@@ -1,5 +1,5 @@
 ﻿# FinalProjectAutomationTest
-"https://hrm.anhtester.com/
+"https://hrm.anhtester.com/"
 
 "- Manage Clients: Add, Edit, Delete
 - Login account Client vừa tạo và check invaid username, invaid password and login success (3 cases)
