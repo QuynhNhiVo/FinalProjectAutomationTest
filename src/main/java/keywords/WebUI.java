@@ -6,6 +6,7 @@ import drivers.DriverManager;
 import io.qameta.allure.Step;
 import lombok.extern.java.Log;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -186,6 +187,7 @@ public class WebUI {
         AllureManager.saveTextLog("First option is: " + select.getFirstSelectedOption().getText());
         return select.getFirstSelectedOption().getText();
     }
+
 
 
     ////VERIFY///////////////////////////////////////////////////////////////////////////////

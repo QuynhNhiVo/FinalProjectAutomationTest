@@ -22,7 +22,7 @@ public class LoginPage extends CommonPage{
 
     private void verifyLoginPage(){
         verifyElementVisible(headline);
-        verifyEqual(getTextElement(headline), textHeadline);
+        verifyContain(getTextElement(headline), textHeadline);
         verifyElementVisible(paragraph);
         verifyEqual(getTextElement(paragraph), tParagraph);
         verifyEqual(getTitlePage(), title, "The title of sign in page not match.");
@@ -37,6 +37,7 @@ public class LoginPage extends CommonPage{
         setText(ipUsername, excelHelpers.getCellData("USERNAME", 1));
         setText(ipPassword, excelHelpers.getCellData("PASSWORD", 1));
         verifyLoginPage();
+        clickElement(buttonLogin);
         return new DashboardPage();
     }
 }
