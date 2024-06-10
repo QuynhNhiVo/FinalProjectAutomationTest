@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite All" verbose="1">
+
+    <test name="Login Test Parallel" parallel="methods">
+        <classes>
+            <class name="projectHRM.testcases.LoginTest"/>
+        </classes>
+    </test>
+
+</suite>

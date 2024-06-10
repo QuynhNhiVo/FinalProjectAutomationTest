@@ -3,8 +3,8 @@ package keywords;
 import com.aventstack.extentreports.Status;
 import constants.ConfigData;
 import drivers.DriverManager;
+import helpers.SystemHelpers;
 import io.qameta.allure.Step;
-import lombok.extern.java.Log;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -12,17 +12,23 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 import reports.AllureManager;
 import reports.ExtentTestManager;
 import utils.LogUtils;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WebUI {
 
-    public static JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    private static JavascriptExecutor js = (JavascriptExecutor) getDriver();
+
+    private static SoftAssert softAssert = new SoftAssert();
 
     public static WebDriver getDriver() {
         return DriverManager.getDriver();
@@ -61,13 +67,28 @@ public class WebUI {
         return getDriver().getTitle();
     }
 
+    @Step("Navigate to previous page")
+    public static void goToPreviousPage() {
+        getDriver().navigate().forward();
+        LogUtils.info("Navigate to previous page.");
+        ExtentTestManager.logMessage(Status.INFO, "Navigate to previous page.");
+        AllureManager.saveTextLog("Navigate to previous page.");
+    }
+
     @Step("Click Element: {0}")
     public static void clickElement(By by) {
-        waitForElementClickable(by);
-        getWebElement(by).click();
-        LogUtils.info("Click Element: " + by.toString());
-        ExtentTestManager.logMessage(Status.INFO, "Click Element: " + by.toString());
-        AllureManager.saveTextLog("Click Element: " + by.toString());
+        waiForPageLoad();
+        if (verifyElementClickable(by)) {
+            getWebElement(by).click();
+            LogUtils.info("Click Element: " + by.toString());
+            ExtentTestManager.logMessage(Status.INFO, "Click Element: " + by.toString());
+            AllureManager.saveTextLog("Click Element: " + by.toString());
+        } else {
+            js.executeScript("arguments[0].click();", getWebElement(by));
+            LogUtils.info("Click element with JavaScript: " + by);
+            ExtentTestManager.logMessage(Status.INFO, "Click Element with JavaScript: " + by.toString());
+            AllureManager.saveTextLog("Click Element with JavaScript: " + by.toString());
+        }
     }
 
     @Step("Set text : {1} For Element: {0} ")
@@ -146,19 +167,12 @@ public class WebUI {
         AllureManager.saveTextLog("Clear placeholder and Set text on Element: " + by + " - Text: " + text);
     }
 
-    @Step("Navigate to previous page")
-    public static void goToPreviousPage(){
-        getDriver().navigate().forward();
-        LogUtils.info("Navigate to previous page.");
-        ExtentTestManager.logMessage(Status.INFO, "Navigate to previous page.");
-        AllureManager.saveTextLog("Navigate to previous page.");
-    }
-
     @Step("Select with {1} option: {2} of element {0}")
-    public static void handleDropdown(By by, String type, String[] option) {
+    public static void handleDropdown(By button, By by, String type, String[] option) {
+        clickElement(button);
         Select select = new Select(getWebElement(by));
         waiForPageLoad();
-        for (int i=0;  i < option.length; i++){
+        for (int i = 0; i < option.length; i++) {
             switch (type.trim().toLowerCase()) {
                 case "text":
                     select.selectByVisibleText(option[i]);
@@ -180,7 +194,7 @@ public class WebUI {
     }
 
     @Step("Get first option of the element {0}")
-    public static String getFirstOptionSelected(By by){
+    public static String getFirstOptionSelected(By by) {
         Select select = new Select(getWebElement(by));
         LogUtils.info("First option is: " + select.getFirstSelectedOption().getText());
         ExtentTestManager.logMessage(Status.INFO, "First option is: " + select.getFirstSelectedOption().getText());
@@ -188,6 +202,48 @@ public class WebUI {
         return select.getFirstSelectedOption().getText();
     }
 
+    @Step("Upload file with sendkey {1} to element {0}")
+    public static void uploadFileSendKey(By by, String path) {
+        getWebElement(by).sendKeys(SystemHelpers.getCurrentDir() + path);
+        LogUtils.info("Upload file with sendkey: " + path + " - To element " + by);
+        ExtentTestManager.logMessage(Status.INFO, "Upload file with sendkey: " + path + " - To element " + by);
+        AllureManager.saveTextLog("Upload file with sendkey: " + path + " - To element " + by);
+    }
+
+    @Step("Upload file with robot class {1} to element {0}")
+    public static void uploadFileWithRobot(By by, String path) {
+        clickElement(by);
+        sleep(2);
+        Robot rb = null;
+        try {
+            rb = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        StringSelection str = new StringSelection(SystemHelpers.getCurrentDir() + path);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+        rb.keyPress(KeyEvent.VK_CONTROL);
+        rb.keyPress(KeyEvent.VK_V);
+        rb.keyRelease(KeyEvent.VK_CONTROL);
+        rb.keyRelease(KeyEvent.VK_V);
+        sleep(2);
+        rb.keyPress(KeyEvent.VK_ENTER);
+        rb.keyRelease(KeyEvent.VK_ENTER);
+        LogUtils.info("Upload file with robot class: " + path + " - To element " + by);
+        ExtentTestManager.logMessage(Status.INFO, "Upload file with robot class: " + path + " - To element " + by);
+        AllureManager.saveTextLog("Upload file: with robot class " + path + " - To element " + by);
+    }
+
+    @Step("Scroll navigation bar down")
+    public static void scrollDownMenuBar(By by) {
+        waitForElementVisible(by);
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(getWebElement(by)).sendKeys(Keys.PAGE_DOWN).build().perform();
+    }
+
+    public static void scrollToElement(By by) {
+        js.executeScript("argument[0].scrollIntoView(true);", getWebElements(by));
+    }
 
 
     ////VERIFY///////////////////////////////////////////////////////////////////////////////
@@ -357,14 +413,14 @@ public class WebUI {
             WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(ConfigData.TIMEOUT), Duration.ofMillis(ConfigData.STEP_TIME));
             wait.until(ExpectedConditions.elementToBeClickable(by));
             LogUtils.info("Verify Element clickable: " + by);
-            ExtentTestManager.logMessage(Status.INFO,"Verify Element clickable: " + by);
+            ExtentTestManager.logMessage(Status.INFO, "Verify Element clickable: " + by);
             AllureManager.saveTextLog("Verify Element clickable: " + by);
             return true;
         } catch (Exception e) {
             ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
             AllureManager.saveTextLog(e.getMessage());
-            LogUtils.error(ConfigData.TIMEOUT + "(s) Element is Not clickable. " + e.getMessage());
-            Assert.fail(ConfigData.TIMEOUT + "(s) Element is Not clickable. " + e.getMessage());
+            LogUtils.error("Element is Not clickable. " + e.getMessage());
+            Assert.fail("Element is Not clickable. " + e.getMessage());
             return false;
         }
     }
@@ -542,15 +598,37 @@ public class WebUI {
         return check;
     }
 
+    public static void softAssertContain(String value1, String value2) {
+        if (softAssert == null) {
+            softAssert = new SoftAssert();
+            softAssert.assertTrue(value1.contains(value2));
+        } else {
+            softAssert.assertTrue(value1.contains(value2));
+        }
+    }
+
+    public static void softAssertEqual(String value1, String value2) {
+        if (softAssert == null) {
+            softAssert = new SoftAssert();
+            softAssert.assertEquals(value1, value2);
+        } else {
+            softAssert.assertEquals(value1, value2);
+        }
+    }
+
+    public static void endAssert() {
+        softAssert.assertAll();
+    }
+
     @Step("Verify the element is selected {0}")
-    public static boolean checkElementIsSelected(By by){
+    public static boolean checkElementIsSelected(By by) {
         waitForElementVisible(by);
-        if(getWebElement(by).isSelected()){
+        if (getWebElement(by).isSelected()) {
             LogUtils.info("The element has been selected: " + by);
             ExtentTestManager.logMessage(Status.INFO, "The element has been selected: " + by);
             AllureManager.saveTextLog("The element has been selected: " + by);
             return true;
-        }else {
+        } else {
             ExtentTestManager.logMessage(Status.WARNING, "Element not selected" + by);
             AllureManager.saveTextLog("Element not selected" + by);
             Assert.assertTrue(false, "Element not selected" + by);
@@ -567,16 +645,32 @@ public class WebUI {
             return true;
         } else {
             LogUtils.info("Element not selected.");
-            boolean check = verifyElementClickable(by);
-            ExtentTestManager.logMessage(Status.INFO, "Element not selected. Click element: " + by);
-            AllureManager.saveTextLog("Element not selected. Click element: " + by);
-            if (check) {
-                clickElement(by);
-            } else {
-                js.executeScript("arguments[0].click();", getWebElement(by));
-                LogUtils.info("Click element: " + by);
+            clickElement(by);
+        }
+        return false;
+    }
+
+    @Step("Verify the number of results")
+    public static void verifyNumberOfResults(int col, String value) {
+        List<WebElement> list = getWebElements(By.xpath("//tbody/tr"));
+        List<WebElement> page = getWebElements(By.xpath("//ul[@class='pagination']/li"));
+        int totalPage = page.size()-2;
+        if (list.size() < 1) {
+            LogUtils.info("Not found!");
+            verifyEqual(totalPage, 0, "Page result != 0");
+        } else {
+            LogUtils.info("Total number of rows of search result is: " + list.size());
+            for (int i = 1; i <= list.size(); i++) {
+                String rs = getTextElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+                boolean check = verifyEqual(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Equal with :" + value);
+                if (check) {
+                    LogUtils.info("The result of row " + i + " is: " + rs);
+                } else {
+                    verifyContain(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Contain with :" + value);
+                    LogUtils.info("The result of row " + i + " is: " + rs);
+                }
             }
-            return false;
         }
     }
 
@@ -615,6 +709,7 @@ public class WebUI {
     }
 
     public static WebElement waitForElementVisible(By by) {
+        waiForPageLoad();
         try {
             WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(ConfigData.TIMEOUT), Duration.ofMillis(ConfigData.STEP_TIME));
             boolean check = verifyElementVisible(by);
