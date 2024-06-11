@@ -23,7 +23,6 @@ public class LoginPage extends CommonPage{
     private void verifyLoginPage(){
         verifyElementVisible(headline);
         verifyContain(getTextElement(headline), textHeadline);
-        verifyElementVisible(paragraph);
         verifyEqual(getTextElement(paragraph), tParagraph);
         verifyEqual(getTitlePage(), title, "The title of sign in page not match.");
         verifyEqual(getAttributeElement(ipUsername, "placeholder"), plhUser, "Placeholder of the username field not match");

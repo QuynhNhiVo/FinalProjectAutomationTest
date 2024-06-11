@@ -13,6 +13,7 @@ public class ManageClientsPage extends CommonPage{
     private String textSubHeading = "List All Clients";
     private String textHeadAddNew = "Add New Client";
     private String totalRecord = "//div[@id='xin_table_info']";
+    private String textAlert = "Client updated.";
 
     private By subHeading = By.xpath("//h5[contains(text(),'List All')]");
     private By inputSearch = By.xpath("//input[@type='search']");
@@ -31,12 +32,12 @@ public class ManageClientsPage extends CommonPage{
     private By inputEmail = By.xpath("//input[@name='email']");
     private By inputUsername  = By.xpath("//input[@name='username']");
     private By inputAttachment  = By.xpath("//input[@name='file']");
-    private By buttonAttachment = By.xpath("//label[normalize-space()='Choose file...']");
+    private By buttonSaveAdd = By.xpath("//span[normalize-space()='Save']");
 
-    private By buttonStatus= By.xpath("//span[@role='presentation']");
-    private By dropdownStatus = By.xpath("//select[@name='gender']");
-    private By buttonCountry = By.xpath("//span[@role='presentation']");
-    private By dropdownCountry = By.xpath("//select[@name='gender']");
+    private By buttonStatus= By.xpath("//select[@name='status']/following-sibling::span");
+    private By dropdownStatus = By.xpath("//select[@name='status']");
+    private By buttonCountry = By.xpath("//select[@name='country']/following-sibling::span");
+    private By dropdownCountry = By.xpath("//select[@name='country']");
     private By inputAddress1 = By.xpath("//input[@name='address_1']");
     private By inputAddress2 = By.xpath("//input[@name='address_2']");
     private By inputCity = By.xpath("//input[@name='city']");
@@ -52,28 +53,65 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage addClient(int n){
+    public ManageClientsPage addClient(int row){
         ExcelHelpers excelHelpers = new ExcelHelpers();
         excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
         clickElement(buttonAddNew);
         verifyEqual(getTextElement(subHeadAddNew), textHeadAddNew, "Heading not match");
-        setText(inputFirstName, excelHelpers.getCellData("FIRSTNAME", 2));
-        setText(inputLastName, excelHelpers.getCellData("LASTNAME", 2));
-        setText(inputPassword, excelHelpers.getCellData("PASSWORD", 2));
-        setText(inputContactNumber, excelHelpers.getCellData("CONTACT", 2));
-        handleDropdown(buttonGender, dropdownGender, "text", excelHelpers.getCellData("GENDER", 2).split(", "));
-        setText(inputEmail, excelHelpers.getCellData("EMAIL", 2));
-        setText(inputUsername, excelHelpers.getCellData("USERNAME", 2));
-        uploadFileSendKey(inputAttachment, excelHelpers.getCellData("ATTACHMENT", 2));
-        clickElement(buttonSaveIf);
+        setText(inputFirstName, excelHelpers.getCellData("FIRSTNAME", row));
+        setText(inputLastName, excelHelpers.getCellData("LASTNAME", row));
+        setText(inputPassword, excelHelpers.getCellData("PASSWORD", row));
+        setText(inputContactNumber, excelHelpers.getCellData("CONTACT", row));
+        handleDropdown(buttonGender, dropdownGender, "text", excelHelpers.getCellData("GENDER", row).split(", "));
+        setText(inputEmail, excelHelpers.getCellData("EMAIL", row));
+        setText(inputUsername, excelHelpers.getCellData("USERNAME", row));
+        uploadFileSendKey(inputAttachment, excelHelpers.getCellData("ATTACHMENT", row));
+        clickElement(buttonSaveAdd);
         return this;
     }
 
-    public ManageClientsPage verifySearchClient(){
+    public ManageClientsPage editClient(int row){
         ExcelHelpers excelHelpers = new ExcelHelpers();
         excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
-        setText(inputSearch, excelHelpers.getCellData("FIRSTNAME", 2));
-
+        setText(inputSearch, excelHelpers.getCellData("FIRSTNAME", row));
+        sleep(2);
+        verifyRecordAndPagination(1, excelHelpers.getCellData("FIRSTNAME", row));
+        clickElement(buttonDetail);
+        sleep(2);
+        handleDropdown(buttonStatus, dropdownStatus, "text", excelHelpers.getCellData("STATUS", row).split(", "));
+        handleDropdown(buttonCountry, dropdownCountry, "text", excelHelpers.getCellData("COUNTRY", row).split(", "));
+        setText(inputAddress1, excelHelpers.getCellData("ADDRESS", row));
+        setText(inputAddress2, excelHelpers.getCellData("ADDRESS2", row));
+        setText(inputCity, excelHelpers.getCellData("CITY", row));
+        setText(inputState, excelHelpers.getCellData("STATE", row));
+        setText(inputZip, excelHelpers.getCellData("ZIPCODE", row));
+        clickElement(buttonSaveIf);
+        verifyEqual(getTextAlert(), textAlert, "Not show correct alert");
+        goToPreviousPage();
         return this;
     }
+
+    public ManageClientsPage verifySearchClient(int row){
+        ExcelHelpers excelHelpers = new ExcelHelpers();
+        excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
+        setText(inputSearch, excelHelpers.getCellData("FIRSTNAME", row));
+        sleep(2);
+        verifyRecordAndPagination(1, excelHelpers.getCellData("FIRSTNAME", row));
+        clickElement(buttonDetail);
+        sleep(2);
+        softAssertEqual(getAttributeElement(inputFirstName, "value"), excelHelpers.getCellData("FIRSTNAME", row));
+        softAssertEqual(getAttributeElement(inputLastName, "value"), excelHelpers.getCellData("LASTNAME", row));
+        softAssertEqual(getAttributeElement(inputEmail, "value"), excelHelpers.getCellData("EMAIL", row));
+        softAssertEqual(getAttributeElement(inputUsername, "value"), excelHelpers.getCellData("USERNAME", row));
+        softAssertEqual(getAttributeElement(inputContactNumber, "value"), excelHelpers.getCellData("CONTACT", row));
+        softAssertEqual(getFirstOptionSelected(dropdownGender), excelHelpers.getCellData("GENDER", row));
+        softAssertEqual(getFirstOptionSelected(dropdownCountry), excelHelpers.getCellData("GENDER", row));
+        softAssertEqual(getAttributeElement(inputAddress1, "value"), excelHelpers.getCellData("ADDRESS", row));
+        softAssertEqual(getAttributeElement(inputAddress2, "value"), excelHelpers.getCellData("ADDRESS2", row));
+        softAssertEqual(getAttributeElement(inputCity, "value"), excelHelpers.getCellData("CITY", row));
+        softAssertEqual(getAttributeElement(inputState, "value"), excelHelpers.getCellData("STATE", row));
+        softAssertEqual(getAttributeElement(inputZip, "value"), excelHelpers.getCellData("ZIPCODE", row));
+        return this;
+    }
+    
 }

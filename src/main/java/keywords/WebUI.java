@@ -5,6 +5,7 @@ import constants.ConfigData;
 import drivers.DriverManager;
 import helpers.SystemHelpers;
 import io.qameta.allure.Step;
+import lombok.extern.java.Log;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -78,6 +79,8 @@ public class WebUI {
     @Step("Click Element: {0}")
     public static void clickElement(By by) {
         waiForPageLoad();
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(getWebElement(by)).perform();
         if (verifyElementClickable(by)) {
             getWebElement(by).click();
             LogUtils.info("Click Element: " + by.toString());
@@ -143,10 +146,10 @@ public class WebUI {
 
     @Step("Get attribute {1} of element {0}")
     public static String getAttributeElement(By by, String atb) {
-        LogUtils.info("Get attribute " + atb + ":  " + getWebElement(by).getAttribute(atb) + " - Of element" + by);
-        ExtentTestManager.logMessage(Status.INFO, "Get attribute " + atb + ":  " + getWebElement(by).getAttribute(atb) + " - Of element" + by);
-        AllureManager.saveTextLog("Get attribute " + atb + ":  " + getWebElement(by).getAttribute(atb) + " - Of element" + by);
-        return getWebElement(by).getAttribute(atb);
+        LogUtils.info("Get attribute " + atb + ":  " + waitForElementVisible(by).getAttribute(atb) + " - Of element" + by);
+        ExtentTestManager.logMessage(Status.INFO, "Get attribute " + atb + ":  " + waitForElementVisible(by).getAttribute(atb) + " - Of element" + by);
+        AllureManager.saveTextLog("Get attribute " + atb + ":  " + waitForElementVisible(by).getAttribute(atb) + " - Of element" + by);
+        return waitForElementVisible(by).getAttribute(atb);
     }
 
     @Step("Clear placeholder on Element: {0}")
@@ -234,7 +237,6 @@ public class WebUI {
         AllureManager.saveTextLog("Upload file: with robot class " + path + " - To element " + by);
     }
 
-    @Step("Scroll navigation bar down")
     public static void scrollDownMenuBar(By by) {
         waitForElementVisible(by);
         Actions actions = new Actions(getDriver());
@@ -243,6 +245,14 @@ public class WebUI {
 
     public static void scrollToElement(By by) {
         js.executeScript("argument[0].scrollIntoView(true);", getWebElements(by));
+    }
+
+    @Step("Get text alert")
+    public static String getTextAlert() {
+        LogUtils.info("Text of alert: " + getDriver().switchTo().alert().getText());
+        ExtentTestManager.logMessage(Status.INFO, "Text of alert: " + getDriver().switchTo().alert().getText());
+        AllureManager.saveTextLog("Text of alert: " + getDriver().switchTo().alert().getText());
+        return getDriver().switchTo().alert().getText();
     }
 
 
@@ -601,19 +611,21 @@ public class WebUI {
     public static void softAssertContain(String value1, String value2) {
         if (softAssert == null) {
             softAssert = new SoftAssert();
-            softAssert.assertTrue(value1.contains(value2));
-        } else {
-            softAssert.assertTrue(value1.contains(value2));
         }
+        softAssert.assertTrue(value1.contains(value2));
+        LogUtils.info("Assert " + value1 + " -Contain- " + value2);
+        ExtentTestManager.logMessage(Status.INFO, "Assert " + value1 + " -Contain- " + value2);
+        AllureManager.saveTextLog("Assert " + value1 + " -Contain- " + value2);
     }
 
     public static void softAssertEqual(String value1, String value2) {
         if (softAssert == null) {
             softAssert = new SoftAssert();
-            softAssert.assertEquals(value1, value2);
-        } else {
-            softAssert.assertEquals(value1, value2);
         }
+        softAssert.assertEquals(value1, value2);
+        LogUtils.info("Assert " + value1 + " -Equals- " + value2);
+        ExtentTestManager.logMessage(Status.INFO, "Assert " + value1 + " -Equals- " + value2);
+        AllureManager.saveTextLog("Assert " + value1 + " -Equals- " + value2);
     }
 
     public static void endAssert() {
@@ -650,26 +662,111 @@ public class WebUI {
         return false;
     }
 
-    @Step("Verify the number of results")
+    @Step("Verify the value of results")
     public static void verifyNumberOfResults(int col, String value) {
+        // Retrieve the list of elements represending search results
         List<WebElement> list = getWebElements(By.xpath("//tbody/tr"));
-        List<WebElement> page = getWebElements(By.xpath("//ul[@class='pagination']/li"));
-        int totalPage = page.size()-2;
-        if (list.size() < 1) {
+        if (list.isEmpty()) {
             LogUtils.info("Not found!");
-            verifyEqual(totalPage, 0, "Page result != 0");
-        } else {
+            ExtentTestManager.logMessage(Status.INFO, "Not found!");
+            AllureManager.saveTextLog("Not found!");
+            return;
+        }
+        try {
             LogUtils.info("Total number of rows of search result is: " + list.size());
+            ExtentTestManager.logMessage(Status.INFO, "Total number of rows of search result is: " + list.size());
+            AllureManager.saveTextLog("Total number of rows of search result is: " + list.size());
             for (int i = 1; i <= list.size(); i++) {
                 String rs = getTextElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
-                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
-                boolean check = verifyEqual(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Equal with :" + value);
-                if (check) {
-                    LogUtils.info("The result of row " + i + " is: " + rs);
+//                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+                //Check the search result value of each column equal to the searched keyword
+                if (!rs.trim().toLowerCase().equals(value.trim().toLowerCase())) {
+                    //Check if the search result value of each column contains the searched keywor  d
+//                    verifyContain(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Contain with :" + value);
+                    LogUtils.info("The result of row " + i + " Contain: " + rs);
+                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Contain: " + rs);
+                    AllureManager.saveTextLog("The result of row " + i + " Contain: " + rs);
                 } else {
-                    verifyContain(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Contain with :" + value);
-                    LogUtils.info("The result of row " + i + " is: " + rs);
+                    LogUtils.info("The result of row " + i + " Equals: " + rs);
+                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Equals: " + rs);
+                    AllureManager.saveTextLog("The result of row " + i + " Equals: " + rs);
                 }
+            }
+        } catch (Exception e) {
+            LogUtils.error(e.getMessage());
+            ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
+            AllureManager.saveTextLog(e.getMessage());
+        }
+    }
+
+    @Step("Verify data and pagination after search")
+    public static void verifyRecordAndPagination(int item, int col, String value) {
+        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
+        if (infoTable == null) {
+            LogUtils.info("Info table is not found or is empty");
+            return;
+        }
+        ArrayList<String> list = new ArrayList<String>();
+        for (String str : infoTable.split("\\s")) {
+            list.add(str);
+        }
+
+        int totalRecord = Integer.parseInt(list.get(5));
+        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
+
+        int totalpage = totalRecord / item;
+        int remainder = totalRecord % item;
+
+        if (remainder > 0) {
+            totalpage = totalpage + 1;
+        }
+
+        LogUtils.info("Total page with text info: " + totalpage);
+
+        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
+        int actualPage = pagination.size() - 2;
+        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
+
+        for (int i = 1; i <= totalpage; i++) {
+            verifyNumberOfResults(col, value);
+            if (i < totalpage) {
+                clickElement(By.xpath("//a[normalize-space()='Next']"));
+            }
+        }
+    }
+
+    @Step("Verify data and pagination after search")
+    public static void verifyRecordAndPagination(int col, String value) {
+        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
+        if (infoTable == null) {
+            LogUtils.info("Info table is not found or is empty");
+            return;
+        }
+        ArrayList<String> list = new ArrayList<String>();
+        for (String str : infoTable.split("\\s")) {
+            list.add(str);
+        }
+
+        int totalRecord = Integer.parseInt(list.get(5));
+        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
+
+        int totalpage = totalRecord / 10;
+        int remainder = totalRecord % 10;
+
+        if (remainder > 0) {
+            totalpage = totalpage + 1;
+        }
+
+        LogUtils.info("Total page with text info: " + totalpage);
+
+        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
+        int actualPage = pagination.size() - 2;
+        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
+
+        for (int i = 1; i <= totalpage; i++) {
+            verifyNumberOfResults(col, value);
+            if (i < totalpage) {
+                clickElement(By.xpath("//a[normalize-space()='Next']"));
             }
         }
     }

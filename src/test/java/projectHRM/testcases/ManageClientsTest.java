@@ -27,7 +27,21 @@ public class ManageClientsTest extends BaseTest {
         loginPage.loginAdminHRM()
             .goManageClients()
             .verifyClientsPage()
-            .addClient();
+            .addClient(2);
+    }
+
+    @Test
+    public void TC_Edit(){
+        loginPage.loginAdminHRM()
+            .goManageClients()
+            .editClient(2);
+    }
+
+    @Test
+    public void TC_AddEditSearch(){
+        loginPage.loginAdminHRM()
+            .goManageClients()
+            .verifySearchClient(2);
     }
 
 }
