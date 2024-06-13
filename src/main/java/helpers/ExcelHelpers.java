@@ -28,6 +28,9 @@ public class ExcelHelpers {
     private String excelFilePath;
     private Map<String, Integer> columns = new HashMap<>();
 
+    public ExcelHelpers() {
+    }
+
     public void setExcelFile(String ExcelPath, String SheetName) {
         LogUtils.info("Set :" + SheetName + " - From path: " + ExcelPath);
         try {
@@ -110,6 +113,9 @@ public class ExcelHelpers {
                     } else {
                         CellData = String.valueOf((long) cell.getNumericCellValue());
                     }
+                    break;
+                case FORMULA:
+                    CellData = cell.getStringCellValue();
                     break;
                 case BOOLEAN:
                     CellData = Boolean.toString(cell.getBooleanCellValue());

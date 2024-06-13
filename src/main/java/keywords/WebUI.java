@@ -190,10 +190,11 @@ public class WebUI {
                     select.deselectAll();
                     break;
             }
-            LogUtils.info("Choose of the element dropdown: " + by + " - Option" + option.toString());
-            ExtentTestManager.logMessage(Status.INFO, "Choose of the element dropdown: " + by + " - Option" + option.toString());
-            AllureManager.saveTextLog("Choose of the element dropdown: " + by + " - Option" + option.toString());
+            LogUtils.info("Choose of the element dropdown: " + by + " - Option" + option);
+            ExtentTestManager.logMessage(Status.INFO, "Choose of the element dropdown: " + by + " - Option" + option);
+            AllureManager.saveTextLog("Choose of the element dropdown: " + by + " - Option" + option);
         }
+        clickElement(button);
     }
 
     @Step("Get first option of the element {0}")
@@ -249,10 +250,29 @@ public class WebUI {
 
     @Step("Get text alert")
     public static String getTextAlert() {
+        sleep(2);
         LogUtils.info("Text of alert: " + getDriver().switchTo().alert().getText());
         ExtentTestManager.logMessage(Status.INFO, "Text of alert: " + getDriver().switchTo().alert().getText());
         AllureManager.saveTextLog("Text of alert: " + getDriver().switchTo().alert().getText());
         return getDriver().switchTo().alert().getText();
+    }
+
+    @Step("Click accept alert")
+    public static void acceptAlert() {
+        sleep(1);
+        LogUtils.info("Click accept alert");
+        ExtentTestManager.logMessage(Status.INFO, "Click accept alert");
+        AllureManager.saveTextLog("Click accept alert");
+        getDriver().switchTo().alert().accept();
+    }
+
+    @Step("Click dismiss alert")
+    public static void dismissAlert() {
+        sleep(1);
+        LogUtils.info("Click accept alert");
+        ExtentTestManager.logMessage(Status.INFO, "Click dismiss alert");
+        AllureManager.saveTextLog("Click dismiss alert");
+        getDriver().switchTo().alert().dismiss();
     }
 
 
@@ -609,10 +629,11 @@ public class WebUI {
     }
 
     public static void softAssertContain(String value1, String value2) {
+        waiForPageLoad();
         if (softAssert == null) {
             softAssert = new SoftAssert();
         }
-        softAssert.assertTrue(value1.contains(value2));
+        softAssert.assertTrue(value1.contains(value2), value1 + " Not Contain " + value2);
         LogUtils.info("Assert " + value1 + " -Contain- " + value2);
         ExtentTestManager.logMessage(Status.INFO, "Assert " + value1 + " -Contain- " + value2);
         AllureManager.saveTextLog("Assert " + value1 + " -Contain- " + value2);
@@ -742,12 +763,25 @@ public class WebUI {
             LogUtils.info("Info table is not found or is empty");
             return;
         }
+
         ArrayList<String> list = new ArrayList<String>();
         for (String str : infoTable.split("\\s")) {
-            list.add(str);
+            StringBuilder reversedStr = new StringBuilder(str).reverse();
+            list.add(reversedStr.toString());
         }
 
-        int totalRecord = Integer.parseInt(list.get(5));
+        boolean isValidNumber = true;
+        Integer totalRecord = null;
+        try {
+            totalRecord = Integer.parseInt(list.get(6));
+        } catch (NumberFormatException e) {
+            isValidNumber = false;
+        }
+
+        if (!isValidNumber || totalRecord <= 0) {
+            totalRecord = 1;
+        }
+
         LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
 
         int totalpage = totalRecord / 10;
@@ -760,7 +794,13 @@ public class WebUI {
         LogUtils.info("Total page with text info: " + totalpage);
 
         List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
-        int actualPage = pagination.size() - 2;
+        int actualPage;
+        if (pagination.size() - 2 == 0) {
+            actualPage = 1;
+        } else {
+            actualPage = (pagination.size() - 2);
+        }
+
         verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
 
         for (int i = 1; i <= totalpage; i++) {

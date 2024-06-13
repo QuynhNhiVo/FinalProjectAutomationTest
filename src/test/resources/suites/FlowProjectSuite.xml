@@ -3,10 +3,16 @@
 <suite name="Parallel Suite Client" verbose="1">
 
     <test name="Manage Clients Test Parallel" parallel="methods">
+        <parameter name="row" value="2"></parameter>
         <classes>
             <class name="projectHRM.testcases.ManageClientsTest">
                 <methods>
-                    <exclude name="TC_FlowVerifyFunctionClients"></exclude>
+                    <include name="TC_FlowVerifyFunctionClient"/>
+                </methods>
+            </class>
+            <class name="projectHRM.testcases.LoginTest">
+                <methods>
+                    <include name="TC_LoginClient"/>
                 </methods>
             </class>
         </classes>
