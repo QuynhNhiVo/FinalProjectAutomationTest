@@ -1,6 +1,5 @@
 package projectHRM.pages;
 
-import helpers.ExcelHelpers;
 import org.openqa.selenium.By;
 import static keywords.WebUI.*;
 
@@ -9,10 +8,12 @@ public class CommonPage {
     private By buttonLogout = By.xpath("//i[@class='feather icon-power']");
     private By menuHome = By.xpath("//span[normalize-space()='Home']");
     private By menuClients = By.xpath("//span[normalize-space()='Manage Clients']");
+    private By menuProjects = By.xpath("//span[normalize-space()='Projects']");
 
     LoginPage loginPage;
     DashboardPage dashboardPage;
     ManageClientsPage manageClientsPage;
+    ProjectsPage projectsPage;
 
     public LoginPage logOut(){
         clickElement(buttonLogout);
@@ -21,8 +22,14 @@ public class CommonPage {
 
     public ManageClientsPage goManageClients(){
         scrollDownMenuBar(menuHome);
-        clickElement(menuClients);
+        clickElement(menuProjects);
         return new ManageClientsPage();
+    }
+
+    public ProjectsPage goProjects(){
+        scrollDownMenuBar(menuHome);
+        clickElement(menuProjects);
+        return new ProjectsPage();
     }
 
     public LoginPage getLoginPage(){
@@ -44,5 +51,12 @@ public class CommonPage {
             manageClientsPage = new ManageClientsPage();
         }
         return manageClientsPage;
+    }
+
+    public ProjectsPage getProjectsPage(){
+        if(projectsPage==null){
+            projectsPage = new ProjectsPage();
+        }
+        return projectsPage;
     }
 }

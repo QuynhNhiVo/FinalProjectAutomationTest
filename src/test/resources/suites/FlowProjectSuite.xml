@@ -2,7 +2,7 @@
 
 <suite name="Parallel Suite Client" verbose="1">
 
-    <test name="Manage Clients Test Parallel" parallel="methods">
+    <test name="Manage Clients Test Parallel">
         <parameter name="row" value="2"></parameter>
         <classes>
             <class name="projectHRM.testcases.ManageClientsTest">

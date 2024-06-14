@@ -68,14 +68,6 @@ public class WebUI {
         return getDriver().getTitle();
     }
 
-    @Step("Navigate to previous page")
-    public static void goToPreviousPage() {
-        getDriver().navigate().forward();
-        LogUtils.info("Navigate to previous page.");
-        ExtentTestManager.logMessage(Status.INFO, "Navigate to previous page.");
-        AllureManager.saveTextLog("Navigate to previous page.");
-    }
-
     @Step("Click Element: {0}")
     public static void clickElement(By by) {
         waiForPageLoad();
@@ -170,6 +162,68 @@ public class WebUI {
         AllureManager.saveTextLog("Clear placeholder and Set text on Element: " + by + " - Text: " + text);
     }
 
+    @Step("Get CSS value {1} of the element {0}")
+    public static String getCssElement(By by, String prop) {
+        return getWebElement(by).getCssValue(prop);
+    }
+
+    @Step("Get text alert")
+    public static String getTextAlert() {
+        sleep(2);
+        LogUtils.info("Text of alert: " + getDriver().switchTo().alert().getText());
+        ExtentTestManager.logMessage(Status.INFO, "Text of alert: " + getDriver().switchTo().alert().getText());
+        AllureManager.saveTextLog("Text of alert: " + getDriver().switchTo().alert().getText());
+        return getDriver().switchTo().alert().getText();
+    }
+
+    @Step("Click accept alert")
+    public static void acceptAlert() {
+        sleep(1);
+        LogUtils.info("Click accept alert");
+        ExtentTestManager.logMessage(Status.INFO, "Click accept alert");
+        AllureManager.saveTextLog("Click accept alert");
+        getDriver().switchTo().alert().accept();
+    }
+
+    @Step("Click dismiss alert")
+    public static void dismissAlert() {
+        sleep(1);
+        LogUtils.info("Click accept alert");
+        ExtentTestManager.logMessage(Status.INFO, "Click dismiss alert");
+        AllureManager.saveTextLog("Click dismiss alert");
+        getDriver().switchTo().alert().dismiss();
+    }
+
+    @Step("Switch to iframe index {0}")
+    public static void goIframe(int i) {
+        getDriver().switchTo().frame(i);
+    }
+
+    @Step("Switch to iframe {0}")
+    public static void goIframe(By by) {
+        getDriver().switchTo().frame(getWebElement(by));
+    }
+
+    @Step("Navigate to previous page")
+    public static void goToPreviousPage() {
+        getDriver().navigate().forward();
+        LogUtils.info("Navigate to previous page.");
+        ExtentTestManager.logMessage(Status.INFO, "Navigate to previous page.");
+        AllureManager.saveTextLog("Navigate to previous page.");
+    }
+
+    public static void scrollDownMenuBar(By by) {
+        waitForElementVisible(by);
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(getWebElement(by)).sendKeys(Keys.PAGE_DOWN).build().perform();
+    }
+
+    public static void scrollToElement(By by) {
+        js.executeScript("argument[0].scrollIntoView(true);", getWebElements(by));
+    }
+
+
+    ////HANDLE PAGE/////////////////////////////////////////////////////////////////////////
     @Step("Select with {1} option: {2} of element {0}")
     public static void handleDropdown(By button, By by, String type, String[] option) {
         clickElement(button);
@@ -206,6 +260,166 @@ public class WebUI {
         return select.getFirstSelectedOption().getText();
     }
 
+    @Step("Verify the element is selected {0}")
+    public static boolean checkElementIsSelected(By by) {
+        waitForElementVisible(by);
+        if (getWebElement(by).isSelected()) {
+            LogUtils.info("The element has been selected: " + by);
+            ExtentTestManager.logMessage(Status.INFO, "The element has been selected: " + by);
+            AllureManager.saveTextLog("The element has been selected: " + by);
+            return true;
+        } else {
+            ExtentTestManager.logMessage(Status.WARNING, "Element not selected" + by);
+            AllureManager.saveTextLog("Element not selected" + by);
+            Assert.assertTrue(false, "Element not selected" + by);
+            return false;
+        }
+    }
+
+    @Step("Verify the element is selected {0}")
+    public static boolean checkElementIsSelectedAndClick(By by) {
+        if (getWebElement(by).isSelected()) {
+            LogUtils.info("Element has selected: " + by);
+            ExtentTestManager.logMessage(Status.INFO, "Element has selected: " + by);
+            AllureManager.saveTextLog("Element has selected: " + by);
+            return true;
+        } else {
+            LogUtils.info("Element not selected.");
+            clickElement(by);
+        }
+        return false;
+    }
+
+    @Step("Verify the value of results")
+    public static void verifyNumberOfResults(int col, String value) {
+        // Retrieve the list of elements represending search results
+        List<WebElement> list = getWebElements(By.xpath("//tbody/tr"));
+        if (list.isEmpty()) {
+            LogUtils.info("Not found!");
+            ExtentTestManager.logMessage(Status.INFO, "Not found!");
+            AllureManager.saveTextLog("Not found!");
+            return;
+        }
+        try {
+            LogUtils.info("Total number of rows of search result is: " + list.size());
+            ExtentTestManager.logMessage(Status.INFO, "Total number of rows of search result is: " + list.size());
+            AllureManager.saveTextLog("Total number of rows of search result is: " + list.size());
+            for (int i = 1; i <= list.size(); i++) {
+                String rs = getTextElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+//                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+                //Check the search result value of each column equal to the searched keyword
+                if (!rs.trim().toLowerCase().equals(value.trim().toLowerCase())) {
+                    //Check if the search result value of each column contains the searched keywor  d
+//                    verifyContain(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Contain with :" + value);
+                    LogUtils.info("The result of row " + i + " Contain: " + rs);
+                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Contain: " + rs);
+                    AllureManager.saveTextLog("The result of row " + i + " Contain: " + rs);
+                } else {
+                    LogUtils.info("The result of row " + i + " Equals: " + rs);
+                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Equals: " + rs);
+                    AllureManager.saveTextLog("The result of row " + i + " Equals: " + rs);
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.error(e.getMessage());
+            ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
+            AllureManager.saveTextLog(e.getMessage());
+        }
+    }
+
+    @Step("Verify data and pagination after search")
+    public static void verifyRecordAndPagination(int item, int col, String value) {
+        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
+        if (infoTable == null) {
+            LogUtils.info("Info table is not found or is empty");
+            return;
+        }
+        ArrayList<String> list = new ArrayList<String>();
+        for (String str : infoTable.split("\\s")) {
+            list.add(str);
+        }
+
+        int totalRecord = Integer.parseInt(list.get(5));
+        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
+
+        int totalpage = totalRecord / item;
+        int remainder = totalRecord % item;
+
+        if (remainder > 0) {
+            totalpage = totalpage + 1;
+        }
+
+        LogUtils.info("Total page with text info: " + totalpage);
+
+        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
+        int actualPage = pagination.size() - 2;
+        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
+
+        for (int i = 1; i <= totalpage; i++) {
+            verifyNumberOfResults(col, value);
+            if (i < totalpage) {
+                clickElement(By.xpath("//a[normalize-space()='Next']"));
+            }
+        }
+    }
+
+    @Step("Verify data and pagination after search")
+    public static void verifyRecordAndPagination(int col, String value) {
+        //Get the record information of table
+        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
+        if (infoTable == null) {
+            LogUtils.info("Info table is empty");
+            return;
+        }
+
+        ArrayList<String> list = new ArrayList<String>();
+        for (String str : infoTable.split("\\s")) {
+            //Reverse list
+            StringBuilder reversedStr = new StringBuilder(str).reverse();
+            list.add(reversedStr.toString());
+        }
+
+        boolean isValidNumber = true;
+        Integer totalRecord = null;
+        try {
+            totalRecord = Integer.parseInt(list.get(6));
+        } catch (NumberFormatException e) {
+            isValidNumber = false;
+        }
+
+        if (!isValidNumber || totalRecord <= 0) {
+            totalRecord = 1;
+        }
+
+        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
+
+        int totalpage = totalRecord / 10;
+        int remainder = totalRecord % 10;
+
+        if (remainder > 0) {
+            totalpage = totalpage + 1;
+        }
+
+        LogUtils.info("Total page with text info: " + totalpage);
+
+        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
+        int actualPage;
+        if (pagination.size() - 2 == 0) {
+            actualPage = 1;
+        } else {
+            actualPage = (pagination.size() - 2);
+        }
+
+        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
+
+        for (int i = 1; i <= totalpage; i++) {
+            verifyNumberOfResults(col, value);
+            if (i < totalpage) {
+                clickElement(By.xpath("//a[normalize-space()='Next']"));
+            }
+        }
+    }
+
     @Step("Upload file with sendkey {1} to element {0}")
     public static void uploadFileSendKey(By by, String path) {
         getWebElement(by).sendKeys(SystemHelpers.getCurrentDir() + path);
@@ -238,41 +452,110 @@ public class WebUI {
         AllureManager.saveTextLog("Upload file: with robot class " + path + " - To element " + by);
     }
 
-    public static void scrollDownMenuBar(By by) {
-        waitForElementVisible(by);
-        Actions actions = new Actions(getDriver());
-        actions.moveToElement(getWebElement(by)).sendKeys(Keys.PAGE_DOWN).build().perform();
+    @Step("Choose status {0}")
+    public static void chooseStatus(String status) {
+        By path = By.xpath("(//a[contains(@data-rating-text,'" + status + "')]");
+        getWebElement(path).click();
+        verifyContain(getTextElement(path), status, "Choose the wrong status :" + status);
+        switch (status.trim().toLowerCase()) {
+            case "notstarted":
+                verifyEqual(getCssElement(path, "background-color"), "#ffa21d", "Color of status :" + status + " is incorrect");
+                break;
+            case "inprogress":
+                verifyEqual(getCssElement(path, "background-color"), "#7267EF", "Color of status :" + status + " is incorrect");
+                break;
+            case "cancelled":
+                verifyEqual(getCssElement(path, "background-color"), "#EA4D4D", "Color of status :" + status + " is incorrect");
+                break;
+            case "onhold":
+                verifyEqual(getCssElement(path, "background-color"), "#6c757d", "Color of status :" + status + " is incorrect");
+                break;
+            case "completed":
+                verifyEqual(getCssElement(path, "background-color"), "#17C666", "Color of status :" + status + " is incorrect");
+                break;
+        }
+        LogUtils.info("Choose status: " + status);
+        ExtentTestManager.logMessage(Status.INFO, "Choose status: " + status);
+        AllureManager.saveTextLog("Choose status: " + status);
     }
 
-    public static void scrollToElement(By by) {
-        js.executeScript("argument[0].scrollIntoView(true);", getWebElements(by));
-    }
-
-    @Step("Get text alert")
-    public static String getTextAlert() {
+    public static void getStartDate(By by, String month, String year, String date) {
+        clickElement(by);
+        //Month
+        String start = "(//div[@class='dtp-date'])[1]";
+        String presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
+        while (presentMonth.trim().toLowerCase().equals(month.trim().toLowerCase())) {
+            getDriver().findElement(By.xpath(start + "/div[1]/div[@class='left center p10']")).click();
+            presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
+            LogUtils.info("Choose month start: " + presentMonth.trim());
+        }
         sleep(2);
-        LogUtils.info("Text of alert: " + getDriver().switchTo().alert().getText());
-        ExtentTestManager.logMessage(Status.INFO, "Text of alert: " + getDriver().switchTo().alert().getText());
-        AllureManager.saveTextLog("Text of alert: " + getDriver().switchTo().alert().getText());
-        return getDriver().switchTo().alert().getText();
+
+        //Year
+        String presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
+        while (year.equals(presentYear.trim())) {
+            if (Integer.parseInt(year) < Integer.parseInt(presentYear.trim())) {
+                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='left center p10']")).click();
+            } else if (Integer.parseInt(year) > Integer.parseInt(presentYear.trim())) {
+                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='right center p10']")).click();
+            }
+            presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
+        }
+
+        LogUtils.info("Choose year start: " + presentYear);
+        sleep(2);
+
+        //Date
+        List<WebElement> listDate = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr/td"));
+        int totalDate = listDate.size();
+        int row = totalDate / 7;
+        int add = totalDate % 7;
+        if (add > 0) {
+            row = row + 1;
+        }
+
+        for (int i = 2; i <= row + 1; i++) {
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr" + i + "/td/a"));
+            int dateRow = dateInRow.size();
+            for (int j = 1; j <= dateRow; j++) {
+                WebElement getDate = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td[" + j + "]/a"));
+                if (getDate.getText().trim().equals(date)) {
+                    getDate.click();
+                    LogUtils.info("Choose year start: " + getDate);
+                    return;
+                }
+            }
+        }
+        sleep(2);
     }
 
-    @Step("Click accept alert")
-    public static void acceptAlert() {
-        sleep(1);
-        LogUtils.info("Click accept alert");
-        ExtentTestManager.logMessage(Status.INFO, "Click accept alert");
-        AllureManager.saveTextLog("Click accept alert");
-        getDriver().switchTo().alert().accept();
-    }
+    public static void clickDate(By by, String date) {
+        clickElement(by);
+        List<WebElement> listDate = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr/td/a"));
+        int totalDate = listDate.size();
+        int row = totalDate / 7;
+        int add = totalDate % 7;
+        if (add > 0) {
+            row = row + 1;
+        }
+        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
 
-    @Step("Click dismiss alert")
-    public static void dismissAlert() {
-        sleep(1);
-        LogUtils.info("Click accept alert");
-        ExtentTestManager.logMessage(Status.INFO, "Click dismiss alert");
-        AllureManager.saveTextLog("Click dismiss alert");
-        getDriver().switchTo().alert().dismiss();
+        for (int i = 2; i <= row + 1; i++) {
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td/a"));
+            int dateRow = dateInRow.size();
+            LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
+            for (int j = 1; j <= dateRow; j++) {
+                WebElement getDate = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td[" + j + "]//a"));
+                if (verifyElementPresent(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td[" + j + "]//a")))
+                if (getDate.getText().trim().equals(date)) {
+                    getDate.click();
+                    LogUtils.info("Choose year start: " + getDate);
+                    return;
+                }
+
+            }
+        }
+        sleep(2);
     }
 
 
@@ -651,164 +934,6 @@ public class WebUI {
 
     public static void endAssert() {
         softAssert.assertAll();
-    }
-
-    @Step("Verify the element is selected {0}")
-    public static boolean checkElementIsSelected(By by) {
-        waitForElementVisible(by);
-        if (getWebElement(by).isSelected()) {
-            LogUtils.info("The element has been selected: " + by);
-            ExtentTestManager.logMessage(Status.INFO, "The element has been selected: " + by);
-            AllureManager.saveTextLog("The element has been selected: " + by);
-            return true;
-        } else {
-            ExtentTestManager.logMessage(Status.WARNING, "Element not selected" + by);
-            AllureManager.saveTextLog("Element not selected" + by);
-            Assert.assertTrue(false, "Element not selected" + by);
-            return false;
-        }
-    }
-
-    @Step("Verify the element is selected {0}")
-    public static boolean checkElementIsSelectedAndClick(By by) {
-        if (getWebElement(by).isSelected()) {
-            LogUtils.info("Element has selected: " + by);
-            ExtentTestManager.logMessage(Status.INFO, "Element has selected: " + by);
-            AllureManager.saveTextLog("Element has selected: " + by);
-            return true;
-        } else {
-            LogUtils.info("Element not selected.");
-            clickElement(by);
-        }
-        return false;
-    }
-
-    @Step("Verify the value of results")
-    public static void verifyNumberOfResults(int col, String value) {
-        // Retrieve the list of elements represending search results
-        List<WebElement> list = getWebElements(By.xpath("//tbody/tr"));
-        if (list.isEmpty()) {
-            LogUtils.info("Not found!");
-            ExtentTestManager.logMessage(Status.INFO, "Not found!");
-            AllureManager.saveTextLog("Not found!");
-            return;
-        }
-        try {
-            LogUtils.info("Total number of rows of search result is: " + list.size());
-            ExtentTestManager.logMessage(Status.INFO, "Total number of rows of search result is: " + list.size());
-            AllureManager.saveTextLog("Total number of rows of search result is: " + list.size());
-            for (int i = 1; i <= list.size(); i++) {
-                String rs = getTextElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
-//                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
-                //Check the search result value of each column equal to the searched keyword
-                if (!rs.trim().toLowerCase().equals(value.trim().toLowerCase())) {
-                    //Check if the search result value of each column contains the searched keywor  d
-//                    verifyContain(rs.trim().toLowerCase(), value.trim().toLowerCase(), "The result of row " + i + " not Contain with :" + value);
-                    LogUtils.info("The result of row " + i + " Contain: " + rs);
-                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Contain: " + rs);
-                    AllureManager.saveTextLog("The result of row " + i + " Contain: " + rs);
-                } else {
-                    LogUtils.info("The result of row " + i + " Equals: " + rs);
-                    ExtentTestManager.logMessage(Status.INFO, "The result of row " + i + " Equals: " + rs);
-                    AllureManager.saveTextLog("The result of row " + i + " Equals: " + rs);
-                }
-            }
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage());
-            ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
-            AllureManager.saveTextLog(e.getMessage());
-        }
-    }
-
-    @Step("Verify data and pagination after search")
-    public static void verifyRecordAndPagination(int item, int col, String value) {
-        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
-        if (infoTable == null) {
-            LogUtils.info("Info table is not found or is empty");
-            return;
-        }
-        ArrayList<String> list = new ArrayList<String>();
-        for (String str : infoTable.split("\\s")) {
-            list.add(str);
-        }
-
-        int totalRecord = Integer.parseInt(list.get(5));
-        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
-
-        int totalpage = totalRecord / item;
-        int remainder = totalRecord % item;
-
-        if (remainder > 0) {
-            totalpage = totalpage + 1;
-        }
-
-        LogUtils.info("Total page with text info: " + totalpage);
-
-        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
-        int actualPage = pagination.size() - 2;
-        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
-
-        for (int i = 1; i <= totalpage; i++) {
-            verifyNumberOfResults(col, value);
-            if (i < totalpage) {
-                clickElement(By.xpath("//a[normalize-space()='Next']"));
-            }
-        }
-    }
-
-    @Step("Verify data and pagination after search")
-    public static void verifyRecordAndPagination(int col, String value) {
-        String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
-        if (infoTable == null) {
-            LogUtils.info("Info table is not found or is empty");
-            return;
-        }
-
-        ArrayList<String> list = new ArrayList<String>();
-        for (String str : infoTable.split("\\s")) {
-            StringBuilder reversedStr = new StringBuilder(str).reverse();
-            list.add(reversedStr.toString());
-        }
-
-        boolean isValidNumber = true;
-        Integer totalRecord = null;
-        try {
-            totalRecord = Integer.parseInt(list.get(6));
-        } catch (NumberFormatException e) {
-            isValidNumber = false;
-        }
-
-        if (!isValidNumber || totalRecord <= 0) {
-            totalRecord = 1;
-        }
-
-        LogUtils.info(list + ": " + totalRecord + " Records".toUpperCase());
-
-        int totalpage = totalRecord / 10;
-        int remainder = totalRecord % 10;
-
-        if (remainder > 0) {
-            totalpage = totalpage + 1;
-        }
-
-        LogUtils.info("Total page with text info: " + totalpage);
-
-        List<WebElement> pagination = getWebElements(By.xpath("//ul[@class='pagination']/li"));
-        int actualPage;
-        if (pagination.size() - 2 == 0) {
-            actualPage = 1;
-        } else {
-            actualPage = (pagination.size() - 2);
-        }
-
-        verifyEqual(totalpage, actualPage, "The number of pages according to the result is Different from the actual number of pages");
-
-        for (int i = 1; i <= totalpage; i++) {
-            verifyNumberOfResults(col, value);
-            if (i < totalpage) {
-                clickElement(By.xpath("//a[normalize-space()='Next']"));
-            }
-        }
     }
 
 
