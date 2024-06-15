@@ -22,12 +22,11 @@ public class CommonPage {
 
     public ManageClientsPage goManageClients(){
         scrollDownMenuBar(menuHome);
-        clickElement(menuProjects);
+        clickElement(menuClients);
         return new ManageClientsPage();
     }
 
     public ProjectsPage goProjects(){
-        scrollDownMenuBar(menuHome);
         clickElement(menuProjects);
         return new ProjectsPage();
     }

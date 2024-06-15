@@ -59,7 +59,7 @@ public class ManageClientsPage extends CommonPage{
 
     public ManageClientsPage(){
         this.excelHelpers = new ExcelHelpers();
-        this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
+        this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Clients");
     }
 
     public ManageClientsPage verifyClientsPage(){

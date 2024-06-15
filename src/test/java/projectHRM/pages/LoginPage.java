@@ -47,7 +47,7 @@ public class LoginPage extends CommonPage{
         setText(ipUsername, excelHelpers.getCellData("USERNAME", 1));
         setText(ipPassword, excelHelpers.getCellData("PASSWORD", 1));
         clickElement(buttonLogin);
-        waiForPageLoad(10);
+        sleep(4);
         return new DashboardPage();
     }
 
