@@ -5,15 +5,19 @@ import static keywords.WebUI.*;
 import constants.ConfigData;
 import helpers.ExcelHelpers;
 import org.openqa.selenium.By;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import java.util.Hashtable;
 
-public class ProjectsPage extends CommonPage{
+public class ProjectsPage extends CommonPage {
     private String subdir = "/erp/projects-list";
     private String title = "Projects | HRM | Anh Tester Demo";
     private String textHeadProject = "List All Projects";
+    private String textTaskAdd = "Task added.";
+    private String textUpFile = "Project file added.";
+    private String textStatus = "Project status updated.";
 
     private By headingProjects = By.xpath("//h5[contains(text(),'List All')]");
     private By buttonAddNew = By.xpath("//h5[contains(text(),'List All')]/following-sibling::div/a[normalize-space()='Add New']");
@@ -24,7 +28,9 @@ public class ProjectsPage extends CommonPage{
     private By buttonPriority = By.xpath("//label[normalize-space()='Priority']/following-sibling::span");
     private By dropdownPriority = By.xpath("//select[@name='priority']");
     private By inputStartDate = By.xpath("//label[@for='start_date']/following-sibling::div//input");
+    private By saveStartDate = By.xpath("(//div[@class='dtp-date-view'])[1]/following-sibling::div//button[.='OK']");
     private By inputEndDate = By.xpath("//label[@for='end_date']/following-sibling::div/input");
+    private By saveEndDate = By.xpath("(//div[@class='dtp-date-view'])[2]/following-sibling::div//button[.='OK']");
     private By inputSummary = By.xpath("//textarea[@id='summary']");
     private By buttonTeam = By.xpath("//label[normalize-space()='Team']/following-sibling::span");
     private By dropdownTeam = By.xpath("//select[@name='assigned_to[]']");
@@ -44,15 +50,18 @@ public class ProjectsPage extends CommonPage{
     private By inputTitleTasks = By.xpath("//input[@name='task_name']");
     private By inputHourTasks = By.xpath("//input[@name='task_hour']");
     private By inputStartTasks = By.xpath("((//input[@name='task_name']/parent::div)/parent::div)/following-sibling::div[1]/div/div/input[@name='start_date']");
+    private By saveStartTasks= By.xpath("(//div[@class='dtp-buttons'])[5]/button[contains(.,'OK')]");
     private By inputEndTasks = By.xpath("((//input[@name='task_name']/parent::div)/parent::div)/following-sibling::div[2]/div/div/input[@name='end_date']");
+    private By saveEndTasks= By.xpath("(//div[@class='dtp-buttons'])[6]/button[contains(.,'OK')]");
     private By inputSmrTasks = By.xpath("//textarea[@id='summary']");
     private By iframeTask = By.xpath("(//td[@class='k-editable-area'][1])[4]/iframe");
-    private By inputDescTasks = By.xpath("//textarea[@id='description']");
     private By saveTasks = By.xpath("//form[@id='add_task']//button[@type='submit']");
+    private By messageAdd = By.xpath("//div[@class='toast-message']");
 
     private By buttonStatus = By.xpath("//span[normalize-space()='Update Status']");
 
     private By tabAttach = By.xpath("//a[@id='pills-files-tab']");
+    private By uploadFiles = By.xpath("//input[@id='attachment_file']");
     private By inputTitleAt = By.xpath("//input[@name='file_name']");
     private By buttonAddFile = By.xpath("//button[contains(.,'Add File')]");
 
@@ -67,17 +76,35 @@ public class ProjectsPage extends CommonPage{
     }
 
     private void getDetail(){
+        waiForPageLoad();
         clickElement(buttonDetail);
         sleep(2);
     }
 
-    private void search(int row){
-        setText(inputSearch, excelHelpers.getCellData("TITLE",row));
+    private void getTabTask(){
+        waiForPageLoad();
+        clickElement(tabTasks);
         sleep(2);
     }
 
-    private void search(Hashtable<String, String> data){
-        setText(inputSearch, data.get("TITLE"));
+    private void getTabAttach(){
+        waiForPageLoad();
+        clickElement(tabAttach);
+        sleep(2);
+    }
+
+    public ProjectsPage search(int row){
+        goProjects();
+        clearSetText(inputSearch, excelHelpers.getCellData("CLIENT",row));
+        sleep(2);
+        return this;
+    }
+
+    public ProjectsPage search(Hashtable<String, String> data){
+        goProjects();
+        clearSetText(inputSearch, data.get("CLIENT"));
+        sleep(2);
+        return this;
     }
 
     public ProjectsPage verifyProjectsPage(){
@@ -94,14 +121,14 @@ public class ProjectsPage extends CommonPage{
         handleDropdown(buttonClients, dropdownClients, "value", excelHelpers.getCellData("CLIENT",row).split(", "));
         setText(inputHour, excelHelpers.getCellData("HOUR",row));
         handleDropdown(buttonPriority, dropdownPriority, "text", excelHelpers.getCellData("PRIORITY",row).split(", "));
-        getStartDate(inputStartDate, excelHelpers.getCellData("START_DATE",row).split(", "));
-        getEndDate(inputEndDate, excelHelpers.getCellData("END_DATE",row).split(", "));
+        getStartDate(inputStartDate, excelHelpers.getCellData("START_DATE",row).split(", "), saveStartDate);
+        getEndDate(inputEndDate, excelHelpers.getCellData("END_DATE",row).split(", "), saveEndDate);
         setText(inputSummary, excelHelpers.getCellData("SUMMARY",row));
         handleDropdown(buttonTeam, dropdownTeam, "text", excelHelpers.getCellData("TEAM",row).split(", "));
         goIframe(iframeAdd);
         setText(inputDescription, excelHelpers.getCellData("DESCRIPTION",row));
         exitIframe();
-        scrollClickElement(buttonSave);
+        clickElement(buttonSave);
         sleep(2);
         return this;
     }
@@ -112,49 +139,108 @@ public class ProjectsPage extends CommonPage{
         handleDropdown(buttonClients, dropdownClients, "value", data.get("CLIENT").split(", "));
         setText(inputHour, data.get("HOUR"));
         handleDropdown(buttonPriority, dropdownPriority, "text", data.get("PRIORITY").split(", "));
-        getStartDate(inputStartDate, data.get("START_DATE").split(", "));
-        getEndDate(inputEndDate, data.get("END_DATE").split(", "));
+        getStartDate(inputStartDate, data.get("START_DATE").split(", "), saveStartDate);
+        getEndDate(inputEndDate, data.get("END_DATE").split(", "), saveEndDate);
         setText(inputSummary, data.get("SUMMARY"));
         handleDropdown(buttonTeam, dropdownTeam, "text", data.get("TEAM").split(", "));
         goIframe(iframeAdd);
         setText(inputDescription, data.get("DESCRIPTION"));
         exitIframe();
-        scrollClickElement(buttonSave);
+        clickElement(buttonSave);
         sleep(2);
         return this;
     }
 
-    public ProjectsPage searchProject(int row){
+    @Parameters({"row"})
+    public ProjectsPage verifyResults(int row){
         search(row);
-        verifyRecordAndPagination(1, excelHelpers.getCellData("TITLE",row));
+        verifyRecordAndPagination(2, excelHelpers.getCellData("CLIENT",row));
         return this;
     }
 
-    public ProjectsPage addTask(int row){
-        search(row);
+    public ProjectsPage verifyResults(Hashtable<String, String> data){
+        search(data);
+        verifyRecordAndPagination(2, data.get("CLIENT"));
+        return this;
+    }
+
+    @Parameters({"row"})
+    public ProjectsPage addTask(@Optional("1") int row){
         getDetail();
-        clickElement(tabTasks);
-        sleep(2);
+        getTabTask();
+        verifyContain(getTextElement(headingDetail), excelHelpers.getCellData("TITLE",row), "This not the project page detail!");
         clickElement(buttonAddTasks);
         setText(inputTitleTasks, excelHelpersTask.getCellData("TITLE",row));
-        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE",row).split(", "));
-        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE",row).split(", "));
+        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE",row).split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE",row).split(", "), saveEndTasks);
         setText(inputHourTasks, excelHelpersTask.getCellData("HOUR",row));
         setText(inputSmrTasks, excelHelpersTask.getCellData("SUMMARY",row));
-        goIframe(iframeAdd);
-        setText(inputDescTasks, excelHelpersTask.getCellData("DESCRIPTION",row));
+        goIframe(iframeTask);
+        setText(inputDescription, excelHelpersTask.getCellData("DESCRIPTION",row));
         exitIframe();
-        sleep(5);
-        clickElement(buttonReset);
-//        clickElement(saveTasks);
-        return this;
-    }
-    public ProjectsPage addDate(){
-        clickElement(buttonAddNew);
-        scrollClickElement(buttonSave);
-        sleep(5);
+        sleep(1);
+        clickElement(saveTasks);
+        verifyEqual(getTextElement(messageAdd), textTaskAdd, "Not show correct alert");
+        sleep(2);
         return this;
     }
 
+    public ProjectsPage addTask(Hashtable<String, String> data){
+        setText(inputSearch, data.get("CLIENT"));
+        sleep(2);
+        getDetail();
+        getTabTask();
+        verifyContain(getTextElement(headingDetail), data.get("PROJECT"), "This not the project page detail!");
+        clickElement(buttonAddTasks);
+        setText(inputTitleTasks, data.get("TITLE"));
+        getStartDate(inputStartTasks, data.get("START_DATE").split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, data.get("END_DATE").split(", "), saveEndTasks);
+        setText(inputHourTasks, data.get("HOUR"));
+        setText(inputSmrTasks, data.get("SUMMARY"));
+        goIframe(iframeTask);
+        setText(inputDescription, data.get("DESCRIPTION"));
+        exitIframe();
+        sleep(2);
+        clickElement(saveTasks);
+        verifyEqual(getTextElement(messageAdd), textTaskAdd, "Not show correct alert");
+        return this;
+    }
 
+    @Parameters({"row"})
+    public ProjectsPage addAttachFiles(int row){
+        getTabAttach();
+        uploadFileSendKey(uploadFiles, excelHelpersTask.getCellData("ATTACH", row));
+        setText(inputTitleAt,  excelHelpersTask.getCellData("TITLE_FILE", row));
+        clickElement(buttonAddFile);
+        verifyEqual(getTextElement(messageAdd), textUpFile,"Not show correct alert");
+        sleep(4);
+        return this;
+    }
+
+    public ProjectsPage addAttachFiles(Hashtable<String, String> data){
+        getTabAttach();
+        uploadFileSendKey(uploadFiles, data.get("ATTACH"));
+        setText(inputTitleAt,  data.get("TITLE_FILE"));
+        clickElement(buttonAddFile);
+        verifyEqual(getTextElement(messageAdd), textUpFile,"Not show correct alert");
+        sleep(4);
+        return this;
+    }
+
+    @Parameters({"row"})
+    public ProjectsPage updateStatus(int row){
+        waiForPageLoad();
+        chooseStatus(excelHelpersTask.getCellData("STATUS", row));
+        clickElement(buttonStatus);
+        verifyEqual(getTextElement(messageAdd), textStatus,"Not show correct alert");
+        return this;
+    }
+
+    public ProjectsPage updateStatus(Hashtable<String, String> data){
+        waiForPageLoad();
+        chooseStatus(data.get("STATUS"));
+        clickElement(buttonStatus);
+        verifyEqual(getTextElement(messageAdd), textStatus,"Not show correct alert");
+        return this;
+    }
 }

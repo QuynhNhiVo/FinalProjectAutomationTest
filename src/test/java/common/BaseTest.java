@@ -10,16 +10,14 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Optional;
+import org.testng.annotations.*;
 import utils.LogUtils;
 
 @Listeners(TestListener.class)
 public class BaseTest {
 
     @BeforeMethod
+    @Parameters({"browser"})
     public void createDriver(@Optional("chrome") String browser){
         WebDriver driver = setupBrowser(browser);
         DriverManager.setDriver(driver);

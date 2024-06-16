@@ -17,6 +17,7 @@ public class ConfigData {
     public static int PAGE_LOAD_TIMEOUT = Integer.parseInt(PropertiesHelpers.getValue("PAGE_LOAD_TIMEOUT"));
 
     public static String EXTENT_REPORT = PropertiesHelpers.getValue("EXTENT_REPORT");
+    public static String ALLURE_REPORT = PropertiesHelpers.getValue("ALLURE_REPORT0");
     public static String SCREENSHOT = PropertiesHelpers.getValue("SCREENSHOT");
     public static String SCREENSHOT_PATH = PropertiesHelpers.getValue("SCREENSHOT_PATH");
     public static String RECORD = PropertiesHelpers.getValue("RECORD");

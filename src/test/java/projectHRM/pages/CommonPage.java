@@ -1,6 +1,7 @@
 package projectHRM.pages;
 
 import org.openqa.selenium.By;
+
 import static keywords.WebUI.*;
 
 public class CommonPage {

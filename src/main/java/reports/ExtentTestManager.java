@@ -17,7 +17,8 @@ public class ExtentTestManager {
     static ExtentReports extent = ExtentReportManager.getExtentReports();
 
     public static ExtentTest getTest() {
-        return extentTestMap.get((int) Thread.currentThread().getId());
+        //getTest() return null id no test in current thread
+        return extentTestMap.getOrDefault((int) Thread.currentThread().getId(), null);
     }
 
     public static synchronized ExtentTest saveToReport(String testName, String desc) {

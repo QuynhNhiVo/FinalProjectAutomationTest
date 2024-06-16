@@ -25,20 +25,19 @@ files and test data from Excel files.
 
 * Add, edit, and delete projects.
 
-### Task Management
+#### Edit Projects
 
-* Add and delete tasks for projects.
-    * Access project details to view tasks.
+* Task
+   * Add Task for Projects
+   * Delete Task
+  
 
-### Update Project Status
+* Status
+  * Update status for Projects
 
-* Update project status.
-    * Access project details to perform this action.
 
-### File Attachment
-
-* Add attachments to projects.
-    * Access project details to attach files.
+* File Attachment
+  * Add attachments to projects.
 
 ### Logging and Reporting
 

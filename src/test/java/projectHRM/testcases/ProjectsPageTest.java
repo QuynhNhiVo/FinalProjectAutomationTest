@@ -2,7 +2,6 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderProjects;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import projectHRM.pages.DashboardPage;
 import projectHRM.pages.LoginPage;
@@ -27,7 +26,30 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
-    public void TC_AddProduct(){
+    public void TC_AddTask(){
+        loginPage.loginAdminHRM()
+            .goProjects()
+            .addTask(3);
+    }
+
+    @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
+    public void TC_AddTasks(Hashtable<String, String> data){
+        loginPage.loginAdminHRM()
+            .goProjects()
+            .addTask(data);
+    }
+
+    @Test
+    public void TC_AddAttachUpdateStatus(){
+        loginPage.loginAdminHRM()
+            .goProjects()
+            .search(1)
+            .addAttachFiles(1)
+            .updateStatus(1);
+    }
+
+    @Test
+    public void TC_AddProject(){
         loginPage.loginAdminHRM()
             .goProjects()
             .verifyProjectsPage()
@@ -35,7 +57,7 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test(dataProvider = "data_add_projects", dataProviderClass = DataProviderProjects.class)
-    public void TC_AddProducts(Hashtable<String, String> data){
+    public void TC_AddProjects(Hashtable<String, String> data){
         loginPage.loginAdminHRM()
             .goProjects()
             .verifyProjectsPage()
@@ -43,17 +65,23 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
-    public void TC_AddTask(){
-        loginPage.loginAdminHRM()
-            .goProjects()
-            .addTask(1);
-    }
-
-    @Test
-    public void TC_TestDate1(){
+    public void TC_FlowAddTaskAddAttachUpdateStatus(){
         loginPage.loginAdminHRM()
             .goProjects()
             .verifyProjectsPage()
-            .addDate();
+            .addNewProject(3)
+            .verifyResults(3)
+            .addTask(3)
+            .addAttachFiles(3)
+            .updateStatus(3);
+    }
+
+    @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
+    public void TC_FlowAddTaskAddAttachUpdateStatus(Hashtable<String, String> data){
+        loginPage.loginAdminHRM()
+            .goProjects()
+            .addTask(data)
+            .addAttachFiles(3)
+            .updateStatus(3);
     }
 }

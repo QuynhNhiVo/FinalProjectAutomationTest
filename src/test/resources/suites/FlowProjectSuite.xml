@@ -15,6 +15,11 @@
                     <include name="TC_LoginClient"/>
                 </methods>
             </class>
+            <class name="projectHRM.testcases.ProjectsPageTest">
+                <methods>
+                    <include name="TC_FlowAddTaskAddAttachUpdateStatus"/>
+                </methods>
+            </class>
         </classes>
     </test>
 

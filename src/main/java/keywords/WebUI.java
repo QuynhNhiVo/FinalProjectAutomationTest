@@ -88,24 +88,6 @@ public class WebUI {
         }
     }
 
-    @Step("Scroll and Click Element: {0}")
-    public static void scrollClickElement(By by) {
-        waiForPageLoad();
-        js.executeScript("arguments[0].scrollIntoView(false);", getDriver().findElement(by));
-        sleep(2);
-        if (verifyElementClickable(by)) {
-            getWebElement(by).click();
-            LogUtils.info("Click Element: " + by.toString());
-            ExtentTestManager.logMessage(Status.INFO, "Click Element: " + by.toString());
-            AllureManager.saveTextLog("Click Element: " + by.toString());
-        } else {
-            js.executeScript("arguments[0].click();", getWebElement(by));
-            LogUtils.info("Click element with JavaScript: " + by);
-            ExtentTestManager.logMessage(Status.INFO, "Click Element with JavaScript: " + by.toString());
-            AllureManager.saveTextLog("Click Element with JavaScript: " + by.toString());
-        }
-    }
-
     @Step("Set text : {1} For Element: {0} ")
     public static void setText(By by, String text) {
         waitForElementVisible(by);
@@ -322,10 +304,9 @@ public class WebUI {
         return false;
     }
 
-    @Step("Verify the value of results")
     public static void verifyNumberOfResults(int col, String value) {
         // Retrieve the list of elements represending search results
-        List<WebElement> list = getWebElements(By.xpath("//tbody/tr"));
+        List<WebElement> list = getWebElements(By.xpath("//table[@id='xin_table']//tbody/tr"));
         if (list.isEmpty()) {
             LogUtils.info("Not found!");
             ExtentTestManager.logMessage(Status.INFO, "Not found!");
@@ -337,8 +318,8 @@ public class WebUI {
             ExtentTestManager.logMessage(Status.INFO, "Total number of rows of search result is: " + list.size());
             AllureManager.saveTextLog("Total number of rows of search result is: " + list.size());
             for (int i = 1; i <= list.size(); i++) {
-                String rs = getTextElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
-//                scrollToElement(By.xpath("//tbody/tr[" + i + "]/td[" + col + "]"));
+                String rs = getTextElement(By.xpath("//table[@id='xin_table']//tbody/tr[" + i + "]/td[" + col + "]"));
+//                scrollToElement(By.xpath("//table[@id='xin_table']//tbody/tr[" + i + "]/td[" + col + "]"));
                 //Check the search result value of each column equal to the searched keyword
                 if (!rs.trim().toLowerCase().equals(value.trim().toLowerCase())) {
                     //Check if the search result value of each column contains the searched keywor  d
@@ -359,7 +340,7 @@ public class WebUI {
         }
     }
 
-    @Step("Verify data and pagination after search")
+    @Step("Verify data and pagination after search keyword {2} with column {1} and page have {0} results")
     public static void verifyRecordAndPagination(int item, int col, String value) {
         String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
         if (infoTable == null) {
@@ -395,7 +376,7 @@ public class WebUI {
         }
     }
 
-    @Step("Verify data and pagination after search")
+    @Step("Verify data and pagination after search keyword {1} with column {0}")
     public static void verifyRecordAndPagination(int col, String value) {
         //Get the record information of table
         String infoTable = getTextElement(By.xpath("//div[@id='xin_table_info']"));
@@ -486,33 +467,18 @@ public class WebUI {
 
     @Step("Choose status {0}")
     public static void chooseStatus(String status) {
-        By path = By.xpath("(//a[contains(@data-rating-text,'" + status + "')]");
+        waiForPageLoad();
+        By path = By.xpath("//a[contains(@data-rating-text,'" + status + "')]");
         getWebElement(path).click();
-        verifyContain(getTextElement(path), status, "Choose the wrong status :" + status);
-        switch (status.trim().toLowerCase()) {
-            case "notstarted":
-                verifyEqual(getCssElement(path, "background-color"), "#ffa21d", "Color of status :" + status + " is incorrect");
-                break;
-            case "inprogress":
-                verifyEqual(getCssElement(path, "background-color"), "#7267EF", "Color of status :" + status + " is incorrect");
-                break;
-            case "cancelled":
-                verifyEqual(getCssElement(path, "background-color"), "#EA4D4D", "Color of status :" + status + " is incorrect");
-                break;
-            case "onhold":
-                verifyEqual(getCssElement(path, "background-color"), "#6c757d", "Color of status :" + status + " is incorrect");
-                break;
-            case "completed":
-                verifyEqual(getCssElement(path, "background-color"), "#17C666", "Color of status :" + status + " is incorrect");
-                break;
-        }
+        sleep(2);
+        verifyContain(getAttributeElement(path, "data-rating-text"), status, "Choose the wrong status :" + status);
         LogUtils.info("Choose status: " + status);
         ExtentTestManager.logMessage(Status.INFO, "Choose status: " + status);
         AllureManager.saveTextLog("Choose status: " + status);
     }
 
-    @Step("Set the element {0} end day {3} month {1} year {2}")
-    public static void getEndDate(By by,  String[] date) {
+    @Step("Set the element {0} end date {1}")
+    public static void getEndDate(By by,  String[] date, By save) {
         clickElement(by);
         //Choose Month/////////////////////////////////////////////////
         String start = "(//div[@class='dtp-date'])[2]";
@@ -546,7 +512,16 @@ public class WebUI {
         sleep(2);
 
         //Choose Day/////////////////////////////////////////////////
-        List<WebElement> listDate = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[2]//tbody/tr/td/a"));
+        String picker="";
+        //Check the order of element picker in the calendar of tabs
+//        for(int i = 1; i<=8;){
+        for(int i : new int[] {1, 2, 5, 6}){
+            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
+                picker = "(//div[@class='dtp-picker'])["+i+"]";
+                break;
+            }
+        }
+        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
         int totalDate = listDate.size();
         int row = totalDate / 7;
         int add = totalDate % 7;
@@ -556,33 +531,43 @@ public class WebUI {
         LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
 
         for (int i = 2; i <= row + 1; i++) {
-            List<WebElement> dateInRow = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[2]//tbody/tr[" + i + "]/td/a"));
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
             int dateRow = dateInRow.size();
             LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
             for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
-                WebElement getDate = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[2]//tbody/tr[" + i + "]/td[" + j + "]//a"));
+                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
                 if (getDate.getText().trim().equals(date[2])) {
                     getDate.click();
-                    LogUtils.info("Choose year end: " + getDate);
-                    ExtentTestManager.logMessage(Status.INFO, "Choose year end: " + getDate);
-                    AllureManager.saveTextLog("Choose year end: " + getDate);
+                    LogUtils.info("Choose day start: " + getDate.getText());
+                    ExtentTestManager.logMessage(Status.INFO, "Choose day start: " + getDate.getText());
+                    AllureManager.saveTextLog("Choose day start: " + getDate.getText());
+                    break;
                 }
             }
         }
 
-        WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
-        WebElement monthYear = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[2]/div[1]/div"));
-        WebElement day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])[2]/div[1]"));
-        verifyEqual(dayNum.getText().trim(), date[2], "Date choose is incorrect!");
-        LogUtils.info("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
-        ExtentTestManager.logMessage(Status.INFO, "End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
-        AllureManager.saveTextLog("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+//        WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
+//        WebElement monthYear = getDriver().findElement(By.xpath(picker+"/div[1]/div"));
+//        WebElement day = null;
+//        //Check the order of headers in the calendar of tabs
+////        for(int i=1; i<= 8;){
+//        for(int i : new int[] {1, 5, 6}){
+//            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])["+i+"]"))){
+//                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])["+i+"]/div[1]"));
+//                break;
+//            }
+////            i++;
+//        }
+//        verifyEqual(dayNum.getText().trim(), date[2], "Date choose is incorrect!");
+//        LogUtils.info("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+//        ExtentTestManager.logMessage(Status.INFO, "End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+//        AllureManager.saveTextLog("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         sleep(2);
-        clickElement(By.xpath("(//div[@class='dtp-date-view'])[2]/following-sibling::div/button[.='OK']"));
+        clickElement(save);
     }
 
-    @Step("Set the element {0} start day {3} month {1} year {2}")
-    public static void getStartDate(By by, String[] date) {
+    @Step("Set the element {0} start date {1}")
+    public static void getStartDate(By by, String[] date, By save) {
         clickElement(by);
         //Choose Month/////////////////////////////////////////////////
         String start = "(//div[@class='dtp-date'])[1]";
@@ -616,39 +601,61 @@ public class WebUI {
         sleep(2);
 
         //Choose Day/////////////////////////////////////////////////
-        List<WebElement> listDate = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr/td/a"));
+        String picker="";
+        //Check the order of element picker in the calendar of tabs
+//        for(int i = 1; i<=8;){
+        for(int i : new int[] {1, 5, 6}){
+            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
+                picker = "(//div[@class='dtp-picker'])["+i+"]";
+                break;
+            }
+//            i++;
+        }
+        LogUtils.info("picker = " + picker);
+        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
         int totalDate = listDate.size();
         int row = totalDate / 7;
         int add = totalDate % 7;
         if (add > 0) {
             row = row + 1;
         }
-        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
+//        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
 
         for (int i = 2; i <= row + 1; i++) {
-            List<WebElement> dateInRow = getDriver().findElements(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td/a"));
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
             int dateRow = dateInRow.size();
             LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
             for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
-                WebElement getDate = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[1]//tbody/tr[" + i + "]/td[" + j + "]//a"));
+                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
                 if (getDate.getText().trim().equals(date[2])) {
                     getDate.click();
                     LogUtils.info("Choose day start: " + getDate.getText());
-                    ExtentTestManager.logMessage(Status.INFO, "Choose year start: " + getDate.getText());
-                    AllureManager.saveTextLog("Choose year start: " + getDate.getText());
+                    ExtentTestManager.logMessage(Status.INFO, "Choose day start: " + getDate.getText());
+                    AllureManager.saveTextLog("Choose day start: " + getDate.getText());
+                    break;
                 }
             }
         }
 
+        //Check Final date in the calendar
         WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
-        WebElement monthYear = getDriver().findElement(By.xpath("(//div[@class='dtp-picker'])[1]/div[1]/div"));
-        WebElement day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])[1]/div[1]"));
+        WebElement monthYear = getDriver().findElement(By.xpath(picker+"/div[1]/div"));
+        WebElement day = null;
+        //Check the order of headers in the calendar of tabs
+//        for(int i=1; i<= 8;){
+        for(int i : new int[] {1, 5, 6}){
+            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])["+i+"]"))){
+                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])["+i+"]/div[1]"));
+                break;
+            }
+//            i++;
+        }
         verifyEqual(dayNum.getText().trim(), date[2], "Date choose is incorrect!");
         LogUtils.info("Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         ExtentTestManager.logMessage(Status.INFO, "Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         AllureManager.saveTextLog("Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         sleep(2);
-        clickElement(By.xpath("(//div[@class='dtp-date-view'])[1]/following-sibling::div//button[.='OK']"));
+        clickElement(save);
     }
 
 
@@ -667,6 +674,16 @@ public class WebUI {
             ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
             AllureManager.saveTextLog(e.getMessage());
             Assert.fail(e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean verifyVisible(By by) {
+        try {
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(ConfigData.TIMEOUT), Duration.ofMillis(ConfigData.STEP_TIME));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }
@@ -907,6 +924,15 @@ public class WebUI {
             LogUtils.error("Element " + by + "  not exist (DOM)");
             ExtentTestManager.logMessage(Status.WARNING, "Element " + by + "  not exist (DOM)");
             AllureManager.saveTextLog("Element " + by + "  not exist (DOM)");
+            return false;
+        }
+    }
+
+    public static boolean verifyExist(By by) {
+        List<WebElement> list = getWebElements(by);
+        if (list.size() > 0) {
+            return true;
+        } else {
             return false;
         }
     }

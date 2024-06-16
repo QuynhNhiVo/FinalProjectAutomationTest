@@ -1,7 +1,6 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import projectHRM.pages.LoginPage;
 
