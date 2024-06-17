@@ -1,9 +1,9 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
-import constants.ConfigData;
 import dataprovider.DataProviderClients;
-import helpers.ExcelHelpers;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import projectHRM.pages.DashboardPage;
 import projectHRM.pages.LoginPage;
@@ -52,40 +52,39 @@ public class ManageClientsTest extends BaseTest {
     }
 
     @Test
-    public void TC_DeleteClient() {
+    @Parameters({"row"})
+    public void TC_DeleteClient(@Optional("1") int row) {
         loginPage.loginAdminHRM()
             .goManageClients()
-            .deleteClient(5);
+            .deleteClient(row);
     }
 
     @Test
-    public void TC_FlowVerifyFunctionClient() {
+    @Parameters({"row"})
+    public void TC_FlowVerifyFunctionClient(@Optional("1") int row) {
         loginPage.loginAdminHRM()
             .goManageClients()
-            .addClient(1)
-            .editClient(1)
-            .searchClient(1)
-            .verifyDataClient(1);
+            .addClient(row)
+            .editClient(row)
+            .searchClient(row)
+            .verifyDataClient(row);
     }
 
     @Test(dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
     public void TC_FlowVerifyFunctionClients(Hashtable<String, String> data) {
-        ExcelHelpers excelHelpers = new ExcelHelpers();
-        excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
         loginPage.loginAdminHRM()
             .goManageClients()
-            .addClients(data)
-            .searchClients(data)
-            .editClients(data);
+            .addClient(data)
+            .editClient(data)
+            .searchClient(data)
+            .verifyDataClient(data);
     }
 
-    @Test(dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
+    @Test(dataProvider = "data_delete_clients", dataProviderClass = DataProviderClients.class)
     public void TC_FlowDeleteClients(Hashtable<String, String> data) {
-        ExcelHelpers excelHelpers = new ExcelHelpers();
-        excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "CLients");
         loginPage.loginAdminHRM()
             .goManageClients()
-            .deleteClients(data);
+            .deleteClient(data);
     }
 
 }

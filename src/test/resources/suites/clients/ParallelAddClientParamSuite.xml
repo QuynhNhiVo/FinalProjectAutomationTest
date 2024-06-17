@@ -1,0 +1,27 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite Client" verbose="1" parallel="tests">
+
+    <test name="Add Client With Parameter 1">
+        <parameter name="row" value="1"></parameter>
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_FlowVerifyFunctionClient"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Add Client With Parameter 9">
+        <parameter name="row" value="9"></parameter>
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_FlowVerifyFunctionClient"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

@@ -1,0 +1,27 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite Client" verbose="1">
+
+    <test name="Delete Client With Parameter 5" parallel="methods">
+        <parameter name="row" value="5"></parameter>
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_DeleteClient"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Delete Client With Parameter 2" parallel="methods">
+        <parameter name="row" value="2"></parameter>
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_DeleteClient"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

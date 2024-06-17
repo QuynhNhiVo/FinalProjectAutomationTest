@@ -1,12 +1,12 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Parallel Suite Client" verbose="1">
+<suite name="Suite Client" verbose="1" parallel="tests">
 
-    <test name="Manage Clients Test Parallel" parallel="methods">
+    <test name="Add Client DataProvider">
         <classes>
             <class name="projectHRM.testcases.ManageClientsTest">
                 <methods>
-                    <exclude name="TC_FlowVerifyFunctionClients"></exclude>
+                    <include name="TC_FlowVerifyFunctionClient"/>
                 </methods>
             </class>
         </classes>

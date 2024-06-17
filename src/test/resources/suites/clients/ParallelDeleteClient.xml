@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite Client" verbose="1" parallel="tests">
+
+    <test name="Delete Client DataProvider">
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_FlowDeleteClients"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

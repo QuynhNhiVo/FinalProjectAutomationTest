@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite Client" verbose="1">
+
+    <test name="Manage Clients Flow Test">
+        <classes>
+            <class name="projectHRM.testcases.TestClientFunctionFlow">
+                <methods>
+                    <include name="TC_ClientsFunctionFlow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

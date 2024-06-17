@@ -158,6 +158,7 @@ public class WebUI {
     public static void clearSetText(By by, String text) {
         waitForElementVisible(by);
         getWebElement(by).clear();
+        sleep(1);
         getWebElement(by).sendKeys(text);
         LogUtils.info("Clear placeholder and Set text on Element: " + by + " - Text: " + text);
         ExtentTestManager.logMessage(Status.INFO, "Clear placeholder and Set text on Element: " + by + " - Text: " + text);

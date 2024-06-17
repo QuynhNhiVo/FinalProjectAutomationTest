@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+import java.util.Hashtable;
+
 import static keywords.WebUI.*;
 
 public class LoginPage extends CommonPage{
@@ -24,7 +26,6 @@ public class LoginPage extends CommonPage{
     private By paragraph = By.xpath("//p[@class='text-muted']");
     private By alertInvaid = By.xpath("//div[@class='toast-message']");
 
-
     private final ExcelHelpers excelHelpers;
 
     public LoginPage(){
@@ -33,7 +34,6 @@ public class LoginPage extends CommonPage{
     }
 
     private void verifyLoginPage(){
-        verifyElementVisible(headline);
         verifyContain(getTextElement(headline), textHeadline);
         verifyEqual(getTextElement(paragraph), tParagraph);
         verifyEqual(getTitlePage(), title, "The title of sign in page not match.");
@@ -41,6 +41,7 @@ public class LoginPage extends CommonPage{
         verifyEqual(getAttributeElement(ipPassword, "placeholder"), plhPass, "Placeholder of the password field not match");
     }
 
+    //Sheet Login
     public DashboardPage loginAdminHRM(){
         openURL(ConfigData.URL);
         verifyLoginPage();
@@ -51,6 +52,7 @@ public class LoginPage extends CommonPage{
         return new DashboardPage();
     }
 
+    //Sheet Login
     @Parameters({"row"})
     public DashboardPage loginClientHRM(@Optional("2") int row){
         openURL(ConfigData.URL);
@@ -58,11 +60,22 @@ public class LoginPage extends CommonPage{
         setText(ipUsername, excelHelpers.getCellData("USERNAME", row));
         setText(ipPassword, excelHelpers.getCellData("PASSWORD", row));
         clickElement(buttonLogin);
-        waiForPageLoad(10);
+        sleep(4);
         return new DashboardPage();
     }
 
-    public DashboardPage loginClientIvlUser(@Optional("2") int row){
+    //Sheet Client dataProvider
+    public DashboardPage loginClientHRM(Hashtable<String, String> data){
+        openURL(ConfigData.URL);
+        verifyLoginPage();
+        setText(ipUsername, data.get("USERNAME"));
+        setText(ipPassword, data.get("PASSWORD"));
+        clickElement(buttonLogin);
+        sleep(4);
+        return new DashboardPage();
+    }
+
+    public DashboardPage loginClientInvlUser(@Optional("2") int row){
         openURL(ConfigData.URL);
         verifyLoginPage();
         setText(ipUsername, excelHelpers.getCellData("USWRONG", row));
@@ -73,7 +86,7 @@ public class LoginPage extends CommonPage{
         return new DashboardPage();
     }
 
-    public DashboardPage loginClientIvlPass(@Optional("2") int row){
+    public DashboardPage loginClientInvlPass(@Optional("2") int row){
         openURL(ConfigData.URL);
         verifyLoginPage();
         setText(ipUsername, excelHelpers.getCellData("USERNAME", row));

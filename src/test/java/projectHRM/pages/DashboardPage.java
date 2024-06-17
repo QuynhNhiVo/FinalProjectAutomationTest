@@ -9,13 +9,14 @@ public class DashboardPage extends CommonPage{
 
     private By navigationBars = By.xpath("//ul[@class='pc-navbar']");
 
-    public DashboardPage verifyDashboardPage(){
-        sleep(3);
+    public DashboardPage verifyDashboardPage() {
+        waiForPageLoad();
+        sleep(2);
         softAssertContain(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);
         endAssert();
         verifyElementVisible(navigationBars);
         getTextListElement(navigationBars);
-        return this;}
-
+        return this;
+    }
 }

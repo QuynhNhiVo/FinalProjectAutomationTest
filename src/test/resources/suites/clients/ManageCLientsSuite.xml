@@ -1,0 +1,25 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite Client" verbose="1">
+
+    <test name="Manage Clients Test" parallel="tests">
+        <classes>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_FlowVerifyFunctionClients"/>
+                </methods>
+            </class>
+            <class name="projectHRM.testcases.LoginTest">
+                <methods>
+                    <include name="TC_LoginClientsSuccess"/>
+                </methods>
+            </class>
+            <class name="projectHRM.testcases.ManageClientsTest">
+                <methods>
+                    <include name="TC_FlowDeleteClients"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
