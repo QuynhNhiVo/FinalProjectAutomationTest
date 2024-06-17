@@ -114,7 +114,6 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    @Parameters({"row"})
     public ProjectsPage addNewProject(@Optional("1") int row){
         clickElement(buttonAddNew);
         setText(inputTitle, excelHelpers.getCellData("TITLE",row));
@@ -151,7 +150,6 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    @Parameters({"row"})
     public ProjectsPage verifyResults(int row){
         search(row);
         verifyRecordAndPagination(2, excelHelpers.getCellData("CLIENT",row));
@@ -164,19 +162,18 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    @Parameters({"row"})
-    public ProjectsPage addTask(@Optional("1") int row){
+    public ProjectsPage addTask(int row){
         getDetail();
         getTabTask();
-        verifyContain(getTextElement(headingDetail), excelHelpers.getCellData("TITLE",row), "This not the project page detail!");
+        verifyContain(getTextElement(headingDetail), excelHelpers.getCellData("PROJECT",row), "This not the project page detail!");
         clickElement(buttonAddTasks);
-        setText(inputTitleTasks, excelHelpersTask.getCellData("TITLE",row));
-        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE",row).split(", "), saveStartTasks);
-        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE",row).split(", "), saveEndTasks);
-        setText(inputHourTasks, excelHelpersTask.getCellData("HOUR",row));
-        setText(inputSmrTasks, excelHelpersTask.getCellData("SUMMARY",row));
+        setText(inputTitleTasks, excelHelpersTask.getCellData("TITLE_TASK",row));
+        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE_TASK",row).split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE_TASK",row).split(", "), saveEndTasks);
+        setText(inputHourTasks, excelHelpersTask.getCellData("HOUR_TASK",row));
+        setText(inputSmrTasks, excelHelpersTask.getCellData("SUMMARY_TASK",row));
         goIframe(iframeTask);
-        setText(inputDescription, excelHelpersTask.getCellData("DESCRIPTION",row));
+        setText(inputDescription, excelHelpersTask.getCellData("DESCRIPTION_TASK",row));
         exitIframe();
         sleep(1);
         clickElement(saveTasks);
@@ -186,27 +183,27 @@ public class ProjectsPage extends CommonPage {
     }
 
     public ProjectsPage addTask(Hashtable<String, String> data){
-        setText(inputSearch, data.get("CLIENT"));
+        setText(inputSearch, data.get("CLIENT_TASK"));
         sleep(2);
         getDetail();
         getTabTask();
         verifyContain(getTextElement(headingDetail), data.get("PROJECT"), "This not the project page detail!");
         clickElement(buttonAddTasks);
-        setText(inputTitleTasks, data.get("TITLE"));
-        getStartDate(inputStartTasks, data.get("START_DATE").split(", "), saveStartTasks);
-        getEndDate(inputEndTasks, data.get("END_DATE").split(", "), saveEndTasks);
-        setText(inputHourTasks, data.get("HOUR"));
-        setText(inputSmrTasks, data.get("SUMMARY"));
+        setText(inputTitleTasks, data.get("TITLE_TASK"));
+        getStartDate(inputStartTasks, data.get("START_DATE_TASK").split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, data.get("END_DATE_TASK").split(", "), saveEndTasks);
+        setText(inputHourTasks, data.get("HOUR_TASK"));
+        setText(inputSmrTasks, data.get("SUMMARY_TASK"));
         goIframe(iframeTask);
-        setText(inputDescription, data.get("DESCRIPTION"));
+        setText(inputDescription, data.get("DESCRIPTION_TASK"));
         exitIframe();
         sleep(2);
         clickElement(saveTasks);
         verifyEqual(getTextElement(messageAdd), textTaskAdd, "Not show correct alert");
+        sleep(4);
         return this;
     }
 
-    @Parameters({"row"})
     public ProjectsPage addAttachFiles(int row){
         getTabAttach();
         uploadFileSendKey(uploadFiles, excelHelpersTask.getCellData("ATTACH", row));
@@ -227,7 +224,6 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    @Parameters({"row"})
     public ProjectsPage updateStatus(int row){
         waiForPageLoad();
         chooseStatus(excelHelpersTask.getCellData("STATUS", row));
@@ -241,6 +237,7 @@ public class ProjectsPage extends CommonPage {
         chooseStatus(data.get("STATUS"));
         clickElement(buttonStatus);
         verifyEqual(getTextElement(messageAdd), textStatus,"Not show correct alert");
+        sleep(5);
         return this;
     }
 }

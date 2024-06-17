@@ -1,0 +1,27 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite Client" verbose="1" parallel="tests">
+
+    <test name="Test Case Add Project Param">
+        <parameter name="row" value="3"/>
+        <classes>
+            <class name="projectHRM.testcases.ProjectsPageTest">
+                <methods>
+                    <include name="TC_AddTask_Attach_Status"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Test Case Add Project">
+        <parameter name="row" value="4"/>
+        <classes>
+            <class name="projectHRM.testcases.ProjectsPageTest">
+                <methods>
+                    <include name="TC_AddTask_Attach_Status"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

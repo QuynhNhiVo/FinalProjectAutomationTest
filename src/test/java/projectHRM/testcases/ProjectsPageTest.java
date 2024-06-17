@@ -2,6 +2,8 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderProjects;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import projectHRM.pages.DashboardPage;
 import projectHRM.pages.LoginPage;
@@ -26,17 +28,21 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
-    public void TC_AddTask(){
+    @Parameters({"row"})
+    public void TC_AddNewProject(@Optional("1") int row){
         loginPage.loginAdminHRM()
             .goProjects()
-            .addTask(3);
+            .verifyProjectsPage()
+            .addNewProject(row)
+            .verifyResults(row);
     }
 
-    @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
-    public void TC_AddTasks(Hashtable<String, String> data){
+    @Test(dataProvider = "data_add_projects", dataProviderClass = DataProviderProjects.class)
+    public void TC_AddNewProject(Hashtable<String, String> data){
         loginPage.loginAdminHRM()
             .goProjects()
-            .addTask(data);
+            .verifyProjectsPage()
+            .addNewProject(data);
     }
 
     @Test
@@ -49,19 +55,21 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
-    public void TC_AddProject(){
+    @Parameters({"row"})
+    public void TC_AddTask_Attach_Status(@Optional("6") int row){
         loginPage.loginAdminHRM()
             .goProjects()
-            .verifyProjectsPage()
-            .addNewProject(3);
+            .search(row)
+            .addTask(row)
+            .addAttachFiles(row)
+            .updateStatus(row);
     }
 
-    @Test(dataProvider = "data_add_projects", dataProviderClass = DataProviderProjects.class)
-    public void TC_AddProjects(Hashtable<String, String> data){
+    @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
+    public void TC_AddTasks(Hashtable<String, String> data){
         loginPage.loginAdminHRM()
             .goProjects()
-            .verifyProjectsPage()
-            .addNewProject(data);
+            .addTask(data);
     }
 
     @Test
