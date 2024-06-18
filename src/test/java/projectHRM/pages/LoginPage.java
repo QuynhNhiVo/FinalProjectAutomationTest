@@ -27,10 +27,13 @@ public class LoginPage extends CommonPage{
     private By alertInvaid = By.xpath("//div[@class='toast-message']");
 
     private final ExcelHelpers excelHelpers;
+    private final ExcelHelpers excelHelpersCLient;
 
     public LoginPage(){
         this.excelHelpers = new ExcelHelpers();
         this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Login");
+        this.excelHelpersCLient = new ExcelHelpers();
+        this.excelHelpersCLient.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Clients");
     }
 
     private void verifyLoginPage(){
@@ -57,8 +60,8 @@ public class LoginPage extends CommonPage{
     public DashboardPage loginClientHRM( int row){
         openURL(ConfigData.URL);
         verifyLoginPage();
-        setText(ipUsername, excelHelpers.getCellData("USERNAME", row));
-        setText(ipPassword, excelHelpers.getCellData("PASSWORD", row));
+        setText(ipUsername, excelHelpersCLient.getCellData("USERNAME", row));
+        setText(ipPassword, excelHelpersCLient.getCellData("PASSWORD", row));
         clickElement(buttonLogin);
         sleep(4);
         return new DashboardPage();

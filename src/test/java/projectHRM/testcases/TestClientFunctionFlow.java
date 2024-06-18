@@ -21,23 +21,23 @@ public class TestClientFunctionFlow extends BaseTest {
     }
 
     @Test
-    @Parameters({"login", "client"})
-    public void TC_ClientFunctionFlow(@Optional("8") int lg, @Optional("7") int cli){
+    @Parameters({"row"})
+    public void TC_ClientFunctionFlowSpecified(@Optional("8") int row){
         loginPage.loginAdminHRM()
             .verifyDashboardPage()
             .goManageClients()
-            .addClient(7)
-            .searchClient(7)
-            .editClient(7)
-            .searchClient(7)
-            .verifyDataClient(7)
+            .addClient(row)//Add Client
+            .searchClient(row)
+            .editClient(row)//Edit Client
+            .searchClient(row)
+            .verifyDataClient(row)
             .logOut()
-            .loginClientHRM( 8)
+            .loginClientHRM( row)//Login With Client
             .verifyDashboardPage()
             .logOut()
             .loginAdminHRM()
             .goManageClients()
-            .deleteClient(7)
+            .deleteClient(row)//Delete Client
             .logOut();
     }
 

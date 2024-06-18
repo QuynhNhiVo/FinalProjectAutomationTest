@@ -4,7 +4,7 @@
 
 <!--    Add Project and Task-->
     <test name="Project Task Flow Test">
-        <parameter name="row" value="5"></parameter>
+        <parameter name="row" value="1"></parameter>
         <classes>
             <class name="projectHRM.testcases.TestProjectFunctionFlow">
                 <methods>
@@ -14,7 +14,7 @@
         </classes>
     </test>
 
-<!--    Only add Project-->
+    Only add Project
     <test name="Project Task Flow Test">
         <classes>
             <class name="projectHRM.testcases.TestProjectFunctionFlow">

@@ -54,7 +54,7 @@ public class ProjectsPage extends CommonPage {
     private By inputSmrTasks = By.xpath("//textarea[@id='summary']");
     private By iframeTask = By.xpath("(//td[@class='k-editable-area'][1])[4]/iframe");
     private By saveTasks = By.xpath("//form[@id='add_task']//button[@type='submit']");
-    private By messageAdd = By.xpath("//div[@class='toast-message']");
+    private By message = By.xpath("//div[@class='toast-message']");
 
     private By buttonDelete = By.xpath("//tbody/tr[1]/td[1]/div/span[contains(@data-original-title,'Delete')]");
     private By confirmDel = By.xpath("//span[normalize-space()='Confirm']");
@@ -82,12 +82,6 @@ public class ProjectsPage extends CommonPage {
         sleep(2);
     }
 
-    private void getTabEdit(){
-        waiForPageLoad();
-        clickElement(tabEdit);
-        sleep(2);
-    }
-
     private void getTabTask(){
         waiForPageLoad();
         clickElement(tabTasks);
@@ -98,6 +92,12 @@ public class ProjectsPage extends CommonPage {
         waiForPageLoad();
         clickElement(tabAttach);
         sleep(2);
+    }
+
+    public ProjectsPage getTabEdit(){
+        waiForPageLoad();
+        clickElement(tabEdit);
+        return this;
     }
 
     public ProjectsPage search(int row){
@@ -174,7 +174,17 @@ public class ProjectsPage extends CommonPage {
         clickElement(buttonDelete);
         sleep(1);
         clickElement(confirmDel);
-        verifyEqual(getTextElement(messageAdd), textDelProj, "Not show correct message");
+        verifyEqual(getTextElement(message), textDelProj, "Not show correct message");
+        sleep(5);
+        return this;
+    }
+
+    public ProjectsPage deleteProject(Hashtable<String, String> data){
+        clearSetText(inputSearch, data.get("CLIENT"));
+        clickElement(buttonDelete);
+        sleep(1);
+        clickElement(confirmDel);
+        verifyEqual(getTextElement(message), textDelProj, "Not show correct message");
         sleep(5);
         return this;
     }
@@ -182,41 +192,41 @@ public class ProjectsPage extends CommonPage {
     public ProjectsPage addTask(int row){
         getDetail();
         getTabTask();
-        verifyContain(getTextElement(headingDetail), excelHelpers.getCellData("PROJECT",row), "This not the project page detail!");
+        verifyContain(getTextElement(headingDetail), excelHelpers.getCellData("TITLE",row), "This not the project page detail!");
         clickElement(buttonAddTasks);
-        setText(inputTitleTasks, excelHelpersTask.getCellData("TITLE_TASK",row));
-        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE_TASK",row).split(", "), saveStartTasks);
-        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE_TASK",row).split(", "), saveEndTasks);
-        setText(inputHourTasks, excelHelpersTask.getCellData("HOUR_TASK",row));
-        setText(inputSmrTasks, excelHelpersTask.getCellData("SUMMARY_TASK",row));
+        setText(inputTitleTasks, excelHelpersTask.getCellData("TITLE",row));
+        getStartDate(inputStartTasks, excelHelpersTask.getCellData("START_DATE",row).split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, excelHelpersTask.getCellData("END_DATE",row).split(", "), saveEndTasks);
+        setText(inputHourTasks, excelHelpersTask.getCellData("HOUR",row));
+        setText(inputSmrTasks, excelHelpersTask.getCellData("SUMMARY",row));
         goIframe(iframeTask);
-        setText(inputDescription, excelHelpersTask.getCellData("DESCRIPTION_TASK",row));
+        setText(inputDescription, excelHelpersTask.getCellData("DESCRIPTION",row));
         exitIframe();
         sleep(1);
         clickElement(saveTasks);
-        verifyEqual(getTextElement(messageAdd), textTaskAdd, "Not show correct alert");
+        verifyEqual(getTextElement(message), textTaskAdd, "Not show correct alert");
         sleep(2);
         return this;
     }
 
     public ProjectsPage addTask(Hashtable<String, String> data){
-        setText(inputSearch, data.get("CLIENT_TASK"));
+        setText(inputSearch, data.get("CLIENT"));
         sleep(2);
         getDetail();
         getTabTask();
         verifyContain(getTextElement(headingDetail), data.get("PROJECT"), "This not the project page detail!");
         clickElement(buttonAddTasks);
-        setText(inputTitleTasks, data.get("TITLE_TASK"));
-        getStartDate(inputStartTasks, data.get("START_DATE_TASK").split(", "), saveStartTasks);
-        getEndDate(inputEndTasks, data.get("END_DATE_TASK").split(", "), saveEndTasks);
-        setText(inputHourTasks, data.get("HOUR_TASK"));
-        setText(inputSmrTasks, data.get("SUMMARY_TASK"));
+        setText(inputTitleTasks, data.get("TITLE"));
+        getStartDate(inputStartTasks, data.get("START_DATE").split(", "), saveStartTasks);
+        getEndDate(inputEndTasks, data.get("END_DATE").split(", "), saveEndTasks);
+        setText(inputHourTasks, data.get("HOUR"));
+        setText(inputSmrTasks, data.get("SUMMARY"));
         goIframe(iframeTask);
-        setText(inputDescription, data.get("DESCRIPTION_TASK"));
+        setText(inputDescription, data.get("DESCRIPTION"));
         exitIframe();
         sleep(2);
         clickElement(saveTasks);
-        verifyEqual(getTextElement(messageAdd), textTaskAdd, "Not show correct alert");
+        verifyEqual(getTextElement(message), textTaskAdd, "Not show correct alert");
         sleep(4);
         return this;
     }
@@ -226,7 +236,7 @@ public class ProjectsPage extends CommonPage {
         uploadFileSendKey(uploadFiles, excelHelpersTask.getCellData("ATTACH", row));
         setText(inputTitleAt,  excelHelpersTask.getCellData("TITLE_FILE", row));
         clickElement(buttonAddFile);
-        verifyEqual(getTextElement(messageAdd), textUpFile,"Not show correct alert");
+        verifyEqual(getTextElement(message), textUpFile,"Not show correct alert");
         sleep(4);
         return this;
     }
@@ -236,7 +246,7 @@ public class ProjectsPage extends CommonPage {
         uploadFileSendKey(uploadFiles, data.get("ATTACH"));
         setText(inputTitleAt,  data.get("TITLE_FILE"));
         clickElement(buttonAddFile);
-        verifyEqual(getTextElement(messageAdd), textUpFile,"Not show correct alert");
+        verifyEqual(getTextElement(message), textUpFile,"Not show correct alert");
         sleep(4);
         return this;
     }
@@ -245,7 +255,7 @@ public class ProjectsPage extends CommonPage {
         waiForPageLoad();
         chooseStatus(excelHelpersTask.getCellData("STATUS", row));
         clickElement(buttonStatus);
-        verifyEqual(getTextElement(messageAdd), textStatus,"Not show correct alert");
+        verifyEqual(getTextElement(message), textStatus,"Not show correct alert");
         return this;
     }
 
@@ -253,7 +263,7 @@ public class ProjectsPage extends CommonPage {
         waiForPageLoad();
         chooseStatus(data.get("STATUS"));
         clickElement(buttonStatus);
-        verifyEqual(getTextElement(messageAdd), textStatus,"Not show correct alert");
+        verifyEqual(getTextElement(message), textStatus,"Not show correct alert");
         sleep(5);
         return this;
     }
