@@ -5,9 +5,7 @@ import static keywords.WebUI.*;
 import constants.ConfigData;
 import helpers.ExcelHelpers;
 import org.openqa.selenium.By;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 
 import java.util.Hashtable;
 
@@ -18,6 +16,7 @@ public class ProjectsPage extends CommonPage {
     private String textTaskAdd = "Task added.";
     private String textUpFile = "Project file added.";
     private String textStatus = "Project status updated.";
+    private String textDelProj = "Project deleted.";
 
     private By headingProjects = By.xpath("//h5[contains(text(),'List All')]");
     private By buttonAddNew = By.xpath("//h5[contains(text(),'List All')]/following-sibling::div/a[normalize-space()='Add New']");
@@ -42,7 +41,6 @@ public class ProjectsPage extends CommonPage {
     private By firstResult = By.xpath("//tbody/tr[1]/td[1]");
     private By inputSearch = By.xpath("//input[@class='form-control form-control-sm']");
     private By buttonDetail = By.xpath("//tbody/tr[1]/td[1]/div/span[contains(@data-original-title,'View Details')]");
-    private By buttonDelete = By.xpath("//tbody/tr[1]/td[1]/div/span[contains(@data-original-title,'Delete')]");
     private By headingDetail = By.xpath("//h5[contains(text(),'Project :')]");
     private By tabTasks = By.xpath("//a[@id='pills-tasks-tab']");
     private By headingTasks = By.xpath("//h5[normalize-space()='List All Tasks']");
@@ -58,8 +56,11 @@ public class ProjectsPage extends CommonPage {
     private By saveTasks = By.xpath("//form[@id='add_task']//button[@type='submit']");
     private By messageAdd = By.xpath("//div[@class='toast-message']");
 
-    private By buttonStatus = By.xpath("//span[normalize-space()='Update Status']");
+    private By buttonDelete = By.xpath("//tbody/tr[1]/td[1]/div/span[contains(@data-original-title,'Delete')]");
+    private By confirmDel = By.xpath("//span[normalize-space()='Confirm']");
 
+    private By buttonStatus = By.xpath("//span[normalize-space()='Update Status']");
+    private By tabEdit = By.xpath("//a[@id='pills-edit-tab']");
     private By tabAttach = By.xpath("//a[@id='pills-files-tab']");
     private By uploadFiles = By.xpath("//input[@id='attachment_file']");
     private By inputTitleAt = By.xpath("//input[@name='file_name']");
@@ -78,6 +79,12 @@ public class ProjectsPage extends CommonPage {
     private void getDetail(){
         waiForPageLoad();
         clickElement(buttonDetail);
+        sleep(2);
+    }
+
+    private void getTabEdit(){
+        waiForPageLoad();
+        clickElement(tabEdit);
         sleep(2);
     }
 
@@ -159,6 +166,16 @@ public class ProjectsPage extends CommonPage {
     public ProjectsPage verifyResults(Hashtable<String, String> data){
         search(data);
         verifyRecordAndPagination(2, data.get("CLIENT"));
+        return this;
+    }
+
+    public ProjectsPage deleteProject(int row){
+        search(row);
+        clickElement(buttonDelete);
+        sleep(1);
+        clickElement(confirmDel);
+        verifyEqual(getTextElement(messageAdd), textDelProj, "Not show correct message");
+        sleep(5);
         return this;
     }
 

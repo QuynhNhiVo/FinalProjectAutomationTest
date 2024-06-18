@@ -112,7 +112,7 @@ public class ManageClientsPage extends CommonPage{
         setText(inputState, excelHelpers.getCellData("STATE", row));
         setText(inputZip, excelHelpers.getCellData("ZIPCODE", row));
         clickElement(buttonSaveIf);
-        verifyEqual(getTextElement(messEdit), textAlertEdit, "Not show correct alert");
+        verifyEqual(getTextElement(messEdit), textAlertEdit, "Not show correct message");
         goToPreviousPage();
         return this;
     }
@@ -130,7 +130,7 @@ public class ManageClientsPage extends CommonPage{
         setText(inputState, data.get("STATE"));
         setText(inputZip, data.get("ZIPCODE"));
         clickElement(buttonSaveIf);
-        verifyEqual(getTextElement(messEdit), textAlertEdit, "Not show correct alert");
+        verifyEqual(getTextElement(messEdit), textAlertEdit, "Not show correct message");
         goToPreviousPage();
         return this;
     }

@@ -2,6 +2,8 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderClients;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import projectHRM.pages.LoginPage;
 
@@ -20,8 +22,9 @@ public class LoginTest extends BaseTest {
     }
 
     @Test
-    public void TC_LoginClientSuccess(){
-        loginPage.loginClientHRM(3)
+    @Parameters({"row"})
+    public void TC_LoginClientSuccess(@Optional("2") int row){
+        loginPage.loginClientHRM(row)
             .verifyDashboardPage()
             .logOut();
     }
@@ -34,12 +37,14 @@ public class LoginTest extends BaseTest {
     }
 
     @Test
-    public void TC_LoginClientWithInvalidUsername(){
-        loginPage.loginClientInvlUser(2);
+    @Parameters({"row"})
+    public void TC_LoginClientWithInvalidUsername(@Optional("2") int row){
+        loginPage.loginClientInvlUser(row);
     }
 
     @Test
-    public void TC_LoginClientWithInvalidPassword(){
-        loginPage.loginClientInvlPass(2);
+    @Parameters({"row"})
+    public void TC_LoginClientWithInvalidPassword(@Optional("2") int row){
+        loginPage.loginClientInvlPass(row);
     }
 }

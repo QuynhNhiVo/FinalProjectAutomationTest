@@ -53,8 +53,8 @@ public class LoginPage extends CommonPage{
     }
 
     //Sheet Login
-    @Parameters({"row"})
-    public DashboardPage loginClientHRM(@Optional("2") int row){
+
+    public DashboardPage loginClientHRM( int row){
         openURL(ConfigData.URL);
         verifyLoginPage();
         setText(ipUsername, excelHelpers.getCellData("USERNAME", row));
@@ -75,7 +75,7 @@ public class LoginPage extends CommonPage{
         return new DashboardPage();
     }
 
-    public DashboardPage loginClientInvlUser(@Optional("2") int row){
+    public DashboardPage loginClientInvlUser(int row){
         openURL(ConfigData.URL);
         verifyLoginPage();
         setText(ipUsername, excelHelpers.getCellData("USWRONG", row));

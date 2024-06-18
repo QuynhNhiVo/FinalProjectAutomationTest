@@ -18,9 +18,10 @@ public class TestProjectFunctionFlow extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_ProjectFunctionFlow(@Optional("1") int row){
+    public void TC_Project_TaskFunctionFlow(@Optional("1") int row){
         loginPage.loginAdminHRM()
             .goProjects()
+            .verifyProjectsPage()
             .addNewProject(row)
             .verifyResults(row)
             .addTask(row)
@@ -38,12 +39,15 @@ public class TestProjectFunctionFlow extends BaseTest {
     }
 
     @Test(dataProvider = ("data_add_tasks"), dataProviderClass = DataProviderProjects.class)
-    public void TC_TasksFunctionFlow(Hashtable<String, String> data){
+    public void TC_FlowAddTask_Attach_UpdateStatus(Hashtable<String, String> data){
         loginPage.loginAdminHRM()
             .goProjects()
+            .verifyProjectsPage()
+            .search(data)
             .addTask(data)
             .addAttachFiles(data)
             .updateStatus(data)
             .logOut();
     }
+
 }

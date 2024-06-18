@@ -29,7 +29,7 @@ public class ProjectsPageTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_AddNewProject(@Optional("1") int row){
+    public void TC_AddNewProjectSpecified(@Optional("1") int row){
         loginPage.loginAdminHRM()
             .goProjects()
             .verifyProjectsPage()
@@ -46,23 +46,20 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
+    @Parameters({"row"})
+    public void TC_DeleteProject(@Optional("1") int row){
+        loginPage.loginAdminHRM()
+            .goProjects()
+            .deleteProject(row);
+    }
+
+    @Test
     public void TC_AddAttachUpdateStatus(){
         loginPage.loginAdminHRM()
             .goProjects()
             .search(1)
             .addAttachFiles(1)
             .updateStatus(1);
-    }
-
-    @Test
-    @Parameters({"row"})
-    public void TC_AddTask_Attach_Status(@Optional("6") int row){
-        loginPage.loginAdminHRM()
-            .goProjects()
-            .search(row)
-            .addTask(row)
-            .addAttachFiles(row)
-            .updateStatus(row);
     }
 
     @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
@@ -73,23 +70,22 @@ public class ProjectsPageTest extends BaseTest {
     }
 
     @Test
-    public void TC_FlowAddTaskAddAttachUpdateStatus(){
+    @Parameters({"row"})
+    public void TC_AddTaskAddAttachUpdateStatusSpecified(@Optional("1") int row){
         loginPage.loginAdminHRM()
             .goProjects()
-            .verifyProjectsPage()
-            .addNewProject(3)
-            .verifyResults(3)
-            .addTask(3)
-            .addAttachFiles(3)
-            .updateStatus(3);
+            .search(row)
+            .addTask(row)
+            .addAttachFiles(row)
+            .updateStatus(row);
     }
 
     @Test(dataProvider = "data_add_tasks", dataProviderClass = DataProviderProjects.class)
-    public void TC_FlowAddTaskAddAttachUpdateStatus(Hashtable<String, String> data){
+    public void TC_AddTaskAddAttachUpdateStatus(Hashtable<String, String> data){
         loginPage.loginAdminHRM()
             .goProjects()
             .addTask(data)
-            .addAttachFiles(3)
-            .updateStatus(3);
+            .addAttachFiles(data)
+            .updateStatus(data);
     }
 }

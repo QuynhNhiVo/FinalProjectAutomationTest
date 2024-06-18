@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite Project" verbose="1">
+
+    <test name="Task Flow Test">
+        <classes>
+            <class name="projectHRM.testcases.TestProjectFunctionFlow">
+                <methods>
+                    <include name="TC_FlowAddTask_Attach_UpdateStatus"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

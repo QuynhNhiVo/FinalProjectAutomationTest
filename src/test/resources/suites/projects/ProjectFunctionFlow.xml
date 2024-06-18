@@ -1,0 +1,28 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Parallel Suite Project" verbose="1">
+
+<!--    Add Project and Task-->
+    <test name="Project Task Flow Test">
+        <parameter name="row" value="5"></parameter>
+        <classes>
+            <class name="projectHRM.testcases.TestProjectFunctionFlow">
+                <methods>
+                    <include name="TC_Project_TaskFunctionFlow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+<!--    Only add Project-->
+    <test name="Project Task Flow Test">
+        <classes>
+            <class name="projectHRM.testcases.TestProjectFunctionFlow">
+                <methods>
+                    <include name="TC_ProjectsFunctionFlow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

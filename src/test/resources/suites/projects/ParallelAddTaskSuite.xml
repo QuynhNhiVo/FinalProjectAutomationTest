@@ -2,23 +2,34 @@
 
 <suite name="Parallel Suite Client" verbose="1" parallel="tests">
 
-    <test name="Test Case Add Project Param">
+    <test name="Test Case Add Task Param">
         <parameter name="row" value="3"/>
         <classes>
             <class name="projectHRM.testcases.ProjectsPageTest">
                 <methods>
-                    <include name="TC_AddTask_Attach_Status"/>
+                    <include name="TC_AddTaskAddAttachUpdateStatusSpecified"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Test Case Add Project">
+    <test name="Test Case Add Task">
         <parameter name="row" value="4"/>
         <classes>
             <class name="projectHRM.testcases.ProjectsPageTest">
                 <methods>
-                    <include name="TC_AddTask_Attach_Status"/>
+                    <include name="TC_AddTaskAddAttachUpdateStatusSpecified"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Test Case Add Tasks">
+        <parameter name="row" value="4"/>
+        <classes>
+            <class name="projectHRM.testcases.ProjectsPageTest">
+                <methods>
+                    <include name="TC_AddTaskAddAttachUpdateStatus"/>
                 </methods>
             </class>
         </classes>
