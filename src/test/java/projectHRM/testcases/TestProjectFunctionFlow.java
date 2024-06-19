@@ -2,6 +2,7 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderProjects;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -16,7 +17,8 @@ public class TestProjectFunctionFlow extends BaseTest {
     DashboardPage dashboardPage;
     ProjectsPage projectsPage;
 
-    public TestProjectFunctionFlow(){
+    @BeforeMethod
+    public void initData(){
         loginPage = new LoginPage();
     }
 
@@ -56,8 +58,8 @@ public class TestProjectFunctionFlow extends BaseTest {
             .goProjects()
             .verifyProjectsPage()
             .search(data)
-            .getTabEdit()
             .addTask(data)
+            .getTabEdit()
             .addAttachFiles(data)
             .updateStatus(data)
             .goTasks()

@@ -2,6 +2,7 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderProjects;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -16,7 +17,8 @@ public class ProjectsPageTest extends BaseTest {
     DashboardPage dashboardPage;
     ProjectsPage projectsPage;
 
-    public ProjectsPageTest(){
+    @BeforeMethod
+    public void initData(){
         loginPage = new LoginPage();
     }
 

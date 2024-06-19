@@ -2,6 +2,7 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderClients;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -11,7 +12,9 @@ import java.util.Hashtable;
 
 public class LoginTest extends BaseTest {
     LoginPage loginPage;
-    public LoginTest(){
+
+    @BeforeMethod
+    public void initData(){
         loginPage = new LoginPage();
     }
 
@@ -23,7 +26,7 @@ public class LoginTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_LoginClientSuccess(@Optional("2") int row){
+ public void TC_LoginClientSuccess(@Optional("4") int row){
         loginPage.loginClientHRM(row)
             .verifyDashboardPage()
             .logOut();

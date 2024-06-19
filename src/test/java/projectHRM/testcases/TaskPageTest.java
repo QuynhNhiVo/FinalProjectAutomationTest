@@ -1,6 +1,7 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -9,7 +10,8 @@ import projectHRM.pages.LoginPage;
 public class TaskPageTest extends BaseTest {
     LoginPage loginPage;
 
-    public TaskPageTest(){
+    @BeforeMethod
+    public void initData(){
         loginPage = new LoginPage();
     }
 

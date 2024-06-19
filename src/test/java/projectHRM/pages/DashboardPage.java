@@ -11,7 +11,7 @@ public class DashboardPage extends CommonPage{
 
     public DashboardPage verifyDashboardPage() {
         waiForPageLoad();
-        sleep(2);
+        sleep(4);
         softAssertContain(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);
         endAssert();

@@ -18,7 +18,7 @@ public class DriverManager {
     public static void quit(){
         if(DriverManager.driver.get()!=null) {
             DriverManager.driver.get().quit();
-//            driver.remove();
+            driver.remove();
         }
     }
 }

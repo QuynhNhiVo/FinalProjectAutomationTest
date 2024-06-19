@@ -478,95 +478,6 @@ public class WebUI {
         AllureManager.saveTextLog("Choose status: " + status);
     }
 
-    @Step("Set the element {0} end date {1}")
-    public static void getEndDate(By by,  String[] date, By save) {
-        clickElement(by);
-        //Choose Month/////////////////////////////////////////////////
-        String start = "(//div[@class='dtp-date'])[2]";
-        String presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
-        //Get default month
-        LogUtils.info("Present Month: " + presentMonth);
-        while (!presentMonth.trim().toLowerCase().equals(date[0].trim().toLowerCase())) {
-            getDriver().findElement(By.xpath(start + "/div[1]/div[@class='left center p10']")).click();
-            presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
-        }
-        LogUtils.info("Choose month end: " + presentMonth);
-        ExtentTestManager.logMessage(Status.INFO, "Choose month end: " + presentMonth);
-        AllureManager.saveTextLog("Choose month end: " + presentMonth);
-        sleep(2);
-
-        //Choose Year/////////////////////////////////////////////////
-        String presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
-        //Get default year
-        LogUtils.info("Present year: " + presentYear);
-        while (!date[1].equals(presentYear.trim())) {
-            if (Integer.parseInt(date[1]) < Integer.parseInt(presentYear.trim())) {
-                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='left center p10']")).click();
-            } else if (Integer.parseInt(date[1]) > Integer.parseInt(presentYear.trim())) {
-                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='right center p10']")).click();
-            }
-            presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
-        }
-        LogUtils.info("Choose year end: " + presentYear);
-        ExtentTestManager.logMessage(Status.INFO, "Choose year end: " + presentYear);
-        AllureManager.saveTextLog("Choose year end: " + presentYear);
-        sleep(2);
-
-        //Choose Day/////////////////////////////////////////////////
-        String picker="";
-        //Check the order of element picker in the calendar of tabs
-//        for(int i = 1; i<=8;){
-        for(int i : new int[] {1, 2, 5, 6}){
-            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
-                picker = "(//div[@class='dtp-picker'])["+i+"]";
-                break;
-            }
-        }
-        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
-        int totalDate = listDate.size();
-        int row = totalDate / 7;
-        int add = totalDate % 7;
-        if (add > 0) {
-            row = row + 1;
-        }
-        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
-
-        for (int i = 2; i <= row + 1; i++) {
-            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
-            int dateRow = dateInRow.size();
-            LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
-            for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
-                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
-                if (getDate.getText().trim().equals(date[2])) {
-                    getDate.click();
-                    LogUtils.info("Choose day start: " + getDate.getText());
-                    ExtentTestManager.logMessage(Status.INFO, "Choose day start: " + getDate.getText());
-                    AllureManager.saveTextLog("Choose day start: " + getDate.getText());
-                    break;
-                }
-            }
-        }
-
-//        WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
-//        WebElement monthYear = getDriver().findElement(By.xpath(picker+"/div[1]/div"));
-//        WebElement day = null;
-//        //Check the order of headers in the calendar of tabs
-////        for(int i=1; i<= 8;){
-//        for(int i : new int[] {1, 5, 6}){
-//            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])["+i+"]"))){
-//                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])["+i+"]/div[1]"));
-//                break;
-//            }
-////            i++;
-//        }
-//        verifyEqual(dayNum.getText().trim(), date[2], "Date choose is incorrect!");
-//        LogUtils.info("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
-//        ExtentTestManager.logMessage(Status.INFO, "End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
-//        AllureManager.saveTextLog("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
-        sleep(2);
-        clickElement(save);
-    }
-
     @Step("Set the element {0} start date {1}")
     public static void getStartDate(By by, String[] date, By save) {
         clickElement(by);
@@ -605,7 +516,7 @@ public class WebUI {
         String picker="";
         //Check the order of element picker in the calendar of tabs
 //        for(int i = 1; i<=8;){
-        for(int i : new int[] {1, 5, 6}){
+        for(int i : new int[] {1, 5}){
             if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
                 picker = "(//div[@class='dtp-picker'])["+i+"]";
                 break;
@@ -655,6 +566,95 @@ public class WebUI {
         LogUtils.info("Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         ExtentTestManager.logMessage(Status.INFO, "Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         AllureManager.saveTextLog("Start Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+        sleep(2);
+        clickElement(save);
+    }
+
+    @Step("Set the element {0} end date {1}")
+    public static void getEndDate(By by,  String[] date, By save) {
+        clickElement(by);
+        //Choose Month/////////////////////////////////////////////////
+        String start = "(//div[@class='dtp-date'])[2]";
+        String presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
+        //Get default month
+        LogUtils.info("Present Month: " + presentMonth);
+        while (!presentMonth.trim().toLowerCase().equals(date[0].trim().toLowerCase())) {
+            getDriver().findElement(By.xpath(start + "/div[1]/div[@class='left center p10']")).click();
+            presentMonth = getDriver().findElement(By.xpath(start + "/div[1]/div[@class='dtp-actual-month p80']")).getText();
+        }
+        LogUtils.info("Choose month end: " + presentMonth);
+        ExtentTestManager.logMessage(Status.INFO, "Choose month end: " + presentMonth);
+        AllureManager.saveTextLog("Choose month end: " + presentMonth);
+        sleep(2);
+
+        //Choose Year/////////////////////////////////////////////////
+        String presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
+        //Get default year
+        LogUtils.info("Present year: " + presentYear);
+        while (!date[1].equals(presentYear.trim())) {
+            if (Integer.parseInt(date[1]) < Integer.parseInt(presentYear.trim())) {
+                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='left center p10']")).click();
+            } else if (Integer.parseInt(date[1]) > Integer.parseInt(presentYear.trim())) {
+                getDriver().findElement(By.xpath(start + "/div[3]/div[@class='right center p10']")).click();
+            }
+            presentYear = getDriver().findElement(By.xpath(start + "/div[3]/div[@class='dtp-actual-year p80']")).getText();
+        }
+        LogUtils.info("Choose year end: " + presentYear);
+        ExtentTestManager.logMessage(Status.INFO, "Choose year end: " + presentYear);
+        AllureManager.saveTextLog("Choose year end: " + presentYear);
+        sleep(2);
+
+        //Choose Day/////////////////////////////////////////////////
+        String picker="";
+        //Check the order of element picker in the calendar of tabs
+//        for(int i = 1; i<=8;){
+        for(int i : new int[] {2, 6}){
+            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
+                picker = "(//div[@class='dtp-picker'])["+i+"]";
+                break;
+            }
+        }
+        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
+        int totalDate = listDate.size();
+        int row = totalDate / 7;
+        int add = totalDate % 7;
+        if (add > 0) {
+            row = row + 1;
+        }
+        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
+
+        for (int i = 2; i <= row + 1; i++) {
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
+            int dateRow = dateInRow.size();
+            LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
+            for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
+                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
+                if (getDate.getText().trim().equals(date[2])) {
+                    getDate.click();
+                    LogUtils.info("Choose day start: " + getDate.getText());
+                    ExtentTestManager.logMessage(Status.INFO, "Choose day start: " + getDate.getText());
+                    AllureManager.saveTextLog("Choose day start: " + getDate.getText());
+                    break;
+                }
+            }
+        }
+
+//        WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
+//        WebElement monthYear = getDriver().findElement(By.xpath(picker+"/div[1]/div"));
+//        WebElement day = null;
+//        //Check the order of headers in the calendar of tabs
+////        for(int i=1; i<= 8;){
+//        for(int i : new int[] {1, 5, 6}){
+//            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])["+i+"]"))){
+//                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])["+i+"]/div[1]"));
+//                break;
+//            }
+////            i++;
+//        }
+//        verifyEqual(dayNum.getText().trim(), date[2], "Date choose is incorrect!");
+//        LogUtils.info("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+//        ExtentTestManager.logMessage(Status.INFO, "End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
+//        AllureManager.saveTextLog("End Day: " + day.getText() + " " + dayNum.getText() + " " + monthYear.getText());
         sleep(2);
         clickElement(save);
     }
