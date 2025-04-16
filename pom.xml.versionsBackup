@@ -12,21 +12,6 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <selenium.version>4.31.0</selenium.version>
-        <testng.version>7.11.0</testng.version>
-        <poi.version>5.4.1</poi.version>
-        <poi-ooxml.version>5.4.1</poi-ooxml.version>
-        <commons-io.version>2.19.0</commons-io.version>
-        <log4j-core.version>2.24.3</log4j-core.version>
-        <log4j-api.version>2.24.3</log4j-api.version>
-        <slf4j-api.version>2.0.17</slf4j-api.version>
-        <slf4j-simple.version>2.0.17</slf4j-simple.version>
-        <monte-screen-recorder.version>0.7.7.0</monte-screen-recorder.version>
-        <extentreports.version>5.1.2</extentreports.version>
-        <allure-testng.version>2.29.1</allure-testng.version>
-        <allure-attachments.version>2.29.1</allure-attachments.version>
-        <aspectjweaver.version>1.9.24</aspectjweaver.version>
-        <lombok.version>1.18.38</lombok.version>
     </properties>
 
     <dependencies>
@@ -35,105 +20,105 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
+            <version>4.28.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
+            <version>7.10.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
+            <version>5.3.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>${poi-ooxml.version}</version>
+            <version>5.3.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <version>2.18.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${log4j-core.version}</version>
+            <version>2.24.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>${log4j-api.version}</version>
+            <version>2.24.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
+            <version>2.0.16</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j-simple.version}</version>
+            <version>2.0.16</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.stephenc.monte/monte-screen-recorder -->
         <dependency>
             <groupId>com.github.stephenc.monte</groupId>
             <artifactId>monte-screen-recorder</artifactId>
-            <version>${monte-screen-recorder.version}</version>
+            <version>0.7.7.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>${extentreports.version}</version>
+            <version>5.1.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
-            <version>${allure-testng.version}</version>
+            <version>2.29.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-attachments -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-attachments</artifactId>
-            <version>${allure-attachments.version}</version>
+            <version>2.29.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>${aspectjweaver.version}</version>
+            <version>1.9.22.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
+            <version>1.18.36</version>
         </dependency>
 
     </dependencies>
@@ -144,13 +129,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.3</version>
+                    <version>3.2.5</version>
                     <configuration>
                         <suiteXmlFiles>
                             <!--                            <suiteXmlFile>suites/ </suiteXmlFile>-->
                         </suiteXmlFiles>
                         <argLine>
-                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.24/aspectjweaver-1.9.24.jar"
+                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.22.1/aspectjweaver-1.9.22.1.jar"
                         </argLine>
                         <testFailureIgnore>true</testFailureIgnore>
                         <systemPropertyVariables>

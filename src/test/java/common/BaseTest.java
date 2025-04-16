@@ -13,6 +13,9 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
 import utils.LogUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Listeners(TestListener.class)
 public class BaseTest {
 
@@ -50,6 +53,8 @@ public class BaseTest {
     private WebDriver initChromeBrowser(){
         WebDriver driver;
         ChromeOptions options = new ChromeOptions();
+        // Block notifications
+        options.addArguments("--incognito");
         if (ConfigData.HEADLESS.equals("true")){
             LogUtils.info("Launching Chrome (Headless).......");
             options.addArguments("--headless");

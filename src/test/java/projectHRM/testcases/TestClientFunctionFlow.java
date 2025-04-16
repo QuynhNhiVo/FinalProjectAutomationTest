@@ -25,7 +25,8 @@ public class TestClientFunctionFlow extends BaseTest {
     @Test
     @Parameters({"row"})
     public void TC_ClientFunctionFlowSpecified(@Optional("8") int row){
-        loginPage.loginAdminHRM()
+        loginPage
+                .loginAdminHRM()
             .verifyDashboardPage()
             .goManageClients()
             .addClient(row)//Add Client
@@ -36,7 +37,7 @@ public class TestClientFunctionFlow extends BaseTest {
             .logOut()
             .loginClientHRM( row)//Login With Client
             .verifyDashboardPage()
-            .logOut()
+            .logoutClient()
             .loginAdminHRM()
             .goManageClients()
             .deleteClient(row)//Delete Client

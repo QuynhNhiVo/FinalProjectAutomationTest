@@ -26,7 +26,7 @@ public class LoginTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
- public void TC_LoginClientSuccess(@Optional("4") int row){
+ public void TC_LoginClientSuccess(@Optional("8") int row){
         loginPage.loginClientHRM(row)
             .verifyDashboardPage()
             .logOut();

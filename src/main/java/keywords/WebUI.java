@@ -19,6 +19,7 @@ import reports.AllureManager;
 import reports.ExtentTestManager;
 import utils.LogUtils;
 
+import javax.security.auth.kerberos.KeyTab;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
@@ -91,7 +92,7 @@ public class WebUI {
     @Step("Set text : {1} For Element: {0} ")
     public static void setText(By by, String text) {
         waitForElementVisible(by);
-        getWebElement(by).sendKeys(text);
+        getWebElement(by).sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
         LogUtils.info("Set text:" + text + " - For Element: " + by);
         ExtentTestManager.logMessage(Status.INFO, "Set text:" + text + " - For Element: " + by);
         AllureManager.saveTextLog("Set text:" + text + " - For Element: " + by);
@@ -208,7 +209,7 @@ public class WebUI {
     }
 
     @Step("Exit iframe")
-    public static void exitIframe(){
+    public static void exitIframe() {
         getDriver().switchTo().parentFrame();
     }
 
@@ -231,7 +232,7 @@ public class WebUI {
     }
 
 
-    ////HANDLE PAGE/////////////////////////////////////////////////////////////////////////
+    /// /HANDLE PAGE/////////////////////////////////////////////////////////////////////////
     @Step("Select with {1} option: {2} of element {0}")
     public static void handleDropdown(By button, By by, String type, String[] option) {
         clickElement(button);
@@ -243,7 +244,7 @@ public class WebUI {
                     select.selectByVisibleText(option[i]);
                     break;
                 case "value":
-                    String id = getDriver().findElement(By.xpath("(//label[@for='client_id']/following-sibling::select)//option[normalize-space()='" + option[i] +"']")).getAttribute("value");
+                    String id = getDriver().findElement(By.xpath("(//label[@for='client_id']/following-sibling::select)//option[normalize-space()='" + option[i] + "']")).getAttribute("value");
                     select.selectByValue(id);
                     break;
                 case "index":
@@ -260,7 +261,7 @@ public class WebUI {
         clickElement(button);
     }
 
-    public static void sendKeysDropdown(By button, By by){
+    public static void sendKeysDropdown(By button, By by) {
         clickElement(button);
         Select select = new Select(getWebElement(by));
         waiForPageLoad();
@@ -513,18 +514,18 @@ public class WebUI {
         sleep(2);
 
         //Choose Day/////////////////////////////////////////////////
-        String picker="";
+        String picker = "";
         //Check the order of element picker in the calendar of tabs
 //        for(int i = 1; i<=8;){
-        for(int i : new int[] {1, 5}){
-            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
-                picker = "(//div[@class='dtp-picker'])["+i+"]";
+        for (int i : new int[]{1, 5}) {
+            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])[" + i + "]"))) {
+                picker = "(//div[@class='dtp-picker'])[" + i + "]";
                 break;
             }
 //            i++;
         }
         LogUtils.info("picker = " + picker);
-        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
+        List<WebElement> listDate = getDriver().findElements(By.xpath(picker + "//tbody/tr/td/a"));
         int totalDate = listDate.size();
         int row = totalDate / 7;
         int add = totalDate % 7;
@@ -534,11 +535,11 @@ public class WebUI {
 //        LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
 
         for (int i = 2; i <= row + 1; i++) {
-            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker + "//tbody/tr[" + i + "]/td"));
             int dateRow = dateInRow.size();
             LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
             for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
-                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
+                WebElement getDate = getDriver().findElement(By.xpath(picker + "//tbody/tr[" + i + "]/td[" + j + "]"));
                 if (getDate.getText().trim().equals(date[2])) {
                     getDate.click();
                     LogUtils.info("Choose day start: " + getDate.getText());
@@ -551,13 +552,13 @@ public class WebUI {
 
         //Check Final date in the calendar
         WebElement dayNum = getDriver().findElement(By.xpath(start + "/div[2]"));
-        WebElement monthYear = getDriver().findElement(By.xpath(picker+"/div[1]/div"));
+        WebElement monthYear = getDriver().findElement(By.xpath(picker + "/div[1]/div"));
         WebElement day = null;
         //Check the order of headers in the calendar of tabs
 //        for(int i=1; i<= 8;){
-        for(int i : new int[] {1, 5, 6}){
-            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])["+i+"]"))){
-                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])["+i+"]/div[1]"));
+        for (int i : new int[]{1, 5, 6}) {
+            if (verifyVisible(By.xpath("(//header[@class='dtp-header'])[" + i + "]"))) {
+                day = getDriver().findElement(By.xpath("(//header[@class='dtp-header'])[" + i + "]/div[1]"));
                 break;
             }
 //            i++;
@@ -571,7 +572,7 @@ public class WebUI {
     }
 
     @Step("Set the element {0} end date {1}")
-    public static void getEndDate(By by,  String[] date, By save) {
+    public static void getEndDate(By by, String[] date, By save) {
         clickElement(by);
         //Choose Month/////////////////////////////////////////////////
         String start = "(//div[@class='dtp-date'])[2]";
@@ -605,16 +606,16 @@ public class WebUI {
         sleep(2);
 
         //Choose Day/////////////////////////////////////////////////
-        String picker="";
+        String picker = "";
         //Check the order of element picker in the calendar of tabs
 //        for(int i = 1; i<=8;){
-        for(int i : new int[] {2, 6}){
-            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])["+i+"]"))){
-                picker = "(//div[@class='dtp-picker'])["+i+"]";
+        for (int i : new int[]{2, 6}) {
+            if (verifyVisible(By.xpath("(//div[@class='dtp-picker'])[" + i + "]"))) {
+                picker = "(//div[@class='dtp-picker'])[" + i + "]";
                 break;
             }
         }
-        List<WebElement> listDate = getDriver().findElements(By.xpath(picker+"//tbody/tr/td/a"));
+        List<WebElement> listDate = getDriver().findElements(By.xpath(picker + "//tbody/tr/td/a"));
         int totalDate = listDate.size();
         int row = totalDate / 7;
         int add = totalDate % 7;
@@ -624,11 +625,11 @@ public class WebUI {
         LogUtils.info("Have: " + totalDate + " date and: " + row + " week.");
 
         for (int i = 2; i <= row + 1; i++) {
-            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker+"//tbody/tr[" + i + "]/td"));
+            List<WebElement> dateInRow = getDriver().findElements(By.xpath(picker + "//tbody/tr[" + i + "]/td"));
             int dateRow = dateInRow.size();
             LogUtils.info("Week " + (i - 1) + " have " + dateRow + " date.");
             for (int j = (7 - dateRow + 1); j <= dateRow; j++) {
-                WebElement getDate = getDriver().findElement(By.xpath(picker+"//tbody/tr[" + i + "]/td[" + j + "]"));
+                WebElement getDate = getDriver().findElement(By.xpath(picker + "//tbody/tr[" + i + "]/td[" + j + "]"));
                 if (getDate.getText().trim().equals(date[2])) {
                     getDate.click();
                     LogUtils.info("Choose day start: " + getDate.getText());
@@ -659,8 +660,35 @@ public class WebUI {
         clickElement(save);
     }
 
+    public static void checkErrorNavigate() {
+//        boolean check = verifyContain(getWebElements(By.xpath("//h1[normalize-space()='Whoops!'")).toString().toLowerCase().toLowerCase(), "whoops!");
+//        if (check) {
+//            refreshPage();
+//        }
+        try {
+            List<WebElement> headers = getWebElements(By.tagName("h1"));
+            for (WebElement h1 : headers) {
+                String text = h1.getText().trim().toLowerCase();
+                if (text.contains("whoops!")) {
+                    System.out.println("Error page detected. Refreshing...");
+                    refreshPage();
+                    return; // After refresh, exit this method. Your main test will continue.
+                }
+            }
+            // No error found, continue
+            System.out.println("No error page found. Continuing test...");
+        } catch (Exception e) {
+            System.out.println("Exception during error check: " + e.getMessage());
+            // Continue anyway even if there's an exception
+        }
+    }
 
-    ////VERIFY///////////////////////////////////////////////////////////////////////////////
+    private static void refreshPage() {
+        getDriver().navigate().refresh();
+    }
+
+
+    /// /VERIFY///////////////////////////////////////////////////////////////////////////////
     @Step("Verify visible of element {0}")
     public static boolean verifyElementVisible(By by) {
         try {
@@ -1057,7 +1085,7 @@ public class WebUI {
     }
 
 
-    ////WAIT///////////////////////////////////////////////////////////////////////////////
+    /// /WAIT///////////////////////////////////////////////////////////////////////////////
     public static void waiForPageLoad() {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(ConfigData.PAGE_LOAD_TIMEOUT), Duration.ofMillis(ConfigData.STEP_TIME));
         JavascriptExecutor js = (JavascriptExecutor) getDriver();

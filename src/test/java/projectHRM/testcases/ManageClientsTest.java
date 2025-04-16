@@ -63,7 +63,7 @@ public class ManageClientsTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_FlowVerifyFunctionClient(@Optional("1") int row) {
+    public void TC_FlowVerifyFunctionClient(@Optional("2") int row) {
         loginPage.loginAdminHRM()
             .goManageClients()
             .addClient(row)
