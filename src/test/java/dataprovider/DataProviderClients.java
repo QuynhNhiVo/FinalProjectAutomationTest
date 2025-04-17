@@ -14,7 +14,7 @@ public class DataProviderClients {
     public Object[][] dataClients(){
         ExcelHelpers excelHelpers = new ExcelHelpers();
         LogUtils.info("Open file excel: " + SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL);
-        Object[][] data = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Clients", 4, 6);
+        Object[][] data = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Clients", 1, 5);
         return data;
     }
 

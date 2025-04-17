@@ -31,7 +31,7 @@ public class ProjectsPageTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_AddNewProjectSpecified(@Optional("1") int row){
+    public void TC_AddNewProjectSpecified(@Optional("2") int row){
         loginPage.loginAdminHRM()
             .goProjects()
             .verifyProjectsPage()
@@ -49,7 +49,7 @@ public class ProjectsPageTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_DeleteProject(@Optional("1") int row){
+    public void TC_DeleteProject(@Optional("2") int row){
         loginPage.loginAdminHRM()
             .goProjects()
             .deleteProject(row);
@@ -73,7 +73,7 @@ public class ProjectsPageTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_AddTaskAddAttachUpdateStatusSpecified(@Optional("1") int row){
+    public void TC_AddTaskAddAttachUpdateStatusSpecified(@Optional("2") int row){
         loginPage.loginAdminHRM()
             .goProjects()
             .search(row)

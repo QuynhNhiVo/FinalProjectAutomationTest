@@ -10,7 +10,7 @@ public class DashboardPage extends CommonPage{
     private By navigationBars = By.xpath("//ul[@class='pc-navbar']");
 
     public DashboardPage verifyDashboardPage() {
-        waiForPageLoad();
+        waiForPageLoad(4);
         sleep(4);
         softAssertContain(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);

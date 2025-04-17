@@ -101,14 +101,12 @@ public class ProjectsPage extends CommonPage {
     }
 
     public ProjectsPage search(int row){
-        goProjects();
         clearSetText(inputSearch, excelHelpers.getCellData("CLIENT",row));
         sleep(2);
         return this;
     }
 
     public ProjectsPage search(Hashtable<String, String> data){
-        goProjects();
         clearSetText(inputSearch, data.get("CLIENT"));
         sleep(2);
         return this;
@@ -118,6 +116,7 @@ public class ProjectsPage extends CommonPage {
         softAssertContain(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);
         softAssertEqual(getTextElement(headingProjects), textHeadProject);
+        endAssert();
         return this;
     }
 

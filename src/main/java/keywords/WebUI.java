@@ -90,7 +90,7 @@ public class WebUI {
             }
 
             //Check Error Navigate
-            for (int i = 0; i <= 3; i++) {
+            for (int i = 1; i <= 3; i++) {
                 try {
                     String text = getWebElement(By.xpath("//h1[1]")).getText().toLowerCase().trim();
                     if (text.contains("whoops!")) {
@@ -101,7 +101,7 @@ public class WebUI {
                         LogUtils.warn(i + " 🔃 Reload Page");
                         ExtentTestManager.logMessage(Status.WARNING, i + " 🔃 Reload Page");
                         AllureManager.saveTextLog(i + " 🔃 Reload Page");
-                        sleep(1000);
+                        sleep(2);
                     } else {
                         js.executeScript("location.reload()");
                         LogUtils.warn("🔃 Reload Page with Javascript");

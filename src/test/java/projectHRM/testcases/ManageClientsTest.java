@@ -55,7 +55,7 @@ public class ManageClientsTest extends BaseTest {
 
     @Test
     @Parameters({"row"})
-    public void TC_DeleteClient(@Optional("1") int row) {
+    public void TC_DeleteClient(@Optional("2") int row) {
         loginPage.loginAdminHRM()
             .goManageClients()
             .deleteClient(row);
