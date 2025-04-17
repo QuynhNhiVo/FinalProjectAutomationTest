@@ -6,6 +6,8 @@ public class ConfigData {
     public static String AUTHOR = PropertiesHelpers.getValue("AUTHOR");
     public static String FRAMEWORK = PropertiesHelpers.getValue("FRAMEWORK");
 
+    public static String DISPLAY = PropertiesHelpers.getValue("DISPLAY");
+
     public static String URL = PropertiesHelpers.getValue("URL");
     public static String USERNAME = PropertiesHelpers.getValue("USERNAME");
     public static String PASSWORD = PropertiesHelpers.getValue("PASSWORD");

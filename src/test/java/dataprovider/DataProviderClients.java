@@ -18,11 +18,11 @@ public class DataProviderClients {
         return data;
     }
 
-    @DataProvider(name = "data_delete_clients", parallel = true)
+    @DataProvider(name = "data_delete_clients", parallel = false)
     public Object[][] dataDelClients(){
         ExcelHelpers excelHelpers = new ExcelHelpers();
         LogUtils.info("Open file excel: " + SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL);
-        Object[][] data = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Clients", 4, 5);
+        Object[][] data = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Clients", 4, 6);
         return data;
     }
 }

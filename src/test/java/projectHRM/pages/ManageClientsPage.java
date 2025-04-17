@@ -36,6 +36,8 @@ public class ManageClientsPage extends CommonPage{
     private By inputUsername  = By.xpath("//input[@name='username']");
     private By inputAttachment  = By.xpath("//input[@name='file']");
     private By buttonSaveAdd = By.xpath("//span[normalize-space()='Save']");
+    private By messSave = By.xpath("");
+    private String getTextSave = "Client added.";
 
     private By buttonStatus= By.xpath("(//label[@for='membership_type']/following-sibling::span)//span//span//b");
     private By dropdownStatus = By.xpath("//select[@name='status']");
@@ -81,6 +83,7 @@ public class ManageClientsPage extends CommonPage{
         setText(inputUsername, excelHelpers.getCellData("USERNAME", row));
         uploadFileSendKey(inputAttachment, excelHelpers.getCellData("ATTACHMENT", row));
         clickElement(buttonSaveAdd);
+        verifyElementVisible(messEdit, getTextSave);
         return this;
     }
 
@@ -96,12 +99,14 @@ public class ManageClientsPage extends CommonPage{
         setText(inputUsername, data.get("USERNAME"));
         uploadFileSendKey(inputAttachment, data.get("ATTACHMENT"));
         clickElement(buttonSaveAdd);
+        verifyElementVisible(messEdit, getTextSave);
         return this;
     }
 
     public ManageClientsPage editClient(int row){
         clearSetText(inputSearch, excelHelpers.getCellData("FIRSTNAME", row));
         sleep(2);
+        verifyRecordAndPagination(1, excelHelpers.getCellData("FIRSTNAME", row));
         clickElement(buttonDetail);
         sleep(2);
         handleDropdown(buttonStatus, dropdownStatus, "text", excelHelpers.getCellData("STATUS", row).split(", "));
@@ -120,6 +125,7 @@ public class ManageClientsPage extends CommonPage{
     public ManageClientsPage editClient(Hashtable<String, String> data){
         clearSetText(inputSearch, data.get("FIRSTNAME"));
         sleep(2);
+        verifyRecordAndPagination(1, data.get("FIRSTNAME"));
         clickElement(buttonDetail);
         sleep(2);
         handleDropdown(buttonStatus, dropdownStatus, "text", data.get("STATUS").split(", "));

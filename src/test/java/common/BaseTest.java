@@ -62,7 +62,8 @@ public class BaseTest {
             LogUtils.info("Launching Chrome.......");
         }
         driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
+//        driver.manage().window().maximize();
+        driver.manage().window().minimize();
         return driver;
     }
 

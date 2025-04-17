@@ -76,16 +76,48 @@ public class WebUI {
         waiForPageLoad();
         Actions actions = new Actions(getDriver());
         actions.moveToElement(getWebElement(by)).perform();
-        if (verifyElementClickable(by)) {
-            getWebElement(by).click();
-            LogUtils.info("Click Element: " + by.toString());
-            ExtentTestManager.logMessage(Status.INFO, "Click Element: " + by.toString());
-            AllureManager.saveTextLog("Click Element: " + by.toString());
-        } else {
-            js.executeScript("arguments[0].click();", getWebElement(by));
-            LogUtils.info("Click element with JavaScript: " + by);
-            ExtentTestManager.logMessage(Status.INFO, "Click Element with JavaScript: " + by.toString());
-            AllureManager.saveTextLog("Click Element with JavaScript: " + by.toString());
+        try {
+            if (verifyElementClickable(by)) {
+                getWebElement(by).click();
+                LogUtils.info("Click Element: " + by.toString());
+                ExtentTestManager.logMessage(Status.INFO, "Click Element: " + by.toString());
+                AllureManager.saveTextLog("Click Element: " + by.toString());
+            } else {
+                js.executeScript("arguments[0].click();", getWebElement(by));
+                LogUtils.info("Click element with JavaScript: " + by);
+                ExtentTestManager.logMessage(Status.INFO, "Click Element with JavaScript: " + by.toString());
+                AllureManager.saveTextLog("Click Element with JavaScript: " + by.toString());
+            }
+
+            //Check Error Navigate
+            for (int i = 0; i <= 3; i++) {
+                try {
+                    String text = getWebElement(By.xpath("//h1[1]")).getText().toLowerCase().trim();
+                    if (text.contains("whoops!")) {
+                        LogUtils.warn("⚠️ " + getWebElement(By.xpath("//h1[1]")).getText());
+                        ExtentTestManager.logMessage(Status.WARNING, "⚠️ " + getWebElement(By.xpath("//h1[1]")).getText());
+                        AllureManager.saveTextLog("⚠️ " + getWebElement(By.xpath("//h1[1]")).getText());
+                        getDriver().navigate().refresh();
+                        LogUtils.warn(i + " 🔃 Reload Page");
+                        ExtentTestManager.logMessage(Status.WARNING, i + " 🔃 Reload Page");
+                        AllureManager.saveTextLog(i + " 🔃 Reload Page");
+                        sleep(1000);
+                    } else {
+                        js.executeScript("location.reload()");
+                        LogUtils.warn("🔃 Reload Page with Javascript");
+                        ExtentTestManager.logMessage(Status.WARNING, "🔃 Reload Page with Javascript");
+                        AllureManager.saveTextLog("🔃 Reload Page with Javascript");
+                        sleep(1000);
+                    }
+                } catch (Exception ignored) {
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            LogUtils.error(e.getMessage());
+            ExtentTestManager.logMessage(Status.WARNING, e.getMessage());
+            AllureManager.saveTextLog(e.getMessage());
         }
     }
 
@@ -660,33 +692,6 @@ public class WebUI {
         clickElement(save);
     }
 
-    public static void checkErrorNavigate() {
-//        boolean check = verifyContain(getWebElements(By.xpath("//h1[normalize-space()='Whoops!'")).toString().toLowerCase().toLowerCase(), "whoops!");
-//        if (check) {
-//            refreshPage();
-//        }
-        try {
-            List<WebElement> headers = getWebElements(By.tagName("h1"));
-            for (WebElement h1 : headers) {
-                String text = h1.getText().trim().toLowerCase();
-                if (text.contains("whoops!")) {
-                    System.out.println("Error page detected. Refreshing...");
-                    refreshPage();
-                    return; // After refresh, exit this method. Your main test will continue.
-                }
-            }
-            // No error found, continue
-            System.out.println("No error page found. Continuing test...");
-        } catch (Exception e) {
-            System.out.println("Exception during error check: " + e.getMessage());
-            // Continue anyway even if there's an exception
-        }
-    }
-
-    private static void refreshPage() {
-        getDriver().navigate().refresh();
-    }
-
 
     /// /VERIFY///////////////////////////////////////////////////////////////////////////////
     @Step("Verify visible of element {0}")
@@ -1082,6 +1087,17 @@ public class WebUI {
 
     public static void endAssert() {
         softAssert.assertAll();
+    }
+
+    @Step("Verify {0} display and click {1}")
+    public static void verifyAndClick(By by, By button){
+        while (!getDriver().findElement(by).isDisplayed()) {
+            waitForElementClickable(button);
+            LogUtils.info(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            ExtentTestManager.logMessage(Status.INFO, getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            AllureManager.saveTextLog(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            clickElement(button);
+        }
     }
 
 
