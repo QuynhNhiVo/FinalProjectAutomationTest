@@ -12,6 +12,7 @@ public class CommonPage {
     private By menuClients = By.xpath("//span[normalize-space()='Manage Clients']");
     private By menuProjects = By.xpath("//span[normalize-space()='Projects']");
     private By menuTasks = By.xpath("//span[normalize-space()='Tasks']");
+    private By menuEmployees = By.xpath("//span[normalize-space()='Employees']");
     private By hamburgerButton = By.xpath("//div[@class='hamburger-inner']");
 
     LoginPage loginPage;
@@ -19,6 +20,7 @@ public class CommonPage {
     ManageClientsPage manageClientsPage;
     ProjectsPage projectsPage;
     TasksPage tasksPage;
+    EmployeesPage employeesPage;
 
     public LoginPage logOut(){
         clickElement(buttonLogout);
@@ -48,6 +50,12 @@ public class CommonPage {
         verifyAndClick(menuTasks, hamburgerButton);
         clickElement(menuTasks);
         return new TasksPage();
+    }
+
+    public EmployeesPage getEmployees(){
+        verifyAndClick(menuEmployees, hamburgerButton);
+        clickElement(menuEmployees);
+        return new EmployeesPage();
     }
 
     public LoginPage getLoginPage(){
@@ -83,5 +91,12 @@ public class CommonPage {
             tasksPage = new TasksPage();
         }
         return tasksPage;
+    }
+
+    public EmployeesPage getEmployeesPage(){
+        if (employeesPage == null) {
+            employeesPage = new EmployeesPage();
+        }
+        return employeesPage;
     }
 }

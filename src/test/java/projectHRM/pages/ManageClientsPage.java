@@ -217,5 +217,7 @@ public class ManageClientsPage extends CommonPage{
         verifyEqual(getTextElement(messConf), textConfirm, "Alert not correct message");
         return this;
     }
+
+
     
 }

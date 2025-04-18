@@ -5,8 +5,6 @@ import constants.ConfigData;
 import drivers.DriverManager;
 import helpers.SystemHelpers;
 import io.qameta.allure.Step;
-import lombok.extern.java.Log;
-import org.apache.commons.math3.analysis.function.Min;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -18,12 +16,9 @@ import org.testng.asserts.SoftAssert;
 import reports.AllureManager;
 import reports.ExtentTestManager;
 import utils.LogUtils;
-
-import javax.security.auth.kerberos.KeyTab;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,6 +141,17 @@ public class WebUI {
         LogUtils.info("Send key:" + keys + " - For Element: " + by);
         ExtentTestManager.logMessage(Status.INFO, "Send key:" + keys + " - For Element: " + by);
         AllureManager.saveTextLog("Send key:" + keys + " - For Element: " + by);
+    }
+
+    @Step("Enter Element: {0}")
+    public static void clickAndEnter(By by) {
+        waiForPageLoad();
+        clickElement(by);
+        Actions actions = new Actions(getDriver());
+        actions.sendKeys(Keys.ENTER).perform();
+        LogUtils.info("Enter Element: " + by);
+        ExtentTestManager.logMessage(Status.INFO, "Enter Element: " + by);
+        AllureManager.saveTextLog("Enter Element: " + by);
     }
 
     @Step("Get text of element {0}")
@@ -464,6 +470,20 @@ public class WebUI {
             if (i < totalpage) {
                 clickElement(By.xpath("//a[normalize-space()='Next']"));
             }
+        }
+    }
+
+    public static void verifyTeam(By result, By firstname, By lastname, int col, String value){
+        getWebElement(result).getText();
+        LogUtils.info("Name Team: " + getWebElement(result).getText());
+        String nameTeam = (getWebElement(firstname).getText() + " " + getWebElement(lastname).getText()).toLowerCase().trim();
+        boolean check = getWebElement(result).getText().toLowerCase().trim().contains(nameTeam);
+        if (check) {
+            LogUtils.info("Team has not been created !!");
+            return;
+        }
+        if (!check) {
+
         }
     }
 
@@ -1085,6 +1105,18 @@ public class WebUI {
         AllureManager.saveTextLog("Assert " + value1 + " -Equals- " + value2);
     }
 
+    public static void softAssertUrl(String value1, String value2){
+        waitForContain(value1);
+        if (softAssert == null) {
+            softAssert = new SoftAssert();
+        }
+        softAssert.assertTrue(value1.contains(value2), value1 + " Not Contain " + value2);
+        LogUtils.info("Assert " + value1 + " -Contain- " + value2);
+        ExtentTestManager.logMessage(Status.INFO, "Assert " + value1 + " -Contain- " + value2);
+        AllureManager.saveTextLog("Assert " + value1 + " -Contain- " + value2);
+
+    }
+
     public static void endAssert() {
         softAssert.assertAll();
     }
@@ -1209,6 +1241,18 @@ public class WebUI {
             Assert.fail("Timeout waiting for the element ready to click. " + e.getMessage());
         }
         return null;
+    }
+
+    public static Boolean waitForContain(String text) {
+        waiForPageLoad();
+        try {
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(ConfigData.TIMEOUT), Duration.ofMillis(ConfigData.STEP_TIME));
+            return wait.until(ExpectedConditions.urlContains(text));
+        } catch (Throwable e) {
+            LogUtils.error("Timeout waiting for subdir of URL. " + e.getMessage());
+            Assert.fail("Timeout waiting for the element ready to click. " + e.getMessage());
+            return false;
+        }
     }
 
     public static void sleep(double time) {
