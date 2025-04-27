@@ -18,7 +18,7 @@ public class EmployeesTest extends BaseTest {
     @Test
     public void TC_AddNewEmployees(){
         loginPage.loginAdminHRM()
-                .getEmployees()
+                .goEmployees()
                 .addNewEmployees(1);
     }
 }

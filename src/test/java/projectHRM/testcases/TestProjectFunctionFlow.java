@@ -28,7 +28,7 @@ public class TestProjectFunctionFlow extends BaseTest {
     @Parameters({"row"})
     public void TC_Project_TaskFunctionFlow(@Optional("9") int row) {
         loginPage.loginAdminHRM()
-                .getEmployees()//Add Team of Project
+                .goEmployees()//Add Team of Project
                 .verifyTeam(row)
                 .goProjects()
                 .verifyProjectsPage()

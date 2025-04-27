@@ -52,7 +52,7 @@ public class CommonPage {
         return new TasksPage();
     }
 
-    public EmployeesPage getEmployees(){
+    public EmployeesPage goEmployees(){
         verifyAndClick(menuEmployees, hamburgerButton);
         clickElement(menuEmployees);
         return new EmployeesPage();
