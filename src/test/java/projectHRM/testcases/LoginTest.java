@@ -14,40 +14,49 @@ public class LoginTest extends BaseTest {
     LoginPage loginPage;
 
     @BeforeMethod
-    public void initData(){
+    public void initData() {
         loginPage = new LoginPage();
     }
 
     @Test
-    public void TC_LoginAdminSuccess(){
+    public void TC_LoginAdminSuccess() {
         loginPage.loginAdminHRM()
-            .verifyDashboardPage();
+                .verifyDashboardPage();
     }
 
     @Test
     @Parameters({"row"})
- public void TC_LoginClientSuccess(@Optional("8") int row){
-        loginPage.loginClientHRM(row)
-            .verifyDashboardPage()
-            .logOut();
+    public void TC_LoginClientSuccess(@Optional("8") int row) {
+        loginPage.loginAdminHRM()
+                .goManageClients()
+                .verifyClientsPage()
+                .addClient(row)
+                .logOut()
+                .loginClientHRM(row)
+                .verifyDashboardPage()
+                .logoutClient();
     }
 
     @Test(dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
-    public void TC_LoginClientsSuccess(Hashtable<String, String> data){
-        loginPage.loginClientHRM(data)
-            .verifyDashboardPage()
-            .logOut();
+    public void TC_LoginClientsSuccess(Hashtable<String, String> data) {
+        loginPage.loginAdminHRM()
+                .goManageClients()
+                .verifyClientsPage()
+                .addClient(data)
+                .logOut().loginClientHRM(data)
+                .verifyDashboardPage()
+                .logOut();
     }
 
     @Test
     @Parameters({"row"})
-    public void TC_LoginClientWithInvalidUsername(@Optional("2") int row){
+    public void TC_LoginClientWithInvalidUsername(@Optional("2") int row) {
         loginPage.loginClientInvlUser(row);
     }
 
     @Test
     @Parameters({"row"})
-    public void TC_LoginClientWithInvalidPassword(@Optional("2") int row){
+    public void TC_LoginClientWithInvalidPassword(@Optional("2") int row) {
         loginPage.loginClientInvlPass(row);
     }
 }

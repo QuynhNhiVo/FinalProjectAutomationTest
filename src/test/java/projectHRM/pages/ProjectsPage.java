@@ -76,7 +76,7 @@ public class ProjectsPage extends CommonPage {
         this.excelHelpersTask.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Tasks");
     }
 
-    private void getDetail(){
+    public void getDetail(){
         waiForPageLoad();
         clickElement(buttonDetail);
         sleep(2);
