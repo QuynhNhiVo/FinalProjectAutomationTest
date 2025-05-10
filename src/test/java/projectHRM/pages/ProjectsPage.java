@@ -17,6 +17,8 @@ public class ProjectsPage extends CommonPage {
     private String textUpFile = "Project file added.";
     private String textStatus = "Project status updated.";
     private String textDelProj = "Project deleted.";
+    private String textConfirm = "Project added.";
+
 
     private By headingProjects = By.xpath("//h5[contains(text(),'List All')]");
     private By buttonAddNew = By.xpath("//h5[contains(text(),'List All')]/following-sibling::div/a[normalize-space()='Add New']");
@@ -65,6 +67,9 @@ public class ProjectsPage extends CommonPage {
     private By uploadFiles = By.xpath("//input[@id='attachment_file']");
     private By inputTitleAt = By.xpath("//input[@name='file_name']");
     private By buttonAddFile = By.xpath("//button[contains(.,'Add File')]");
+    private By buttonConfirm = By.xpath("//span[normalize-space()='Confirm']");
+    private By messConf = By.xpath("//div[@class='toast-message']");
+
 
     private final ExcelHelpers excelHelpers;
     private final ExcelHelpers excelHelpersTask;
@@ -78,7 +83,7 @@ public class ProjectsPage extends CommonPage {
 
     public void getDetail(){
         waiForPageLoad();
-        clickElement(buttonDetail);
+        clickDetailButton(buttonDetail);
         sleep(2);
     }
 
@@ -100,23 +105,17 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    public ProjectsPage search(int row){
-        clearSetText(inputSearch, excelHelpers.getCellData("CLIENT",row));
-        sleep(2);
-        return this;
-    }
-
-    public ProjectsPage search(Hashtable<String, String> data){
-        clearSetText(inputSearch, data.get("CLIENT"));
-        sleep(2);
-        return this;
-    }
-
     public ProjectsPage verifyProjectsPage(){
         softAssertContain(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);
         softAssertEqual(getTextElement(headingProjects), textHeadProject);
         endAssert();
+        return this;
+    }
+
+    public ProjectsPage search(int row){
+        clearSetText(inputSearch, excelHelpers.getCellData("CLIENT",row));
+        sleep(2);
         return this;
     }
 
@@ -135,24 +134,7 @@ public class ProjectsPage extends CommonPage {
         exitIframe();
         clickElement(buttonSave);
         sleep(2);
-        return this;
-    }
-
-    public ProjectsPage addNewProject(Hashtable<String, String> data){
-        clickElement(buttonAddNew);
-        setText(inputTitle, data.get("TITLE"));
-        handleDropdown(buttonClients, dropdownClients, "value", data.get("CLIENT").split(", "));
-        setText(inputHour, data.get("HOUR"));
-        handleDropdown(buttonPriority, dropdownPriority, "text", data.get("PRIORITY").split(", "));
-        getStartDate(inputStartDate, data.get("START_DATE").split(", "), saveStartDate);
-        getEndDate(inputEndDate, data.get("END_DATE").split(", "), saveEndDate);
-        setText(inputSummary, data.get("SUMMARY"));
-        handleDropdown(buttonTeam, dropdownTeam, "text", data.get("TEAM").split(", "));
-        goIframe(iframeAdd);
-        setText(inputDescription, data.get("DESCRIPTION"));
-        exitIframe();
-        clickElement(buttonSave);
-        sleep(2);
+        verifyEqual(getTextElement(messConf), textConfirm, "Alert not correct message");
         return this;
     }
 
@@ -162,24 +144,8 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    public ProjectsPage verifyResults(Hashtable<String, String> data){
-        search(data);
-        verifyRecordAndPagination(2, data.get("CLIENT"));
-        return this;
-    }
-
     public ProjectsPage deleteProject(int row){
         search(row);
-        clickElement(buttonDelete);
-        sleep(1);
-        clickElement(confirmDel);
-        verifyEqual(getTextElement(message), textDelProj, "Not show correct message");
-        sleep(5);
-        return this;
-    }
-
-    public ProjectsPage deleteProject(Hashtable<String, String> data){
-        clearSetText(inputSearch, data.get("CLIENT"));
         clickElement(buttonDelete);
         sleep(1);
         clickElement(confirmDel);
@@ -208,9 +174,68 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    public ProjectsPage addTask(Hashtable<String, String> data){
-        setText(inputSearch, data.get("CLIENT"));
+    public ProjectsPage addAttachFiles(int row){
+        getDetail();
+        getTabAttach();
+        uploadFileSendKey(uploadFiles, excelHelpersTask.getCellData("ATTACH", row));
+        setText(inputTitleAt,  excelHelpersTask.getCellData("TITLE_FILE", row));
+        clickElement(buttonAddFile);
+        verifyEqual(getTextElement(message), textUpFile,"Not show correct alert");
+        sleep(4);
+        return this;
+    }
+
+    public ProjectsPage updateStatus(int row){
+        waiForPageLoad();
+        chooseStatus(excelHelpersTask.getCellData("STATUS", row));
+        clickElement(buttonStatus);
+        verifyEqual(getTextElement(message), textStatus,"Not show correct alert");
+        return this;
+    }
+
+    public ProjectsPage search(Hashtable<String, String> data){
+        clearSetText(inputSearch, data.get("CLIENT"));
         sleep(2);
+        return this;
+    }
+
+    public ProjectsPage addNewProject(Hashtable<String, String> data){
+        clickElement(buttonAddNew);
+        setText(inputTitle, data.get("TITLE"));
+        handleDropdown(buttonClients, dropdownClients, "value", data.get("CLIENT").split(", "));
+        setText(inputHour, data.get("HOUR"));
+        handleDropdown(buttonPriority, dropdownPriority, "text", data.get("PRIORITY").split(", "));
+        getStartDate(inputStartDate, data.get("START_DATE").split(", "), saveStartDate);
+        getEndDate(inputEndDate, data.get("END_DATE").split(", "), saveEndDate);
+        setText(inputSummary, data.get("SUMMARY"));
+        handleDropdown(buttonTeam, dropdownTeam, "text", data.get("TEAM").split(", "));
+        goIframe(iframeAdd);
+        setText(inputDescription, data.get("DESCRIPTION"));
+        exitIframe();
+        clickElement(buttonSave);
+        sleep(2);
+        verifyEqual(getTextElement(messConf), textConfirm, "Alert not correct message");
+
+        return this;
+    }
+
+    public ProjectsPage verifyResults(Hashtable<String, String> data){
+        search(data);
+        verifyRecordAndPagination(2, data.get("CLIENT"));
+        return this;
+    }
+
+    public ProjectsPage deleteProject(Hashtable<String, String> data){
+        clearSetText(inputSearch, data.get("CLIENT"));
+        clickElement(buttonDelete);
+        sleep(1);
+        clickElement(confirmDel);
+        verifyEqual(getTextElement(message), textDelProj, "Not show correct message");
+        sleep(5);
+        return this;
+    }
+
+    public ProjectsPage addTask(Hashtable<String, String> data){
         getDetail();
         getTabTask();
         verifyContain(getTextElement(headingDetail), data.get("PROJECT"), "This not the project page detail!");
@@ -230,16 +255,6 @@ public class ProjectsPage extends CommonPage {
         return this;
     }
 
-    public ProjectsPage addAttachFiles(int row){
-        getTabAttach();
-        uploadFileSendKey(uploadFiles, excelHelpersTask.getCellData("ATTACH", row));
-        setText(inputTitleAt,  excelHelpersTask.getCellData("TITLE_FILE", row));
-        clickElement(buttonAddFile);
-        verifyEqual(getTextElement(message), textUpFile,"Not show correct alert");
-        sleep(4);
-        return this;
-    }
-
     public ProjectsPage addAttachFiles(Hashtable<String, String> data){
         getTabAttach();
         uploadFileSendKey(uploadFiles, data.get("ATTACH"));
@@ -247,14 +262,6 @@ public class ProjectsPage extends CommonPage {
         clickElement(buttonAddFile);
         verifyEqual(getTextElement(message), textUpFile,"Not show correct alert");
         sleep(4);
-        return this;
-    }
-
-    public ProjectsPage updateStatus(int row){
-        waiForPageLoad();
-        chooseStatus(excelHelpersTask.getCellData("STATUS", row));
-        clickElement(buttonStatus);
-        verifyEqual(getTextElement(message), textStatus,"Not show correct alert");
         return this;
     }
 

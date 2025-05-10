@@ -2,35 +2,42 @@ package projectHRM.testcases;
 
 import common.BaseTest;
 import dataprovider.DataProviderCombine;
-import dataprovider.DataProviderProjects;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import projectHRM.pages.DashboardPage;
-import projectHRM.pages.EmployeesPage;
-import projectHRM.pages.LoginPage;
-import projectHRM.pages.ProjectsPage;
+import projectHRM.pages.*;
 
 import java.util.Hashtable;
 
-public class TestProjectFunctionFlow extends BaseTest {
+public class FN_E2EFLowTest extends BaseTest {
     LoginPage loginPage;
     DashboardPage dashboardPage;
+    ManageClientsPage manageClientsPage;
     EmployeesPage employeesPage;
     ProjectsPage projectsPage;
 
     @BeforeMethod
-    public void initData() {
+    public void initData(){
         loginPage = new LoginPage();
     }
 
     @Test
     @Parameters({"row"})
-    public void TC_Project_TaskFlowSpecified(@Optional("9") int row) {
+    public void TC_E2E_Spec(@Optional("3") int row){
         loginPage.loginAdminHRM()
+                .verifyDashboardPage()
                 .goManageClients()
-                .addClient(row)
+                .addClient(row)//Add Client
+                .goManageClients()
+                .editClient(row)//Edit Client
+                .searchClient(row)
+                .verifyDataClient(row)
+                .logOut()
+                .loginClientHRM(row)//Login With Client
+                .verifyDashboardPage()
+                .logoutClient()
+                .loginAdminHRM()
                 .goEmployees()//Add Team of Project
                 .verifyTeam(row)
                 .goProjects()
@@ -44,15 +51,27 @@ public class TestProjectFunctionFlow extends BaseTest {
                 .goTasks()
                 .deleteTask(row)//Delete Task
                 .goProjects()
-                .deleteProject(row)//Delete Project
+                .deleteProject(row)
+                .goManageClients()
+                .deleteClient(row)//Delete Client
                 .logOut();
     }
 
-    @Test(dataProvider = ("data_combine_CPT"), dataProviderClass = DataProviderCombine.class)
-    public void TC_Project_TaskFlow(Hashtable<String, String> clients, Hashtable<String, String> projects, Hashtable<String, String> tasks) {
+    @Test(dataProvider = "data_combine_CPT", dataProviderClass = DataProviderCombine.class)
+    public void TC_E2E(Hashtable<String, String> clients, Hashtable<String, String> projects, Hashtable<String, String> tasks){
         loginPage.loginAdminHRM()
+                .verifyDashboardPage()
                 .goManageClients()
-                .addClient(clients)
+                .addClient(clients)//Add Client
+                .goManageClients()
+                .editClient(clients)//Edit Client
+                .searchClient(clients)
+                .verifyDataClient(clients)
+                .logOut()
+                .loginClientHRM(clients)//Login With Client
+                .verifyDashboardPage()
+                .logoutClient()
+                .loginAdminHRM()
                 .goEmployees()//Add Team of Project
                 .verifyTeam(projects)
                 .goProjects()
@@ -66,8 +85,9 @@ public class TestProjectFunctionFlow extends BaseTest {
                 .goTasks()
                 .deleteTask(tasks)//Delete Task
                 .goProjects()
-                .deleteProject(projects)//Delete Project
+                .deleteProject(projects)
+                .goManageClients()
+                .deleteClient(clients)//Delete Client
                 .logOut();
     }
-
 }

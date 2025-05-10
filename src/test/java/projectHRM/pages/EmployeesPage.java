@@ -3,10 +3,13 @@ package projectHRM.pages;
 import constants.ConfigData;
 import helpers.ExcelHelpers;
 import org.openqa.selenium.By;
+import utils.LogUtils;
+
+import java.util.Hashtable;
 
 import static keywords.WebUI.*;
 
-public class EmployeesPage extends CommonPage{
+public class EmployeesPage extends CommonPage {
 
     private String subdir = "/erp/staff-list";
     private String title = "Employees | HRM | Anh Tester Demo";
@@ -39,14 +42,14 @@ public class EmployeesPage extends CommonPage{
     private final ExcelHelpers excelHelpers;
     private final ExcelHelpers excelHelpers1;
 
-    public EmployeesPage(){
+    public EmployeesPage() {
         this.excelHelpers = new ExcelHelpers();
         this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Employees");
         this.excelHelpers1 = new ExcelHelpers();
         this.excelHelpers1.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Projects");
     }
 
-    public EmployeesPage verifyEmployeesPage(){
+    public EmployeesPage verifyEmployeesPage() {
         softAssertUrl(getURLPage(), subdir);
         softAssertContain(getTitlePage(), title);
         softAssertContain(getTextElement(subHeading), textSubHeading);
@@ -59,7 +62,8 @@ public class EmployeesPage extends CommonPage{
 
         return this;
     }
-    public EmployeesPage addNewEmployees(int row){
+
+    public EmployeesPage addNewEmployees(int row) {
         clickElement(buttonAddNew);
         setText(inputFirstName, excelHelpers.getCellData("FirstName", row));
         setText(inputLastName, excelHelpers.getCellData("LastName", row));
@@ -67,34 +71,53 @@ public class EmployeesPage extends CommonPage{
         setText(inputEmail, excelHelpers.getCellData("Email", row));
         setText(inputUsername, excelHelpers.getCellData("Username", row));
         setText(inputPassword, excelHelpers.getCellData("Password", row));
-        clickAndEnter(inputOfficeShift);
-        clickAndEnter(inputRole);
+        clickTextBox(inputOfficeShift);
+        clickTextBox(inputRole);
         handleDropdown(buttonDepartment, dropdownDepartment, "text", excelHelpers.getCellData("Department", row).split(" "));
-        clickAndEnter(inputDesignation);
+        clickTextBox(inputDesignation);
         uploadFileSendKey(inputPicture, excelHelpers.getCellData("Attach", row));
         clickElement(buttonSave);
         return this;
     }
 
-    public EmployeesPage verifyTeam(int row){
+    public EmployeesPage verifyTeam(int row) {
         setText(inputSearch, excelHelpers1.getCellData("TEAM", row));
 
         String nameTeam = (excelHelpers.getCellData("FirstName", row) + " " + excelHelpers.getCellData("LastName", row));
         boolean check =
-        getWebElement(firstItemResult).getText().toLowerCase().trim().contains(nameTeam.toLowerCase().trim());
+                getWebElement(firstItemResult).getText().toLowerCase().trim().contains(nameTeam.toLowerCase().trim());
+        LogUtils.info(getWebElement(firstItemResult).getText());
 
         if (check) {
             return this;
         }
         if (excelHelpers1.getCellData("TEAM", row).contains("Project Manager")) {
             addNewEmployees(1);
-        }else {
+        } else {
             addNewEmployees(2);
         }
+
         return this;
     }
 
+    public EmployeesPage verifyTeam(Hashtable<String, String> data) {
+        setText(inputSearch, data.get("TEAM"));
 
+        String nameTeam = (data.get("FirstName") + " " + data.get("LastName"));
+        boolean check =
+                getWebElement(firstItemResult).getText().toLowerCase().trim().contains(nameTeam.toLowerCase().trim());
+
+        if (check) {
+            return this;
+        } else {
+            if (data.get("TEAM").contains("Project Manager")) {
+                addNewEmployees(1);
+            } else {
+                addNewEmployees(2);
+            }
+        }
+        return this;
+    }
 
 
 }

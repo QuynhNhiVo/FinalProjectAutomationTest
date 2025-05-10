@@ -1,6 +1,7 @@
 package projectHRM.pages;
 
 import org.openqa.selenium.By;
+import utils.LogUtils;
 
 import static keywords.WebUI.*;
 
@@ -28,32 +29,36 @@ public class CommonPage {
     }
 
     public LoginPage logoutClient(){
-        verifyAndClick(menuHome, hamburgerButton);
+        clickHamburgerButton(menuHome, hamburgerButton);
         clickElement(logoutClient);
         return new LoginPage();
     }
 
     public ManageClientsPage goManageClients(){
-        verifyAndClick(menuHome, hamburgerButton);
+        clickHamburgerButton(menuHome, hamburgerButton);
+        LogUtils.info("****MANAGER CLIENTS PAGE****");
         scrollDownMenuBar(menuHome);
         clickElement(menuClients);
         return new ManageClientsPage();
     }
 
     public ProjectsPage goProjects(){
-        verifyAndClick(menuProjects, hamburgerButton);
+        clickHamburgerButton(menuProjects, hamburgerButton);
+        LogUtils.info("****PROJECTS PAGE****");
         clickElement(menuProjects);
         return new ProjectsPage();
     }
 
     public TasksPage goTasks(){
-        verifyAndClick(menuTasks, hamburgerButton);
+        clickHamburgerButton(menuTasks, hamburgerButton);
+        LogUtils.info("****TASKS PAGE****");
         clickElement(menuTasks);
         return new TasksPage();
     }
 
     public EmployeesPage goEmployees(){
-        verifyAndClick(menuEmployees, hamburgerButton);
+        clickHamburgerButton(menuEmployees, hamburgerButton);
+        LogUtils.info("****EMPLOYEES PAGE****");
         clickElement(menuEmployees);
         return new EmployeesPage();
     }

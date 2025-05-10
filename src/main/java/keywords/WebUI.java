@@ -116,6 +116,36 @@ public class WebUI {
         }
     }
 
+    @Step("Enter Element: {0}")
+    public static void clickTextBox(By by) {
+        waiForPageLoad();
+        clickElement(by);
+        Actions actions = new Actions(getDriver());
+        actions.sendKeys(Keys.ENTER).perform();
+        LogUtils.info("Enter Element: " + by);
+        ExtentTestManager.logMessage(Status.INFO, "Enter Element: " + by);
+        AllureManager.saveTextLog("Enter Element: " + by);
+    }
+
+    @Step("Verify {0} display and click {1}")
+    public static void clickHamburgerButton(By by, By button){
+        while (!getDriver().findElement(by).isDisplayed()) {
+            waitForElementClickable(button);
+            LogUtils.info(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            ExtentTestManager.logMessage(Status.INFO, getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            AllureManager.saveTextLog(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
+            clickElement(button);
+        }
+    }
+
+    @Step("Click button Detail {0}")
+    public static void clickDetailButton(By by){
+        if (!getDriver().getTitle().trim().toLowerCase().contains("detail")) {
+            clickElement(by);
+            LogUtils.info("Navigate to Detail page");
+        }
+    }
+
     @Step("Set text : {1} For Element: {0} ")
     public static void setText(By by, String text) {
         waitForElementVisible(by);
@@ -141,17 +171,6 @@ public class WebUI {
         LogUtils.info("Send key:" + keys + " - For Element: " + by);
         ExtentTestManager.logMessage(Status.INFO, "Send key:" + keys + " - For Element: " + by);
         AllureManager.saveTextLog("Send key:" + keys + " - For Element: " + by);
-    }
-
-    @Step("Enter Element: {0}")
-    public static void clickAndEnter(By by) {
-        waiForPageLoad();
-        clickElement(by);
-        Actions actions = new Actions(getDriver());
-        actions.sendKeys(Keys.ENTER).perform();
-        LogUtils.info("Enter Element: " + by);
-        ExtentTestManager.logMessage(Status.INFO, "Enter Element: " + by);
-        AllureManager.saveTextLog("Enter Element: " + by);
     }
 
     @Step("Get text of element {0}")
@@ -712,7 +731,6 @@ public class WebUI {
         clickElement(save);
     }
 
-
     /// /VERIFY///////////////////////////////////////////////////////////////////////////////
     @Step("Verify visible of element {0}")
     public static boolean verifyElementVisible(By by) {
@@ -1120,18 +1138,6 @@ public class WebUI {
     public static void endAssert() {
         softAssert.assertAll();
     }
-
-    @Step("Verify {0} display and click {1}")
-    public static void verifyAndClick(By by, By button){
-        while (!getDriver().findElement(by).isDisplayed()) {
-            waitForElementClickable(button);
-            LogUtils.info(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
-            ExtentTestManager.logMessage(Status.INFO, getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
-            AllureManager.saveTextLog(getDriver().findElement(by).getAttribute("class")+ " - NOT DISPLAY - Click element: " + getDriver().findElement(button).getAttribute("class"));
-            clickElement(button);
-        }
-    }
-
 
     /// /WAIT///////////////////////////////////////////////////////////////////////////////
     public static void waiForPageLoad() {

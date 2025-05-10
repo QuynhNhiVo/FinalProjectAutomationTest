@@ -8,6 +8,22 @@ import utils.LogUtils;
 
 public class DataProviderCombine {
 
+    /**
+     * DataProvider that combines data from two Excel sheets: "Clients" and "Projects".
+     * <p>
+     * - Reads data from row 5 to row 7 (inclusive) from each sheet.
+     * - Each row is converted into a Hashtable<String, String>.
+     * - Data is combined row-by-row from both sheets:
+     *   + data[0][0] = Client A   | data[0][1] = Project A
+     *   + data[1][0] = Client B   | data[1][1] = Project B
+     *   + ...
+     * <p>
+     * ❗ If the two sheets have different numbers of rows, only the minimum number of rows will be used
+     * to avoid IndexOutOfBoundsException.
+     *
+     * @return Object[][] containing pairs of data: [Client, Project] to be injected into the test method
+     */
+
     @DataProvider(name = "data_combine_CP", parallel = false)
     public Object[][] dataCombineCP(){
         ExcelHelpers excelHelpers = new ExcelHelpers();
@@ -22,24 +38,26 @@ public class DataProviderCombine {
                 //[i][0] will hold client data.
                 //[i][1] will hold project data.
         for (int i = 0; i < dataLength; i++) {
-            data[i][0] = "Clients" + clients[i][0];  // First param: client data
-            data[i][1] = "Projects" + projects[i][0]; // Second param: project data
+            data[i][0] = clients[i][0];  // First param: client data
+            data[i][1] = projects[i][0]; // Second param: project data
+        }
+        return data;
+    }
+
+    @DataProvider(name = "data_combine_CPT", parallel = false)
+    public Object[][] dataCombineCPT(){
+        ExcelHelpers excelHelpers = new ExcelHelpers();
+        LogUtils.info("Open file excel: " + SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL);
+        Object[][] clients = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Clients", 5, 7);
+        Object[][] projects = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Projects", 5, 7);
+        Object[][] tasks = excelHelpers.getDataHashTable(SystemHelpers.getCurrentDir() + ConfigData.LOGIN_HRM_EXCEL, "Tasks", 5, 7);
+        int dataLength = Math.min(clients.length, projects.length);
+        Object[][] data = new Object[dataLength][3];
+        for (int i = 0; i < dataLength; i++) {
+            data[i][0] = clients[i][0];
+            data[i][1] = projects[i][0];
+            data[i][2] = tasks[i][0];
         }
         return data;
     }
 }
-/**
- * DataProvider that combines data from two Excel sheets: "Clients" and "Projects".
- * <p>
- * - Reads data from row 5 to row 7 (inclusive) from each sheet.
- * - Each row is converted into a Hashtable<String, String>.
- * - Data is combined row-by-row from both sheets:
- *   + data[0][0] = Client A   | data[0][1] = Project A
- *   + data[1][0] = Client B   | data[1][1] = Project B
- *   + ...
- * <p>
- * ❗ If the two sheets have different numbers of rows, only the minimum number of rows will be used
- * to avoid IndexOutOfBoundsException.
- *
- * @return Object[][] containing pairs of data: [Client, Project] to be injected into the test method
- */
