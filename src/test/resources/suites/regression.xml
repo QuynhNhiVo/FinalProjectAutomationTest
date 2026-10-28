@@ -1,0 +1,7 @@
+<!-- regression.xml: chạy tuần tự cho đến khi xử lý xong dữ liệu dependent -->
+<suite name="Regression" verbose="1">
+    <test name="Regression">
+        <groups><run><include name="regression"/></run></groups>
+        <packages><package name="projectHRM.testcases"/></packages>
+    </test>
+</suite>

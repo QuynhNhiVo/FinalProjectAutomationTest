@@ -1,6 +1,8 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import constants.Groups;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import projectHRM.pages.DashboardPage;
@@ -11,13 +13,13 @@ public class DashboardTest extends BaseTest {
     DashboardPage dashboardPage;
 
     @BeforeMethod
-    public void initData(){
+    public void initData() {
         loginPage = new LoginPage();
     }
 
-    @Test
-    public void TC_Dashboarrd(){
+    @Test(groups = { Groups.REGRESSION, Groups.DASHBOARD })
+    public void TC_Dashboarrd() {
         loginPage.loginAdminHRM()
-            .verifyDashboardPage();
+                .verifyDashboardPage();
     }
 }

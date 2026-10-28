@@ -1,6 +1,7 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import constants.Groups;
 import dataprovider.DataProviderClients;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -18,14 +19,14 @@ public class LoginTest extends BaseTest {
         loginPage = new LoginPage();
     }
 
-    @Test
+    @Test(groups = { Groups.SMOKE, Groups.REGRESSION, Groups.AUTH })
     public void TC_LoginAdminSuccess() {
         loginPage.loginAdminHRM()
                 .verifyDashboardPage();
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.AUTH, Groups.CLIENT })
+    @Parameters({ "row" })
     public void TC_LoginClientSuccess(@Optional("8") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -37,7 +38,8 @@ public class LoginTest extends BaseTest {
                 .logoutClient();
     }
 
-    @Test(dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
+    @Test(groups = { Groups.REGRESSION, Groups.AUTH,
+            Groups.CLIENT }, dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
     public void TC_LoginClientsSuccess(Hashtable<String, String> data) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -48,14 +50,14 @@ public class LoginTest extends BaseTest {
                 .logOut();
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.SMOKE, Groups.REGRESSION, Groups.AUTH, Groups.NEGATIVE })
+    @Parameters({ "row" })
     public void TC_LoginClientWithInvalidUsername(@Optional("2") int row) {
         loginPage.loginClientInvlUser(row);
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.SMOKE, Groups.REGRESSION, Groups.AUTH, Groups.NEGATIVE })
+    @Parameters({ "row" })
     public void TC_LoginClientWithInvalidPassword(@Optional("2") int row) {
         loginPage.loginClientInvlPass(row);
     }

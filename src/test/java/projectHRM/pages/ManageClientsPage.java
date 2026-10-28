@@ -8,7 +8,7 @@ import java.util.Hashtable;
 
 import static keywords.WebUI.*;
 
-public class ManageClientsPage extends CommonPage{
+public class ManageClientsPage extends CommonPage {
 
     private String subdir = "/erp/clients-list";
     private String title = "Manage Clients | HRM | Anh Tester Demo";
@@ -20,10 +20,16 @@ public class ManageClientsPage extends CommonPage{
 
     private By subHeading = By.xpath("//h5[contains(text(),'List All')]");
     private By inputSearch = By.xpath("//input[@type='search']");
-    private By firstItemResult = By.xpath("//tbody/tr[1]/td/div[1]");
-    private By buttonDetail = By.xpath("//tbody/tr[1]/td/div[2]//button[@class='btn icon-btn btn-sm btn-light-primary waves-effect waves-light']");
-    private By buttonDelete = By.xpath("//tbody/tr[1]/td/div[2]//button[@data-target='.delete-modal']");
-
+    private By firstItemResult = By.xpath("//table//tbody/tr[1]");
+    private By buttonDetail = By
+            .xpath("//button[contains(@class,'btn-light-primary') and contains(@class,'waves-effect')][1]");
+    // private By buttonDelete = By.xpath(
+    // "(//*[self::button or self::span or
+    // self::a][contains(@data-target,'.delete-modal') or contains(@title,'Delete')
+    // or contains(@data-original-title,'Delete') or contains(@class,'delete') or
+    // contains(@onclick,'delete')])[1]");
+    private By buttonDelete = By
+            .xpath("//table[@id='xin_table']//button[contains(@class, 'delete')]");
     private By buttonAddNew = By.xpath("//div[@class='card-header-right']/a[contains(.,'Add New')]");
     private By subHeadAddNew = By.xpath("//h5[contains(text(),'Add New')]");
     private By inputFirstName = By.xpath("//input[@name='first_name']");
@@ -33,13 +39,13 @@ public class ManageClientsPage extends CommonPage{
     private By buttonGender = By.xpath("//span[@role='presentation']");
     private By dropdownGender = By.xpath("//select[@name='gender']");
     private By inputEmail = By.xpath("//input[@name='email']");
-    private By inputUsername  = By.xpath("//input[@name='username']");
-    private By inputAttachment  = By.xpath("//input[@name='file']");
+    private By inputUsername = By.xpath("//input[@name='username']");
+    private By inputAttachment = By.xpath("//input[@name='file']");
     private By buttonSaveAdd = By.xpath("//span[normalize-space()='Save']");
     private By messSave = By.xpath("");
     private String getTextSave = "Client added.";
 
-    private By buttonStatus= By.xpath("(//label[@for='membership_type']/following-sibling::span)//span//span//b");
+    private By buttonStatus = By.xpath("(//label[@for='membership_type']/following-sibling::span)//span//span//b");
     private By dropdownStatus = By.xpath("//select[@name='status']");
     private By buttonCountry = By.xpath("(//label[@for='country']/following-sibling::span)//span//span//span/b");
     private By dropdownCountry = By.xpath("//select[@name='country']");
@@ -58,12 +64,12 @@ public class ManageClientsPage extends CommonPage{
 
     private final ExcelHelpers excelHelpers;
 
-    public ManageClientsPage(){
+    public ManageClientsPage() {
         this.excelHelpers = new ExcelHelpers();
         this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Clients");
     }
 
-    public ManageClientsPage verifyClientsPage(){
+    public ManageClientsPage verifyClientsPage() {
         softAssertContain(getURLPage(), subdir);
         softAssertEqual(getTitlePage(), title);
         softAssertEqual(getTextElement(subHeading), textSubHeading);
@@ -71,23 +77,24 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage addClient(int row){
+    public ManageClientsPage addClient(int row) {
         clickElement(buttonAddNew);
         verifyEqual(getTextElement(subHeadAddNew), textHeadAddNew, "Heading not match");
         setText(inputFirstName, excelHelpers.getCellData("FIRSTNAME", row));
         setText(inputLastName, excelHelpers.getCellData("LASTNAME", row));
         setText(inputPassword, excelHelpers.getCellData("PASSWORD", row));
         setText(inputContactNumber, excelHelpers.getCellData("CONTACT", row));
-        handleDropdown(buttonGender, dropdownGender, "text", excelHelpers.getCellData("GENDER", row).split(", "));
+        handleDropdown(buttonGender, dropdownGender, "value", excelHelpers.getCellData("GENDER", row).split(", "));
         setText(inputEmail, excelHelpers.getCellData("EMAIL", row));
         setText(inputUsername, excelHelpers.getCellData("USERNAME", row));
         uploadFileSendKey(inputAttachment, excelHelpers.getCellData("ATTACHMENT", row));
+        sleep(3);
         clickElement(buttonSaveAdd);
         verifyElementVisible(messEdit, getTextSave);
         return this;
     }
 
-    public ManageClientsPage addClient(Hashtable<String, String> data){
+    public ManageClientsPage addClient(Hashtable<String, String> data) {
         clickElement(buttonAddNew);
         verifyEqual(getTextElement(subHeadAddNew), textHeadAddNew, "Heading not match");
         setText(inputFirstName, data.get("FIRSTNAME"));
@@ -98,12 +105,13 @@ public class ManageClientsPage extends CommonPage{
         setText(inputEmail, data.get("EMAIL"));
         setText(inputUsername, data.get("USERNAME"));
         uploadFileSendKey(inputAttachment, data.get("ATTACHMENT"));
+        sleep(3);
         clickElement(buttonSaveAdd);
         verifyElementVisible(messEdit, getTextSave);
         return this;
     }
 
-    public ManageClientsPage editClient(int row){
+    public ManageClientsPage editClient(int row) {
         clearSetText(inputSearch, excelHelpers.getCellData("FIRSTNAME", row));
         sleep(2);
         verifyRecordAndPagination(1, excelHelpers.getCellData("FIRSTNAME", row));
@@ -122,7 +130,7 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage editClient(Hashtable<String, String> data){
+    public ManageClientsPage editClient(Hashtable<String, String> data) {
         clearSetText(inputSearch, data.get("FIRSTNAME"));
         sleep(2);
         verifyRecordAndPagination(1, data.get("FIRSTNAME"));
@@ -141,7 +149,7 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage searchClient(int row){
+    public ManageClientsPage searchClient(int row) {
         goManageClients();
         waiForPageLoad();
         setText(inputSearch, excelHelpers.getCellData("FIRSTNAME", row));
@@ -150,7 +158,7 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage searchClient(Hashtable<String, String> data){
+    public ManageClientsPage searchClient(Hashtable<String, String> data) {
         goManageClients();
         waiForPageLoad();
         clearSetText(inputSearch, data.get("FIRSTNAME"));
@@ -159,7 +167,7 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage verifyDataClient(int row){
+    public ManageClientsPage verifyDataClient(int row) {
         clickElement(buttonDetail);
         sleep(2);
         softAssertEqual(getAttributeElement(inputFirstName, "value"), excelHelpers.getCellData("FIRSTNAME", row));
@@ -174,11 +182,11 @@ public class ManageClientsPage extends CommonPage{
         softAssertEqual(getAttributeElement(inputCity, "value"), excelHelpers.getCellData("CITY", row));
         softAssertEqual(getAttributeElement(inputState, "value"), excelHelpers.getCellData("STATE", row));
         softAssertEqual(getAttributeElement(inputZip, "value"), excelHelpers.getCellData("ZIPCODE", row));
-//        logOut();
+        // logOut();
         return this;
     }
 
-    public ManageClientsPage verifyDataClient(Hashtable<String, String> data){
+    public ManageClientsPage verifyDataClient(Hashtable<String, String> data) {
         clickElement(buttonDetail);
         sleep(2);
         softAssertEqual(getAttributeElement(inputFirstName, "value"), data.get("FIRSTNAME"));
@@ -193,15 +201,15 @@ public class ManageClientsPage extends CommonPage{
         softAssertEqual(getAttributeElement(inputCity, "value"), data.get("CITY"));
         softAssertEqual(getAttributeElement(inputState, "value"), data.get("STATE"));
         softAssertEqual(getAttributeElement(inputZip, "value"), data.get("ZIPCODE"));
-//        logOut();
+        // logOut();
         return this;
     }
 
-    public ManageClientsPage deleteClient(int row){
+    public ManageClientsPage deleteClient(int row) {
         searchClient(row);
-//        clickElement(buttonDelete);
-//        verifyEqual(getTextElement(messDel), textClose, "Alert not correct message");
-//        clickElement(buttonClose);
+        // clickElement(buttonDelete);
+        // verifyEqual(getTextElement(messDel), textClose, "Alert not correct message");
+        // clickElement(buttonClose);
         clickElement(buttonDelete);
         sleep(1);
         clickElement(buttonConfirm);
@@ -209,7 +217,7 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-    public ManageClientsPage deleteClient(Hashtable<String, String> data){
+    public ManageClientsPage deleteClient(Hashtable<String, String> data) {
         searchClient(data);
         clickElement(buttonDelete);
         sleep(1);
@@ -218,6 +226,4 @@ public class ManageClientsPage extends CommonPage{
         return this;
     }
 
-
-    
 }

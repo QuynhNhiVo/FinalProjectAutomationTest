@@ -1,0 +1,7 @@
+<!-- e2e.xml -->
+<suite name="E2E" verbose="1">
+    <test name="E2E">
+        <groups><run><include name="e2e"/></run></groups>
+        <packages><package name="projectHRM.testcases"/></packages>
+    </test>
+</suite>

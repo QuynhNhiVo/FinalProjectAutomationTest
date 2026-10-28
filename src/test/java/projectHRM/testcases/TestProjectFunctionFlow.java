@@ -1,6 +1,7 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import constants.Groups;
 import dataprovider.DataProviderCombine;
 import dataprovider.DataProviderProjects;
 import org.testng.annotations.BeforeMethod;
@@ -25,48 +26,50 @@ public class TestProjectFunctionFlow extends BaseTest {
         loginPage = new LoginPage();
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT, Groups.TASK })
+    @Parameters({ "row" })
     public void TC_Project_TaskFlowSpecified(@Optional("9") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
                 .addClient(row)
-                .goEmployees()//Add Team of Project
+                .goEmployees()// Add Team of Project
                 .verifyTeam(row)
                 .goProjects()
                 .verifyProjectsPage()
-                .addNewProject(row)//Add Project
+                .addNewProject(row)// Add Project
                 .verifyResults(row)
-                .addTask(row)//Add Task
-                .getTabEdit()//Tab Edit
-                .addAttachFiles(row)//Add Attach
-                .updateStatus(row)//Update status
+                .addTask(row)// Add Task
+                .getTabEdit()// Tab Edit
+                .addAttachFiles(row)// Add Attach
+                .updateStatus(row)// Update status
                 .goTasks()
-                .deleteTask(row)//Delete Task
+                .deleteTask(row)// Delete Task
                 .goProjects()
-                .deleteProject(row)//Delete Project
+                .deleteProject(row)// Delete Project
                 .logOut();
     }
 
-    @Test(dataProvider = ("data_combine_CPT"), dataProviderClass = DataProviderCombine.class)
-    public void TC_Project_TaskFlow(Hashtable<String, String> clients, Hashtable<String, String> projects, Hashtable<String, String> tasks) {
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT,
+            Groups.TASK }, dataProvider = ("data_combine_CPT"), dataProviderClass = DataProviderCombine.class)
+    public void TC_Project_TaskFlow(Hashtable<String, String> clients, Hashtable<String, String> projects,
+            Hashtable<String, String> tasks) {
         loginPage.loginAdminHRM()
                 .goManageClients()
                 .addClient(clients)
-                .goEmployees()//Add Team of Project
+                .goEmployees()// Add Team of Project
                 .verifyTeam(projects)
                 .goProjects()
                 .verifyProjectsPage()
-                .addNewProject(projects)//Add Project
+                .addNewProject(projects)// Add Project
                 .verifyResults(projects)
-                .addTask(tasks)//Add Task
-                .getTabEdit()//Tab Edit
-                .addAttachFiles(tasks)//Add Attach
-                .updateStatus(tasks)//Update status
+                .addTask(tasks)// Add Task
+                .getTabEdit()// Tab Edit
+                .addAttachFiles(tasks)// Add Attach
+                .updateStatus(tasks)// Update status
                 .goTasks()
-                .deleteTask(tasks)//Delete Task
+                .deleteTask(tasks)// Delete Task
                 .goProjects()
-                .deleteProject(projects)//Delete Project
+                .deleteProject(projects)// Delete Project
                 .logOut();
     }
 

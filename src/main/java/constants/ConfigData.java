@@ -26,4 +26,5 @@ public class ConfigData {
     public static String RECORD_PATH = PropertiesHelpers.getValue("RECORD_PATH");
 
     public static String LOGIN_HRM_EXCEL = PropertiesHelpers.getValue("LOGIN_HRM_EXCEL");
+
 }

@@ -1,6 +1,7 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import constants.Groups;
 import dataprovider.DataProviderClients;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -12,6 +13,8 @@ import projectHRM.pages.ManageClientsPage;
 
 import java.util.Hashtable;
 
+import javax.swing.GroupLayout.Group;
+
 public class TestClientFunctionFlow extends BaseTest {
     LoginPage loginPage;
     DashboardPage dashboardPage;
@@ -22,29 +25,30 @@ public class TestClientFunctionFlow extends BaseTest {
         loginPage = new LoginPage();
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.SMOKE, Groups.REGRESSION, Groups.CLIENT })
+    @Parameters({ "row" })
     public void TC_ClientFunctionFlowSpecified(@Optional("8") int row) {
         loginPage
                 .loginAdminHRM()
                 .verifyDashboardPage()
                 .goManageClients()
-                .addClient(row)//Add Client
+                .addClient(row)// Add Client
                 .goManageClients()
-                .editClient(row)//Edit Client
+                .editClient(row)// Edit Client
                 .searchClient(row)
                 .verifyDataClient(row)
                 .logOut()
-                .loginClientHRM(row)//Login With Client
+                .loginClientHRM(row)// Login With Client
                 .verifyDashboardPage()
                 .logoutClient()
                 .loginAdminHRM()
                 .goManageClients()
-                .deleteClient(row)//Delete Client
+                .deleteClient(row)// Delete Client
                 .logOut();
     }
 
-    @Test(dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
+    @Test(groups = { Groups.REGRESSION,
+            Groups.CLIENT }, dataProvider = "data_add_clients", dataProviderClass = DataProviderClients.class)
     public void TC_ClientsFunctionFlow(Hashtable<String, String> data) {
         loginPage.loginAdminHRM()
                 .verifyDashboardPage()

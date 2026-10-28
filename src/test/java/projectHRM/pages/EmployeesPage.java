@@ -21,7 +21,7 @@ public class EmployeesPage extends CommonPage {
 
     private By subHeading = By.xpath("//h5[contains(text(),'List All')]");
     private By inputSearch = By.xpath("//input[@type='search']");
-    private By firstItemResult = By.xpath("//tr[1]//td//div//div//h6");
+    private By firstItemResult = By.xpath("//table//tbody/tr[1]");
 
     private By buttonAddNew = By.xpath("(//h5[contains(text(),'List All')]/following-sibling::div)/a[2]");
     private By inputFirstName = By.xpath("//input[@placeholder='First Name']");
@@ -32,12 +32,12 @@ public class EmployeesPage extends CommonPage {
     private By inputPassword = By.xpath("//input[@placeholder='Password']");
     private By inputOfficeShift = By.xpath("//span[contains(text(),'Office Shift')]");
     private By inputRole = By.xpath("//span[contains(text(),'Role')]");
-    private By buttonDepartment = By.xpath("(//label[normalize-space()='Department']/following-sibling::span[2])/span/span/span/b");
+    private By buttonDepartment = By
+            .xpath("(//label[normalize-space()='Department']/following-sibling::span[2])/span/span/span/b");
     private By dropdownDepartment = By.xpath("//select[@id='department_id']");
     private By inputDesignation = By.xpath("//span[contains(text(),'Designation')]");
     private By inputPicture = By.xpath("//input[@name='file']");
     private By buttonSave = By.xpath("//span[normalize-space()='Save']");
-
 
     private final ExcelHelpers excelHelpers;
     private final ExcelHelpers excelHelpers1;
@@ -73,7 +73,8 @@ public class EmployeesPage extends CommonPage {
         setText(inputPassword, excelHelpers.getCellData("Password", row));
         clickTextBox(inputOfficeShift);
         clickTextBox(inputRole);
-        handleDropdown(buttonDepartment, dropdownDepartment, "text", excelHelpers.getCellData("Department", row).split(" "));
+        handleDropdown(buttonDepartment, dropdownDepartment, "text",
+                excelHelpers.getCellData("Department", row).split(" "));
         clickTextBox(inputDesignation);
         uploadFileSendKey(inputPicture, excelHelpers.getCellData("Attach", row));
         clickElement(buttonSave);
@@ -83,9 +84,10 @@ public class EmployeesPage extends CommonPage {
     public EmployeesPage verifyTeam(int row) {
         setText(inputSearch, excelHelpers1.getCellData("TEAM", row));
 
-        String nameTeam = (excelHelpers.getCellData("FirstName", row) + " " + excelHelpers.getCellData("LastName", row));
-        boolean check =
-                getWebElement(firstItemResult).getText().toLowerCase().trim().contains(nameTeam.toLowerCase().trim());
+        String nameTeam = (excelHelpers.getCellData("FirstName", row) + " "
+                + excelHelpers.getCellData("LastName", row));
+        boolean check = getWebElement(firstItemResult).getText().toLowerCase().trim()
+                .contains(nameTeam.toLowerCase().trim());
         LogUtils.info(getWebElement(firstItemResult).getText());
 
         if (check) {
@@ -104,8 +106,8 @@ public class EmployeesPage extends CommonPage {
         setText(inputSearch, data.get("TEAM"));
 
         String nameTeam = (data.get("FirstName") + " " + data.get("LastName"));
-        boolean check =
-                getWebElement(firstItemResult).getText().toLowerCase().trim().contains(nameTeam.toLowerCase().trim());
+        boolean check = getWebElement(firstItemResult).getText().toLowerCase().trim()
+                .contains(nameTeam.toLowerCase().trim());
 
         if (check) {
             return this;
@@ -118,6 +120,5 @@ public class EmployeesPage extends CommonPage {
         }
         return this;
     }
-
 
 }

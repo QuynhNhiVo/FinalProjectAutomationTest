@@ -1,6 +1,7 @@
 package projectHRM.testcases;
 
 import common.BaseTest;
+import constants.Groups;
 import dataprovider.DataProviderCombine;
 import dataprovider.DataProviderProjects;
 import org.testng.annotations.BeforeMethod;
@@ -13,6 +14,8 @@ import projectHRM.pages.ProjectsPage;
 
 import java.util.Hashtable;
 
+import javax.swing.GroupLayout.Group;
+
 public class ProjectsPageTest extends BaseTest {
     LoginPage loginPage;
     DashboardPage dashboardPage;
@@ -23,15 +26,15 @@ public class ProjectsPageTest extends BaseTest {
         loginPage = new LoginPage();
     }
 
-    @Test
+    @Test(groups = { Groups.SMOKE, Groups.REGRESSION, Groups.PROJECT })
     public void TC_ProjectsPage() {
         loginPage.loginAdminHRM()
                 .goProjects()
                 .verifyProjectsPage();
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT })
+    @Parameters({ "row" })
     public void TC_AddNewProjectSpecified(@Optional("2") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -44,16 +47,16 @@ public class ProjectsPageTest extends BaseTest {
                 .verifyResults(row);
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT, Groups.DEPENDENT })
+    @Parameters({ "row" })
     public void TC_DeleteProjectSpecified(@Optional("2") int row) {
         loginPage.loginAdminHRM()
                 .goProjects()
                 .deleteProject(row);
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT, Groups.DEPENDENT })
+    @Parameters({ "row" })
     public void TC_AddAttachUpdateStatus(@Optional("2") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -66,8 +69,8 @@ public class ProjectsPageTest extends BaseTest {
                 .updateStatus(row);
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT, Groups.TASK })
+    @Parameters({ "row" })
     public void TC_AddTask(@Optional("2") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -81,8 +84,8 @@ public class ProjectsPageTest extends BaseTest {
                 .addTask(row);
     }
 
-    @Test
-    @Parameters({"row"})
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT, Groups.TASK })
+    @Parameters({ "row" })
     public void TC_AddTaskAddAttachUpdateStatusSpecified(@Optional("3") int row) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -97,7 +100,8 @@ public class ProjectsPageTest extends BaseTest {
                 .updateStatus(row);
     }
 
-    @Test(dataProvider = "data_combine_CP", dataProviderClass = DataProviderCombine.class)
+    @Test(groups = { Groups.REGRESSION,
+            Groups.PROJECT }, dataProvider = "data_combine_CP", dataProviderClass = DataProviderCombine.class)
     public void TC_AddNewProject(Hashtable<String, String> client, Hashtable<String, String> project) {
         loginPage.loginAdminHRM()
                 .goManageClients()
@@ -110,8 +114,10 @@ public class ProjectsPageTest extends BaseTest {
                 .verifyResults(project);
     }
 
-    @Test(dataProvider = "data_combine_CPT", dataProviderClass = DataProviderCombine.class)
-    public void TC_AddTasks(Hashtable<String, String> clients, Hashtable<String, String> projects, Hashtable<String, String> tasks) {
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT,
+            Groups.TASK }, dataProvider = "data_combine_CPT", dataProviderClass = DataProviderCombine.class)
+    public void TC_AddTasks(Hashtable<String, String> clients, Hashtable<String, String> projects,
+            Hashtable<String, String> tasks) {
         loginPage.loginAdminHRM()
                 .goManageClients()
                 .addClient(clients)
@@ -125,15 +131,18 @@ public class ProjectsPageTest extends BaseTest {
                 .addTask(tasks);
     }
 
-    @Test(dataProvider = "data_add_projects", dataProviderClass = DataProviderProjects.class)
+    @Test(groups = { Groups.REGRESSION, Groups.DEPENDENT,
+            Groups.PROJECT }, dataProvider = "data_add_projects", dataProviderClass = DataProviderProjects.class)
     public void TC_DeleteProjects(Hashtable<String, String> data) {
         loginPage.loginAdminHRM()
                 .goProjects()
                 .deleteProject(data);
     }
 
-    @Test(dataProvider = "data_combine_CPT", dataProviderClass = DataProviderCombine.class)
-    public void TC_AddTask_Attach_UpdateStatus(Hashtable<String, String> clients, Hashtable<String, String> projects, Hashtable<String, String> tasks) {
+    @Test(groups = { Groups.REGRESSION, Groups.PROJECT,
+            Groups.TASK }, dataProvider = "data_combine_CPT", dataProviderClass = DataProviderCombine.class)
+    public void TC_AddTask_Attach_UpdateStatus(Hashtable<String, String> clients, Hashtable<String, String> projects,
+            Hashtable<String, String> tasks) {
         loginPage.loginAdminHRM()
                 .goManageClients()
                 .addClient(clients)

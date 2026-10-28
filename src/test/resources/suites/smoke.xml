@@ -1,0 +1,8 @@
+<!-- smoke.xml -->
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Smoke" verbose="1" parallel="methods" thread-count="3">
+    <test name="Smoke">
+        <groups><run><include name="smoke"/></run></groups>
+        <packages><package name="projectHRM.testcases"/></packages>
+    </test>
+</suite>
