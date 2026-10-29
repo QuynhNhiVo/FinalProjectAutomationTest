@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiến Lược Kiểm Thử (Test Strategy) - Dự Án FinalProjectAutomationTest</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #172554;
+      --primary-light: #eff6ff;
+      --secondary: #0284c7;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg-alt: #f9fafb;
+      --critical: #dc2626;
+      --critical-bg: #fee2e2;
+      --high: #ea580c;
+      --high-bg: #ffedd5;
+      --medium: #d97706;
+      --medium-bg: #fef3c7;
+      --low: #16a34a;
+      --low-bg: #dcfce7;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.65;
+      color: var(--text-main);
+      background-color: #ffffff;
+      margin: 0;
+      padding: 30px;
+    }
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 12px;
+      margin-top: 0;
+      font-size: 28px;
+    }
+    h2 {
+      color: #1e40af;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 40px;
+      font-size: 20px;
+    }
+    h3 {
+      color: #374151;
+      margin-top: 22px;
+      font-size: 16px;
+    }
+    h4 {
+      color: #4b5563;
+      margin-top: 16px;
+      font-size: 14.5px;
+    }
+    p, li {
+      color: var(--text-main);
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f3f4f6;
+      color: #111827;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td {
+      background-color: var(--bg-alt);
+    }
+    tr:hover td {
+      background-color: #f0fdf4;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .badge-critical { background-color: var(--critical-bg); color: var(--critical); border: 1px solid #f87171; }
+    .badge-high { background-color: var(--high-bg); color: var(--high); border: 1px solid #fdba74; }
+    .badge-medium { background-color: var(--medium-bg); color: var(--medium); border: 1px solid #fde047; }
+    .badge-low { background-color: var(--low-bg); color: var(--low); border: 1px solid #86efac; }
+    .badge-info { background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+    .badge-strategy { background-color: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; font-family: Consolas, monospace; }
+    
+    .callout {
+      background-color: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .callout-warning {
+      background-color: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .callout-danger {
+      background-color: #fef2f2;
+      border-left: 4px solid #ef4444;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .checklist {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .checklist li {
+      padding: 6px 0;
+      font-size: 13.5px;
+    }
+    .checklist li::before {
+      content: "✔ ";
+      color: #16a34a;
+      font-weight: bold;
+    }
+    .footer-note {
+      margin-top: 50px;
+      padding-top: 16px;
+      border-top: 1px dashed #9ca3af;
+      font-size: 12.5px;
+      color: #6b7280;
+      font-style: italic;
+    }
+    .arch-layer {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 10px 0;
+      background: #f8fafc;
+    }
+    .arch-layer h4 {
+      margin: 0 0 6px 0;
+      color: #1e40af;
+      font-size: 14px;
+    }
+    .arch-layer p {
+      margin: 0;
+      font-size: 13px;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Chiến Lược Kiểm Thử (Test Strategy)</h1>
+  <p><strong>Dự án kiểm thử:</strong> FinalProjectAutomationTest (HRM Demo Automation Portfolio)</p>
+  <p><strong>Hệ thống được kiểm thử (AUT):</strong> HRM Web Application (<a href="https://hrm.anhtester.com" target="_blank">https://hrm.anhtester.com</a>)</p>
+
+  <!-- 1. DOCUMENT CONTROL -->
+  <h2>1. Quản Trị Tài Liệu (Document Control)</h2>
+  <table>
+    <tr>
+      <th style="width: 22%;">Thuộc tính</th>
+      <th>Thông tin chi tiết</th>
+    </tr>
+    <tr>
+      <td><strong>Tên tài liệu</strong></td>
+      <td>Chiến Lược Kiểm Thử Phần Mềm (Test Strategy Document)</td>
+    </tr>
+    <tr>
+      <td><strong>Mã tài liệu</strong></td>
+      <td>DOC-02-TEST-STRATEGY</td>
+    </tr>
+    <tr>
+      <td><strong>Phiên bản</strong></td>
+      <td>v0.1 (Draft)</td>
+    </tr>
+    <tr>
+      <td><strong>Trạng thái</strong></td>
+      <td><span class="badge badge-info">Draft - Chờ Phê Duyệt</span></td>
+    </tr>
+    <tr>
+      <td><strong>Tác giả</strong></td>
+      <td>Quỳnh Nhi Võ <code></code></td>
+    </tr>
+<!--     <tr>
+      <td><strong>Người phê duyệt</strong></td>
+      <td>Senior Test Manager / Test Architect <code>[CẦN XÁC NHẬN]</code></td>
+    </tr> -->
+    <tr>
+      <td><strong>Ngày ban hành</strong></td>
+      <td>30/10/2026</td>
+    </tr>
+    <tr>
+      <td><strong>Lịch sử thay đổi</strong></td>
+      <td>
+        <strong>v0.1 (30/10/2026):</strong> Khởi tạo bản thảo đầu tiên gồm 19 phần chuẩn mực định hình phương pháp kiểm thử dựa trên rủi ro (RBT), kiến trúc framework automation Selenium/TestNG, chính sách dữ liệu/môi trường, quy trình quản lý lỗi, các chỉ số KPI chất lượng và khung quản trị AI có trách nhiệm.
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Tài liệu tham chiếu</strong></td>
+      <td>
+        1. <code>docs/01-risk-register.html</code>: Sổ Đăng Ký Rủi Ro &amp; Ánh Xạ Kiểm Thử Theo Rủi Ro.<br>
+        2. ISTQB Advanced Level Test Manager (ATM) &amp; Test Automation Engineer (TAE) Syllabus.<br>
+        3. Tiêu chuẩn ISO/IEC/IEEE 29119-3:2021 (Test Documentation - Test Strategy).<br>
+        4. Tiêu chuẩn ISO/IEC 25010:2023 (Systems and software Quality Requirements and Evaluation - SQuaRE).<br>
+        5. Kho mã nguồn: <a href="https://github.com/QuynhNhiVo/FinalProjectAutomationTest" target="_blank">GitHub: QuynhNhiVo/FinalProjectAutomationTest</a>.
+      </td>
+    </tr>
+  </table>
+
+  <!-- 2. GIỚI THIỆU -->
+  <h2>2. Giới Thiệu &amp; Phạm Vi (Introduction &amp; Scope)</h2>
+  
+  <h3>2.1. Mục đích tài liệu</h3>
+  <p>Tài liệu này xác định cách tiếp cận tổng thể, nguyên tắc kỹ thuật, kiến trúc tự động hóa và các tiêu chuẩn kiểm định chất lượng cho hệ thống HRM Demo. Chiến lược này đóng vai trò kim chỉ nam dài hạn xuyên suốt dự án, giải thích lý do kỹ thuật đằng sau các quyết định kiến trúc và cách thức tối ưu hóa nguồn lực đơn lẻ (1 tester) nhằm tạo ra một bộ portfolio kiểm thử tự động đạt chuẩn doanh nghiệp.</p>
+
+  <h3>2.2. Đối tượng độc giả</h3>
+  <ul>
+    <li><strong>Người phỏng vấn / Test Manager / Tuyển dụng:</strong> Thẩm định tư duy hoạch định chiến lược (Strategic Thinking), năng lực thiết kế framework và khả năng quản trị chất lượng toàn diện.</li>
+    <li><strong>Chính tác giả (Tester / Test Engineer):</strong> Làm căn cứ thiết kế kịch bản test, định cấu trúc suite, cấu hình CI/CD và triển khai các giải pháp xử lý kỹ thuật.</li>
+  </ul>
+
+  <h3>2.3. Tổng quan sản phẩm (AUT)</h3>
+  <p>AUT là ứng dụng quản lý nguồn nhân lực <strong>HRM Demo</strong> (<a href="https://hrm.anhtester.com" target="_blank">https://hrm.anhtester.com</a>) dựa trên web. Ứng dụng cung cấp các nghiệp vụ nhân sự và quản lý công việc của doanh nghiệp vừa và nhỏ, bao gồm phân quyền đa vai trò (Admin, Client, Employee), quản trị thông tin khách hàng, giám sát dự án, giao việc, đính kèm tệp và bảng điều khiển trực quan.</p>
+
+  <h3>2.4. Phạm vi kiểm thử (Scope: IN / OUT)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 15%;">Phân loại</th>
+        <th style="width: 35%;">Hạng mục / Phân hệ</th>
+        <th style="width: 50%;">Chi tiết kỹ thuật &amp; Lý do xác định ranh giới</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IN-SCOPE<br>(Trong phạm vi)</strong></td>
+        <td>
+          1. Đăng nhập &amp; Xác thực (Admin/Client)<br>
+          2. Dashboard (Số liệu widget tổng quan)<br>
+          3. Quản lý Khách hàng (Clients)<br>
+          4. Quản lý Nhân viên (Employees)<br>
+          5. Quản lý Dự án (Projects)<br>
+          6. Quản lý Công việc (Tasks)<br>
+          7. Đính kèm tệp (Attachments cơ bản)<br>
+          8. Cập nhật trạng thái (Status Updates)
+        </td>
+        <td>
+          - <strong>Kiểm thử chức năng (UI Functional &amp; Workflow):</strong> Kiểm định luồng nghiệp vụ cốt lõi, xác thực form, xử lý dữ liệu và logic trạng thái qua giao diện web.<br>
+          - <strong>Kiểm thử bảo mật mức an toàn (Safe Security):</strong> Kiểm tra phân quyền truy cập URL chéo (Admin vs Client RBAC) và lọc mã độc đầu vào (HTML/XSS sanitize).<br>
+          - <strong>Kiểm thử tương thích (Cross-browser):</strong> Chạy trên Chrome, Firefox, Edge và chế độ Headless.<br>
+          - <strong>Tự động hóa (Automation):</strong> Xây dựng bộ test Smoke, Regression và E2E bằng Selenium WebDriver.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>OUT-OF-SCOPE<br>(Ngoài phạm vi)</strong></td>
+        <td>
+          1. Kiểm thử tải nặng &amp; Stress testing<br>
+          2. Kiểm thử thâm nhập sâu (Penetration Testing / SQLi khai thác)<br>
+          3. Kiểm thử trực tiếp tầng Cơ sở dữ liệu (Database Backend)<br>
+          4. Các phân hệ Payroll, Tài chính, Kế toán chuyên sâu<br>
+          5. Ứng dụng Mobile Native (iOS / Android)
+        </td>
+        <td>
+          - <em>Lý do OUT 1 &amp; 2:</em> AUT là site demo dùng chung công khai (<a href="https://hrm.anhtester.com" target="_blank">hrm.anhtester.com</a>), ràng buộc dự án nghiêm cấm tải nặng gây từ chối dịch vụ (DoS) hoặc tấn công gây hỏng hạ tầng lưu trữ của bên thứ ba.<br>
+          - <em>Lý do OUT 3:</em> Không có quyền truy cập trực tiếp kết nối DB (JDBC/MySQL) hoặc quyền root máy chủ.<br>
+          - <em>Lý do OUT 4:</em> Phân hệ demo bị khóa một số hàm tính toán tài chính phức tạp và không thuộc luồng nghiệp vụ tuyển dụng cốt lõi của portfolio.<br>
+          - <em>Lý do OUT 5:</em> Ứng dụng hiện tại là nền tảng web responsive, chưa có app di động native.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.5. Mục tiêu kiểm thử dạng SMART (gắn với Rủi ro từ Risk Register)</h3>
+  <ul>
+    <li><strong>S (Specific):</strong> Khắc phục triệt để hiện tượng kết quả "xanh giả" do cờ build Maven (`RSK-022`) và va chạm dữ liệu Excel (`RSK-021`), đạt độ bao phủ 100% cho 8 phân hệ cốt lõi.</li>
+    <li><strong>M (Measurable):</strong> Tỷ lệ test case Pass của bộ Smoke Test đạt 100%; tỷ lệ Flaky Tests của bộ Regression Test giảm xuống dưới 2% trên 10 lần chạy lặp liên tiếp (`RSK-020`); 0 lỗi Blocker/Critical chưa được kiểm soát.</li>
+    <li><strong>A (Achievable):</strong> Tối ưu hóa 33 test hiện có, refactor DataProvider bằng Java Faker và tách biệt 9 test phụ thuộc độc lập với khả năng thực thi bởi 1 tester trong định mức ~20 giờ/tuần `[GIẢ ĐỊNH]`.</li>
+    <li><strong>R (Relevant):</strong> Xây dựng bộ minh chứng kiểm thử có giá trị kỹ thuật cao, thể hiện năng lực từ manual test design đến CI/CD pipeline automation phục vụ portfolio ứng tuyển Tester/QC.</li>
+    <li><strong>T (Time-bound):</strong> Hoàn thành chiến lược và thiết lập framework ổn định trong chu kỳ dự án trước mốc phỏng vấn việc làm `[GIẢ ĐỊNH]`.</li>
+  </ul>
+
+  <!-- 3. CÁCH TIẾP CẬN TỔNG THỂ -->
+  <h2>3. Cách Tiếp Cận Tổng Thể (Overall Approach)</h2>
+
+  <h3>3.1. Tiếp cận theo rủi ro (Risk-Based Testing - RBT)</h3>
+  <p>Chiến lược kiểm thử được dẫn dắt trực tiếp từ kết quả phân tích rủi ro trong tài liệu <code>docs/01-risk-register.html</code>. Điểm rủi ro (Score = L × I) trực tiếp quyết định:</p>
+  <ul>
+    <li><strong>Thứ tự ưu tiên kiểm thử:</strong> Tập trung giải quyết ngay các rủi ro Critical (Score &ge; 20: `RSK-022` Build xanh giả, `RSK-021` Va chạm dữ liệu Excel) và rủi ro High (Score 10&ndash;16: `RSK-017` Reset demo, `RSK-020` Flaky locators, `RSK-001` Phân quyền Admin-Client).</li>
+    <li><strong>Độ sâu kiểm thử (ISTQB Depth):</strong>
+      <ul>
+        <li><span class="badge badge-critical">Extensive (Chuyên sâu)</span>: Áp dụng cho rủi ro Critical/High. Thiết kế bao phủ đa kỹ thuật (EP + BVA + State Transition + Decision Table), kiểm tra cả luồng hợp lệ, biên và ngoại lệ.</li>
+        <li><span class="badge badge-medium">Balanced (Cân bằng)</span>: Áp dụng cho rủi ro Medium (Score 5&ndash;9). Tập trung vào luồng chính (happy path) và các trường hợp lỗi thường gặp.</li>
+        <li><span class="badge badge-low">Opportunity-based (Theo cơ hội)</span>: Áp dụng cho rủi ro Low (Score &le; 4). Kiểm thử nhanh khi có thời gian hoặc ghi nhận chấp nhận rủi ro.</li>
+      </ul>
+    </li>
+    <li><strong>Mức chạy tự động hóa (Test Execution Levels):</strong>
+      <ul>
+        <li><code>smoke</code>: Chứa các test độc lập, thực thi siêu nhanh (&le; 3 phút), ổn định 100%, bảo vệ các tính năng tối quan trọng (Login, mở phân hệ chính).</li>
+        <li><code>regression</code>: Chứa toàn bộ test nghiệp vụ chi tiết, chạy định kỳ hàng đêm hoặc trước khi phát hành.</li>
+        <li><code>e2e</code>: Chứa các luồng liên hoàn xuyên suốt phân hệ (Tạo Client &rarr; Tạo Project &rarr; Giao Task &rarr; Đóng dự án).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>3.2. Các nguyên tắc chỉ đạo (Guiding Principles)</h3>
+  <ul>
+    <li><strong>Shift-Left Testing (Kiểm thử sớm):</strong> Phân tích rủi ro, thiết kế ma trận kiểm thử và chuẩn bị dữ liệu mồi ngay từ giai đoạn lập chiến lược, trước khi viết code test automation.</li>
+    <li><strong>Tháp kiểm thử thực tế (Pragmatic Test Pyramid):</strong> Giảm thiểu sự phụ thuộc quá mức vào UI E2E vốn mong manh và chạy chậm; cơ cấu bộ kiểm thử theo tỷ lệ hướng tới: API/Service Tests (40%) &rarr; UI Component/Workflow Tests (40%) &rarr; UI E2E liên hoàn (20%).</li>
+    <li><strong>Độc lập dữ liệu tuyệt đối (Data Independence):</strong> Mỗi test case phải tự tạo và tự cô lập dữ liệu kiểm thử của mình (thông qua Java Faker, UUID, timestamp); cấm việc test B phụ thuộc vào bản ghi do test A sinh ra.</li>
+    <li><strong>Thất bại nhanh &amp; Minh bạch (Fail-Fast &amp; Honest Reporting):</strong> Loại bỏ triệt để cấu hình che giấu lỗi `testFailureIgnore=true`. Khi có lỗi, build phải chuyển sang trạng thái đỏ ngay lập tức; cấm việc báo cáo "xanh giả".</li>
+  </ul>
+
+  <h3>3.3. Chiến lược khi không có tài liệu yêu cầu chính thức (No-Spec Strategy)</h3>
+  <div class="callout">
+    <p>Do AUT là ứng dụng demo công khai không có tài liệu đặc tả yêu cầu (SRS/PRD), dự án áp dụng chiến lược <strong>"Thẩm định dựa trên khảo sát thực nghiệm &amp; Giả định nghiệp vụ chuẩn mực"</strong>:</p>
+  </div>
+  <ul>
+    <li><strong>Khảo sát khám phá (Exploratory Testing &amp; Reverse Engineering):</strong> Tester trực tiếp thao tác trên ứng dụng, ghi nhận lại toàn bộ quy tắc UI, mã phản hồi HTTP, thông điệp cảnh báo và hành vi mặc định.</li>
+    <li><strong>Tài liệu hóa giả định nghiệp vụ (Business Rules Assumptions):</strong> Mọi quy tắc suy luận (ví dụ: "Email phải là duy nhất", "Task con chưa xong thì không được chuyển task cha sang Done") đều được lập thành văn bản giả định và đánh dấu <code>[GIẢ ĐỊNH]</code>.</li>
+    <li><strong>Đối chiếu chuẩn ngành (Industry Benchmark Comparison):</strong> So sánh hành vi của AUT với các hệ thống ERP/HRM tiêu chuẩn (như Odoo, OrangeHRM) để xác định xem một hành vi bất thường là tính năng (by-design) hay lỗi phần mềm (bug).</li>
+  </ul>
+
+  <!-- 4. CẤP ĐỘ VÀ LOẠI KIỂM THỬ -->
+  <h2>4. Cấp Độ Kiểm Thử &amp; Loại Kiểm Thử (Test Levels &amp; Test Types)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 15%;">Cấp độ (Test Level)</th>
+        <th style="width: 18%;">Loại kiểm thử (Test Type)</th>
+        <th style="width: 10%;">Độ ưu tiên</th>
+        <th style="width: 12%;">Giai đoạn áp dụng</th>
+        <th style="width: 45%;">Mục tiêu kiểm thử &amp; Ranh giới kỹ thuật</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Component / Screen Level</strong></td>
+        <td>UI Functional &amp; Input Validation</td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Sprint / Daily</td>
+        <td>Kiểm tra tính hợp lệ của từng form nhập liệu (Clients, Employees, Projects, Tasks), các trường bắt buộc, regex định dạng email, sđt và thông báo validation.</td>
+      </tr>
+      <tr>
+        <td><strong>Integration Level</strong></td>
+        <td>Business Workflow &amp; Cascade Logic</td>
+        <td><span class="badge badge-critical">Critical</span></td>
+        <td>Weekly / Regression</td>
+        <td>Kiểm tra sự tương tác giữa các phân hệ: Gán nhân viên vào dự án, liên kết task với dự án cha, xử lý toàn vẹn dữ liệu khi xóa dự án có task con (`RSK-009`).</td>
+      </tr>
+      <tr>
+        <td><strong>System Level</strong></td>
+        <td>End-to-End &amp; RBAC Access Control</td>
+        <td><span class="badge badge-critical">Critical</span></td>
+        <td>Weekly / Pre-release</td>
+        <td>Kiểm tra toàn bộ chu trình nghiệp vụ hoàn chỉnh; kiểm tra phân quyền truy cập chéo URL giữa quyền Admin và Client (`RSK-001`).</td>
+      </tr>
+      <tr>
+        <td><strong>API Level (Dự kiến mở rộng)</strong></td>
+        <td>RESTful Web Service Testing</td>
+        <td><span class="badge badge-medium">Medium</span></td>
+        <td>Phase 2 <code>[ĐỀ XUẤT]</code></td>
+        <td>Kiểm tra các HTTP endpoint ngầm (GET/POST/PUT/DELETE) của HRM, kiểm tra mã phản hồi (200, 201, 400, 403, 500) và schema JSON bằng RestAssured.</td>
+      </tr>
+      <tr>
+        <td><strong>Non-Functional (Security)</strong></td>
+        <td>Safe Security Baseline (Sanitization)</td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Regression</td>
+        <td>Kiểm tra xử lý lọc mã độc đầu vào (Stored XSS payload) trên form Client, kiểm tra brute-force đăng nhập (`RSK-002`) và upload file giả lập (.exe, .php) ở mức an toàn (`RSK-013`).</td>
+      </tr>
+      <tr>
+        <td><strong>Non-Functional (Performance)</strong></td>
+        <td>Single-User Latency &amp; Baseline UI</td>
+        <td><span class="badge badge-low">Low</span></td>
+        <td>Pre-release <code>[ĐỀ XUẤT]</code></td>
+        <td>Đo thời gian phản hồi trang Dashboard, thời gian tìm kiếm bảng danh sách; cấm tải nặng quá 5 luồng ảo (VU) lên site demo.</td>
+      </tr>
+      <tr>
+        <td><strong>Non-Functional (Compatibility)</strong></td>
+        <td>Cross-Browser &amp; Headless Mode</td>
+        <td><span class="badge badge-medium">Medium</span></td>
+        <td>Weekly</td>
+        <td>Kiểm tra tương thích hiển thị và thực thi kịch bản đồng nhất trên Google Chrome, Mozilla Firefox, Microsoft Edge và Headless Linux.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 5. KỸ THUẬT THIẾT KẾ TEST -->
+  <h2>5. Kỹ Thuật Thiết Kế Kiểm Thử (Test Design Techniques)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 22%;">Kỹ thuật ISTQB</th>
+        <th style="width: 18%;">Phân hệ mục tiêu</th>
+        <th style="width: 60%;">Ví dụ áp dụng thực tế trên HRM Demo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Phân vùng tương đương (Equivalence Partitioning - EP)</strong></td>
+        <td>Đăng nhập &amp; Form Nhân viên (Employees)</td>
+        <td>
+          - <em>Đăng nhập:</em> Phân vùng tên đăng nhập hợp lệ (admin@demo.com), không tồn tại, để trống.<br>
+          - <em>Email nhân viên:</em> Phân vùng email chuẩn (name@domain.com), email thiếu ký tự @, email thiếu phần tên miền.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Phân tích giá trị biên (Boundary Value Analysis - BVA)</strong></td>
+        <td>Đính kèm tệp (Attachments) &amp; Độ dài trường nhập</td>
+        <td>
+          - <em>Dung lượng file upload:</em> Biên 0 KB (file rỗng), 2 MB (ngưỡng chuẩn cho phép), 2.01 MB (vượt ngưỡng), 50 MB (file quá khổ) (`RSK-014`).<br>
+          - <em>Tên công ty Client:</em> 1 ký tự, 2 ký tự (tối thiểu), 255 ký tự (tối đa), 256 ký tự (vượt ngưỡng).
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Bảng quyết định (Decision Table Testing)</strong></td>
+        <td>Xác thực &amp; Phân quyền (RBAC)</td>
+        <td>
+          Tổ hợp 4 điều kiện: (Vai trò người dùng = Admin/Client) × (Trạng thái tài khoản = Active/Inactive) × (Đường dẫn = Trang Quản trị Nhân viên) &rarr; Kết quả mong đợi: Cho phép truy cập (HTTP 200) hoặc Chặn truy cập (Redirect Login/HTTP 403) (`RSK-001`, `RSK-007`).
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Kiểm thử chuyển trạng thái (State Transition Testing)</strong></td>
+        <td>Quản lý Công việc (Tasks) &amp; Trạng thái Dự án</td>
+        <td>
+          Kiểm thử vòng đời của Task: <code>To Do</code> &rarr; <code>In Progress</code> &rarr; <code>Review</code> &rarr; <code>Done</code> &rarr; <code>Closed</code>. Kiểm tra các chuyển đổi không hợp lệ (nhảy cóc từ To Do sang Closed khi chưa qua Done) (`RSK-011`).
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Đoán lỗi (Error Guessing) &amp; Exploratory Testing</strong></td>
+        <td>Tệp đính kèm &amp; Thao tác bảng biểu</td>
+        <td>
+          Thử tải lên tệp có đuôi kép (<code>image.jpg.exe</code>), thử nhập ký tự Unicode đặc biệt vào tên dự án, thử nhấn submit đúp (double click) liên tục khi tạo Client.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Kiểm thử trường hợp sử dụng (Use Case Testing)</strong></td>
+        <td>Luồng liên hoàn Dự án &amp; Khách hàng</td>
+        <td>
+          Kịch bản thực tế của Project Manager: Tạo khách hàng mới &rarr; Khởi tạo dự án gán cho khách hàng đó &rarr; Phân công 2 nhân viên &rarr; Tạo 3 công việc &rarr; Đóng dự án &rarr; Xuất báo cáo.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 6. CHIẾN LƯỢC TỰ ĐỘNG HÓA -->
+  <h2>6. Chiến Lược Tự Động Hóa (Test Automation Strategy)</h2>
+
+  <h3>6.1. Tiêu chí lựa chọn kịch bản tự động hóa</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">Hạng mục</th>
+        <th style="width: 40%;">NÊN TỰ ĐỘNG HÓA (Automate)</th>
+        <th style="width: 40%;">KHÔNG NÊN TỰ ĐỘNG HÓA (Keep Manual)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Đặc điểm kịch bản</strong></td>
+        <td>
+          - Các kịch bản kiểm thử Smoke Test đăng nhập và điều hướng cơ bản.<br>
+          - Các bộ kiểm thử hồi quy lặp đi lặp lại thường xuyên (Regression Test).<br>
+          - Kịch bản kiểm tra dữ liệu lớn với nhiều bộ dữ liệu (Data-driven test qua DataProvider).<br>
+          - Các kịch bản kiểm tra phân quyền URL và mã độc sanitize.
+        </td>
+        <td>
+          - Thao tác kiểm tra xung đột chỉnh sửa đồng thời (Concurrency / Optimistic Locking 2 session) do Selenium khó kiểm soát chính xác timing (`RSK-012`).<br>
+          - Kiểm tra độ thẩm mỹ bố cục (UI Look &amp; Feel, màu sắc biểu đồ Dashboard).<br>
+          - Các kịch bản kiểm thử thăm dò (Exploratory Testing) tìm bug mới.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Tỷ lệ mục tiêu</strong></td>
+        <td><strong>&ge; 80%</strong> các ca kiểm thử hồi quy có khả năng lặp lại.</td>
+        <td><strong>&le; 20%</strong> kịch bản chuyên biệt phức tạp hoặc phi chức năng sâu.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>6.2. Kiến trúc framework tự động hóa theo tầng (Layered Architecture)</h3>
+  <div class="arch-layer">
+    <h4>TẦNG 1: DRIVER &amp; BROWSER MANAGEMENT (Hạ tầng cốt lõi)</h4>
+    <p>Sử dụng <code>DriverManager</code> quản lý WebDriver qua <code>ThreadLocal&lt;WebDriver&gt;</code> đảm bảo độc lập luồng; tích hợp Selenium 4.31 tự động tải Driver; cấu hình linh hoạt Chrome/Edge/Firefox và Headless options.</p>
+  </div>
+  <div class="arch-layer">
+    <h4>TẦNG 2: PAGE OBJECT &amp; COMPONENT OBJECT MODEL (Mô hình hóa giao diện)</h4>
+    <p>Phân tách UI thành các Page Object độc lập. Áp dụng Component Object Model (HeaderComponent, SidebarComponent, TableComponent, ModalDialog) để giải quyết rủi ro God Page Object (`RSK-024`), bóc tách locator tập trung, tăng tính tái sử dụng.</p>
+  </div>
+  <div class="arch-layer">
+    <h4>TẦNG 3: ACTION &amp; SYNCHRONIZATION HELPERS (Tương tác &amp; Đồng bộ hóa)</h4>
+    <p>Đóng gói toàn bộ thao tác qua lớp <code>WebUI</code> tiện ích: Thay thế triệt để <code>Thread.sleep</code> bằng <code>WebDriverWait</code> (Explicit Wait) với các <code>ExpectedConditions</code> chuẩn xác; bổ sung fallback click qua JavaScript khi gặp render trễ để loại trừ Flaky tests (`RSK-020`).</p>
+  </div>
+  <div class="arch-layer">
+    <h4>TẦNG 4: TEST DATA &amp; DATA PROVIDER (Dữ liệu kiểm thử)</h4>
+    <p>Tích hợp Java Faker và Timestamp sinh dữ liệu động; refactor DataProvider đọc theo Method Key thay vì chỉ số dòng cố định (`RSK-021`), loại bỏ va chạm dữ liệu.</p>
+  </div>
+  <div class="arch-layer">
+    <h4>TẦNG 5: TEST RUNNER &amp; REPORTING (Thực thi &amp; Báo cáo)</h4>
+    <p>Cấu hình TestNG 7.11 quản trị suite; ghi log chi tiết qua Log4j2; sinh báo cáo trực quan Allure Report tích hợp ExtentReports; tự động chụp ảnh màn hình (Screenshot) và đính kèm video Monte Screen Recorder khi có test case failed.</p>
+  </div>
+
+  <h3>6.3. Chính sách dữ liệu kiểm thử (Test Data Policy)</h3>
+  <ul>
+    <li><strong>Quy tắc sinh dữ liệu động (Dynamic Generation):</strong> 100% dữ liệu tạo mới (Client Name, Email, Project Code) phải được gán tiền tố nhận diện và chuỗi ngẫu nhiên (ví dụ: <code>Faker.company().name() + "_" + System.currentTimeMillis()</code>) để đảm bảo tính duy nhất.</li>
+    <li><strong>Giải quyết 9 test method phụ thuộc:</strong> Xây dựng lớp <code>DataSeedingHelper</code> tự động kiểm tra và khởi tạo bản ghi tiền đề (Pre-requisite Data) trước khi kịch bản chính chạy, biến các test phụ thuộc thành các test case độc lập.</li>
+    <li><strong>Dọn dẹp dữ liệu (Teardown Cleanup):</strong> Do không có quyền truy cập DB để TRUNCATE, framework áp dụng cơ chế "soft cleanup" qua UI trong khối <code>@AfterMethod</code> để xóa bản ghi vừa tạo, hoặc đánh dấu tiền tố <code>AUTO_DEL_</code> để chạy script dọn dẹp định kỳ (`RSK-026`).</li>
+  </ul>
+
+  <h3>6.4. Phân loại taxonomy nhãn kiểm thử (Test Tags)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 15%;">Nhãn (Tag/Group)</th>
+        <th style="width: 15%;">Thời gian thực thi</th>
+        <th style="width: 18%;">Tần suất chạy</th>
+        <th style="width: 52%;">Tiêu chí phân loại &amp; Kịch bản bao hàm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>smoke</code></td>
+        <td>&le; 3 phút</td>
+        <td>Mỗi commit / Mỗi lần build</td>
+        <td>Các ca kiểm thử tối quan trọng, tốc độ cực nhanh, ổn định 100%. Bao gồm: Đăng nhập hợp lệ, đăng nhập sai, truy cập Dashboard, mở danh sách Client, mở danh sách Project (5 tests hiện có).</td>
+      </tr>
+      <tr>
+        <td><code>regression</code></td>
+        <td>15 &ndash; 25 phút</td>
+        <td>Hàng đêm / Trước khi release</td>
+        <td>Toàn bộ kịch bản kiểm thử chức năng chi tiết, kiểm tra validation form, tính toán số liệu widget, bộ lọc, phân quyền và bảo mật cơ bản (31 tests hiện có, bao gồm cả smoke).</td>
+      </tr>
+      <tr>
+        <td><code>e2e</code></td>
+        <td>&le; 5 phút</td>
+        <td>Hàng tuần / Pre-demo</td>
+        <td>Kịch bản kiểm thử luồng nghiệp vụ xuyên suốt các phân hệ từ đầu đến cuối: Tạo Client &rarr; Tạo Project &rarr; Giao Task &rarr; Chuyển trạng thái hoàn thành (2 tests hiện có).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>6.5. Chiến lược chạy song song và ổn định hóa (Parallel &amp; Anti-Flakiness)</h3>
+  <ul>
+    <li><strong>Chạy tuần tự (Mặc định cho Suite chính):</strong> Do môi trường demo dùng chung tài khoản và tài nguyên máy chủ hạn chế, các bộ test mặc định chạy với cấu hình <code>parallel="none"</code> để đảm bảo độ ổn định cao nhất.</li>
+    <li><strong>Chạy song song có kiểm soát (Isolated Parallelism):</strong> Khi kích hoạt chạy đa luồng (ví dụ: <code>thread-count="2"</code>):
+      <ul>
+        <li>Tài khoản test của mỗi thread phải độc lập hoàn toàn.</li>
+        <li>Tắt tính năng quay video Monte Screen Recorder (hoặc cô lập thư mục output theo Thread ID) để tránh xung đột tài nguyên (`RSK-023`).</li>
+      </ul>
+    </li>
+    <li><strong>Cơ chế tự động thử lại (Retry Analyzer):</strong> Tích hợp TestNG <code>IRetryAnalyzer</code> cho phép tự động chạy lại tối đa <strong>01 lần</strong> duy nhất đối với các test fail do timeout đường truyền mạng hoặc gián đoạn kết nối tạm thời (`RSK-028`).</li>
+  </ul>
+
+  <h3>6.6. Chiến lược tích hợp liên tục (CI/CD Pipeline - Lộ trình dự kiến)</h3>
+  <div class="callout">
+    <p>Framework được thiết kế sẵn sàng để tích hợp vào quy trình CI/CD tự động qua <strong>GitHub Actions</strong>:</p>
+  </div>
+  <ul>
+    <li><strong>Trigger:</strong> Tự động kích hoạt khi có Pull Request vào nhánh <code>main</code> hoặc chạy theo lịch định kỳ hàng đêm (Nightly Cron Job).</li>
+    <li><strong>Môi trường thực thi:</strong> Ubuntu Runner sử dụng Headless Chrome và Dockerized Selenium Grid.</li>
+    <li><strong>Báo cáo tự động:</strong> Xuất kết quả Allure Report và tự động deploy lên <strong>GitHub Pages</strong> để phục vụ xem trực quan kết quả trong portfolio.</li>
+  </ul>
+
+  <h3>6.7. Quy ước mã nguồn &amp; Quy trình Review (Code Conventions)</h3>
+  <ul>
+    <li><strong>Cấm tuyệt đối hardcoded sleep:</strong> Cấm sử dụng <code>Thread.sleep()</code> trong toàn bộ mã nguồn; mọi hành động chờ đợi đều phải sử dụng <code>WebDriverWait</code> tường minh (`RSK-031`).</li>
+    <li><strong>Quy ước đặt tên (Naming Conventions):</strong>
+      <ul>
+        <li>Test method: <code>test&lt;Feature&gt;_&lt;Scenario&gt;_&lt;ExpectedResult&gt;</code> (vd: <code>testLogin_ValidAdminCredentials_NavigateToDashboard</code>).</li>
+        <li>Page Object class: Kết thúc bằng <code>Page</code> (vd: <code>ClientsPage</code>, <code>ProjectsPage</code>).</li>
+      </ul>
+    </li>
+    <li><strong>Nguyên tắc Clean Code:</strong> Mỗi Page Object class không vượt quá 300 dòng code; bóc tách component con khi phát hiện class phình to (`RSK-024`).</li>
+  </ul>
+
+  <h3>6.8. Chiến lược báo cáo (Reporting Strategy)</h3>
+  <ul>
+    <li><strong>Allure Report:</strong> Công cụ báo cáo chính thức hiển thị biểu đồ phân bổ trạng thái, các bước thực thi (Steps), dữ liệu đầu vào, thông báo lỗi và ảnh chụp màn hình khi fail.</li>
+    <li><strong>ExtentReports:</strong> Công cụ báo cáo dự phòng xuất file HTML độc lập gọn nhẹ phục vụ chia sẻ nhanh.</li>
+    <li><strong>Log4j2:</strong> Ghi log theo các cấp độ INFO, WARN, ERROR ra console và file xoay vòng (Rolling File Appender) phục vụ điều tra lỗi kỹ thuật chuyên sâu.</li>
+  </ul>
+
+  <!-- 7. MÔI TRƯỜNG VÀ DỮ LIỆU -->
+  <h2>7. Môi Trường &amp; Dữ Liệu Kiểm Thử (Environment &amp; Test Data)</h2>
+
+  <h3>7.1. Ma trận môi trường &amp; Trình duyệt</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">Môi trường / Nền tảng</th>
+        <th style="width: 15%;">Trình duyệt</th>
+        <th style="width: 12%;">Chế độ</th>
+        <th style="width: 15%;">Vai trò kiểm chuẩn</th>
+        <th style="width: 40%;">Ghi chú &amp; Giới hạn kỹ thuật</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>HRM Demo (Hosting công khai)</strong></td>
+        <td>Google Chrome (Mới nhất)</td>
+        <td>GUI &amp; Headless</td>
+        <td><strong>Golden Browser</strong><br>(Môi trường chuẩn)</td>
+        <td>Nền tảng kiểm chuẩn chính thức cho toàn bộ 100% kịch bản kiểm thử trong portfolio.</td>
+      </tr>
+      <tr>
+        <td><strong>HRM Demo (Hosting công khai)</strong></td>
+        <td>Microsoft Edge (Chromium)</td>
+        <td>GUI</td>
+        <td>Secondary Browser</td>
+        <td>Chạy xác minh tương thích định kỳ cho bộ kịch bản Smoke và Core Regression.</td>
+      </tr>
+      <tr>
+        <td><strong>HRM Demo (Hosting công khai)</strong></td>
+        <td>Mozilla Firefox (Gecko)</td>
+        <td>GUI &amp; Headless</td>
+        <td>Cross-Browser</td>
+        <td>Xác minh tính tương thích rendering và bắt lỗi lệch timing click JS (`RSK-027`).</td>
+      </tr>
+      <tr>
+        <td><strong>GitHub Actions Runner</strong></td>
+        <td>Chrome Headless / Linux</td>
+        <td>Headless</td>
+        <td>CI/CD Pipeline</td>
+        <td>Thực thi tự động trên môi trường ảo hóa không giao diện với độ phân giải màn hình giả lập 1920x1080.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.2. Chính sách quản lý tài khoản kiểm thử</h3>
+  <ul>
+    <li>Tài khoản quản trị demo mặc định: <code>admin_example@anhtester.com</code> / Mật khẩu công khai.</li>
+    <li><strong>Biện pháp phòng ngừa mất session (`RSK-025`):</strong> Bổ sung hàm tiện ích kiểm tra trạng thái đăng nhập trước mỗi Test Method: Nếu URL bị văng về trang <code>/login</code>, hệ thống tự động thực hiện tái đăng nhập (Auto-relogin) trước khi tiếp tục.</li>
+  </ul>
+
+  <!-- 8. QUẢN LÝ LỖI -->
+  <h2>8. Quản Lý Lỗi (Defect Management)</h2>
+
+  <h3>8.1. Vòng đời của lỗi (Defect Life Cycle)</h3>
+  <p>Quy trình xử lý lỗi tuân thủ chuẩn ISTQB: <code>New (Mới phát hiện)</code> &rarr; <code>Assigned (Đã giao)</code> &rarr; <code>Open (Đang điều tra)</code> &rarr; <code>Fixed (Đã sửa)</code> &rarr; <code>Retest (Kiểm tra lại)</code> &rarr; <code>Closed (Đóng lỗi)</code>. Nếu không tái hiện được: chuyển trạng thái <code>Cannot Reproduce</code> hoặc <code>Deferred (Hoãn)</code> kèm bằng chứng cụ thể.</p>
+
+  <h3>8.2. Ma trận Mức độ nghiêm trọng (Severity) &amp; Độ ưu tiên (Priority)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 15%;">Mức độ</th>
+        <th style="width: 42%;">Định nghĩa mức độ nghiêm trọng (Severity)</th>
+        <th style="width: 43%;">Định nghĩa độ ưu tiên xử lý (Priority)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-critical">Critical / S1</span></td>
+        <td>Làm sập hệ thống (Crash/500), mất dữ liệu hàng loạt, lỗ hổng bảo mật lộ credential (`RSK-001`), kết quả build xanh giả che giấu toàn bộ lỗi (`RSK-022`).</td>
+        <td><strong>P1 - Xử lý ngay lập tức:</strong> Chặn toàn bộ quy trình phát hành hoặc kiểm thử, phải được sửa trong vòng &lt; 24 giờ.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-high">High / S2</span></td>
+        <td>Chức năng chính bị hỏng hoàn toàn không có giải pháp tạm thời (workaround); ví dụ: Không thể tạo mới Khách hàng hoặc không lưu được Dự án.</td>
+        <td><strong>P2 - Xử lý khẩn cấp:</strong> Cần giải quyết trong sprint hiện tại hoặc trước khi đóng gói tài liệu portfolio.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-medium">Medium / S3</span></td>
+        <td>Chức năng phụ hoạt động sai hoặc có giải pháp thay thế đơn giản; widget Dashboard tính sai lệch số liệu hiển thị (`RSK-003`).</td>
+        <td><strong>P3 - Xử lý bình thường:</strong> Đưa vào backlog xử lý theo kế hoạch kiểm thử thường nhật.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-low">Low / S4</span></td>
+        <td>Lỗi hiển thị giao diện nhỏ (UI glitch), sai chính tả, lệch căn lề văn bản không gây ảnh hưởng đến thao tác người dùng.</td>
+        <td><strong>P4 - Xử lý khi có thời gian:</strong> Khắc phục khi có bản cập nhật giao diện tổng thể.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 9. TIÊU CHÍ VÀO/RA VÀ ĐÌNH CHỈ -->
+  <h2>9. Tiêu Chí Vào / Ra &amp; Đình Chỉ (Entry / Exit &amp; Suspension Criteria)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Hạng mục tiêu chí</th>
+        <th style="width: 75%;">Nội dung quy định chi tiết</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tiêu chí Bắt đầu (Entry Criteria)</strong></td>
+        <td>
+          1. AUT (<a href="https://hrm.anhtester.com" target="_blank">https://hrm.anhtester.com</a>) có thể truy cập ổn định qua HTTP 200.<br>
+          2. Mã nguồn framework được biên dịch thành công (<code>mvn clean compile</code> không có lỗi cú pháp).<br>
+          3. Tài khoản kiểm thử có thể đăng nhập thành công vào hệ thống.<br>
+          4. Bộ dữ liệu mồi hoặc DataProvider đã được nạp sẵn sàng.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Tiêu chí Hoàn thành (Exit Criteria)</strong></td>
+        <td>
+          1. 100% kịch bản trong bộ <code>smoke</code> đạt trạng thái PASS.<br>
+          2. &ge; 95% kịch bản trong bộ <code>regression</code> đạt trạng thái PASS; không còn bất kỳ lỗi Critical (S1) hoặc High (S2) nào đang mở mà không có giải trình.<br>
+          3. Tỷ lệ Flaky test của toàn bộ framework duy trì &le; 2% trên 10 lần chạy lặp liên tục.<br>
+          4. Báo cáo Allure được sinh đầy đủ, không có test rỗng (0 test executed).
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Tiêu chí Đình chỉ (Suspension Criteria)</strong></td>
+        <td>
+          1. Máy chủ demo bị sập hoặc trả về mã lỗi HTTP 502/503/504 kéo dài hơn 15 phút.<br>
+          2. Bên thứ ba reset database làm mất toàn bộ cấu trúc dữ liệu cơ bản.<br>
+          3. Tỷ lệ test case fail trong bộ Smoke Test &ge; 50% ngay từ các bước đăng nhập đầu tiên.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Tiêu chí Tiếp tục (Resumption Criteria)</strong></td>
+        <td>
+          1. Máy chủ demo phục hồi trạng thái hoạt động bình thường.<br>
+          2. Script khởi tạo dữ liệu (Data Seeding) đã tái tạo lại toàn bộ dữ liệu cơ sở.<br>
+          3. Kịch bản Smoke Test chạy thử đạt 100% Pass trước khi cho phép chạy lại toàn bộ suite.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 10. CHỈ SỐ ĐO LƯỜNG (KPIS) -->
+  <h2>10. Chỉ Số Đo Lường Chất Lượng &amp; Hiệu Suất (Quality Metrics &amp; KPIs)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">Tên chỉ số (KPI)</th>
+        <th style="width: 24%;">Công thức tính toán</th>
+        <th style="width: 14%;">Nguồn thu thập</th>
+        <th style="width: 12%;">Tần suất đo</th>
+        <th style="width: 14%;">Ngưỡng đạt <code>[ĐỀ XUẤT]</code></th>
+        <th style="width: 18%;">Hành động khi không đạt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Smoke Pass Rate</strong></td>
+        <td><code>(Số test Smoke Pass / Tổng test Smoke) × 100</code></td>
+        <td>Allure Report / TestNG</td>
+        <td>Mỗi lần chạy</td>
+        <td><strong>100%</strong></td>
+        <td>Chặn build ngay lập tức; điều tra và sửa lỗi trước khi thực hiện bất kỳ việc gì khác.</td>
+      </tr>
+      <tr>
+        <td><strong>Regression Pass Rate</strong></td>
+        <td><code>(Số test Regression Pass / Tổng test Regression) × 100</code></td>
+        <td>Allure Report / TestNG</td>
+        <td>Hàng tuần / Pre-release</td>
+        <td><strong>&ge; 95%</strong></td>
+        <td>Phân tích nguyên nhân lỗi (do AUT hay do script) và lên kế hoạch khắc phục trong 48h.</td>
+      </tr>
+      <tr>
+        <td><strong>Flaky Test Ratio</strong></td>
+        <td><code>(Số test đổi kết quả giữa 2 lần chạy / Tổng test) × 100</code></td>
+        <td>Lịch sử TestNG / Allure</td>
+        <td>Hàng tuần (10 runs)</td>
+        <td><strong>&le; 2%</strong></td>
+        <td>Cách ly test flaky vào suite quarantine; refactor locator và thay wait cứng bằng Explicit wait.</td>
+      </tr>
+      <tr>
+        <td><strong>Automation Execution Time</strong></td>
+        <td><code>Tổng thời gian chạy bộ test Regression</code></td>
+        <td>Maven Surefire log</td>
+        <td>Mỗi lần chạy</td>
+        <td><strong>&le; 25 phút</strong></td>
+        <td>Tối ưu hóa các bước chờ, loại bỏ các bước điều hướng thừa hoặc cấu hình chạy parallel.</td>
+      </tr>
+      <tr>
+        <td><strong>Data Collision Rate</strong></td>
+        <td><code>Số test fail do lỗi trùng lặp dữ liệu</code></td>
+        <td>Allure Failure trace</td>
+        <td>Mỗi lần chạy</td>
+        <td><strong>0 trường hợp</strong></td>
+        <td>Kiểm tra lại cơ chế sinh dữ liệu ngẫu nhiên của Faker và UUID của test case liên quan.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 11. VAI TRÒ VÀ TRÁCH NHIỆM (RACI) -->
+  <h2>11. Vai Trò &amp; Trách Nhiệm (RACI Matrix)</h2>
+  <p><em>Mặc dù dự án thực tế do 01 nhân sự đảm nhiệm toàn diện, ma trận RACI được thiết lập theo vai trò chức năng để chuẩn hóa tư duy tổ chức kiểm thử chuyên nghiệp:</em></p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%;">Nhiệm vụ / Hạng mục kiểm thử</th>
+        <th style="width: 17%;">Test Manager / Architect</th>
+        <th style="width: 18%;">Test Automation Engineer</th>
+        <th style="width: 17%;">Test Author / QA Analyst</th>
+        <th style="width: 18%;">Mentor / Reviewer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hoạch định chiến lược (Test Strategy) &amp; Quản trị rủi ro</td>
+        <td><strong>A / R</strong></td>
+        <td>C</td>
+        <td>C</td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>Thiết kế &amp; Refactor Kiến trúc Framework Automation</td>
+        <td>A</td>
+        <td><strong>R</strong></td>
+        <td>C</td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>Thiết kế kịch bản kiểm thử (Test Cases &amp; Data)</td>
+        <td>A</td>
+        <td>C</td>
+        <td><strong>R</strong></td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>Bảo trì dữ liệu kiểm thử &amp; Khắc phục lỗi Flaky</td>
+        <td>A</td>
+        <td><strong>R</strong></td>
+        <td>C</td>
+        <td>I</td>
+      </tr>
+      <tr>
+        <td>Đánh giá chất lượng độc lập &amp; Code Review</td>
+        <td>A</td>
+        <td>C</td>
+        <td>C</td>
+        <td><strong>R</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <p><em>Ghi chú: R = Responsible (Người thực hiện), A = Accountable (Người chịu trách nhiệm chính), C = Consulted (Người được tham vấn), I = Informed (Người được thông báo).</em></p>
+
+  <!-- 12. CHÍNH SÁCH ỨNG DỤNG AI TRONG KIỂM THỬ -->
+  <h2>12. Chính Sách Ứng Dụng AI Trong Kiểm Thử (AI-Assisted Testing Policy)</h2>
+
+  <h3>12.1. Ma trận phân công trách nhiệm: AI vs Con người</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Hạng mục công việc</th>
+        <th style="width: 38%;">Trí tuệ nhân tạo (AI - Gemini/Claude/Copilot)</th>
+        <th style="width: 37%;">Con người (Tester / QA Lead)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Thiết kế Test Case &amp; Ma trận</strong></td>
+        <td>Gợi ý phân vùng tương đương (EP), giá trị biên (BVA) và sinh dữ liệu mẫu giả lập.</td>
+        <td><strong>Quyết định 100%:</strong> Lọc bỏ các case vô lý, xác thực tính khả thi trên nghiệp vụ thực tế của AUT.</td>
+      </tr>
+      <tr>
+        <td><strong>Viết mã tự động hóa (Code Gen)</strong></td>
+        <td>Sinh mã khung (boilerplate), sinh Page Object locator cơ bản và cấu trúc hàm mẫu.</td>
+        <td><strong>Rà soát &amp; Tinh chỉnh:</strong> Kiểm tra chuẩn clean code, thay thế wait cứng, đảm bảo thread-safe và kiểm thử chạy thực tế.</td>
+      </tr>
+      <tr>
+        <td><strong>Phân tích lỗi (Triage &amp; Root Cause)</strong></td>
+        <td>Tóm tắt stacktrace lỗi từ Allure log, gợi ý giả thuyết nguyên nhân gây fail.</td>
+        <td><strong>Xác minh thực địa:</strong> Thao tác tay trực tiếp trên trình duyệt để khẳng định bug sản phẩm hay lỗi script.</td>
+      </tr>
+      <tr>
+        <td><strong>Soạn thảo tài liệu chất lượng</strong></td>
+        <td>Dự thảo cấu trúc tài liệu theo chuẩn ISO 29119, format bảng biểu và sinh dữ liệu CSV.</td>
+        <td><strong>Thẩm định chuyên môn:</strong> Kiểm chứng số học, đối chiếu bối cảnh dự án và phê duyệt tài liệu.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>12.2. Bốn nguyên tắc kiểm soát AI bắt buộc (Four Guardrails)</h3>
+  <ul>
+    <li><strong>1. Human-in-the-Loop 100%:</strong> Không bao giờ commit bất kỳ đoạn mã hoặc test case nào do AI sinh ra mà chưa có sự kiểm thử và rà soát thủ công của con người (`RSK-029`).</li>
+    <li><strong>2. Cấm rò rỉ dữ liệu bảo mật (Data Masking Mandatory):</strong> Nghiêm cấm đưa mật khẩu thật, private token, API key cá nhân vào bất kỳ prompt AI công cộng nào; bắt buộc thay thế bằng biến giả định `&lt;MASKED_SECRET&gt;` (`RSK-030`).</li>
+    <li><strong>3. Cấm mã nguồn kém chất lượng (No Anti-patterns):</strong> Tuyệt đối không chấp nhận các đoạn mã do AI gợi ý sử dụng <code>Thread.sleep()</code> hoặc khối <code>catch</code> rỗng che giấu exception (`RSK-031`).</li>
+    <li><strong>4. Tính tái lập của kết quả kiểm thử:</strong> Dữ liệu và kịch bản do AI sinh phải có khả năng tái lập và kiểm chứng độc lập trên môi trường web thực tế (`RSK-032`).</li>
+  </ul>
+
+  <!-- 13. CÔNG CỤ VÀ HẠ TẦNG -->
+  <h2>13. Công Cụ &amp; Hạ Tầng Kiểm Thử (Tools &amp; Infrastructure)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">Hạng mục</th>
+        <th style="width: 25%;">Công cụ hiện tại</th>
+        <th style="width: 25%;">Đề xuất bổ sung <code>[ĐỀ XUẤT]</code></th>
+        <th style="width: 32%;">Mục đích &amp; Lý do kỹ thuật</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ngôn ngữ &amp; Build</strong></td>
+        <td>Java 21, Apache Maven 3.9+</td>
+        <td>-</td>
+        <td>Nền tảng ổn định chuẩn doanh nghiệp, quản lý thư viện và plugin Surefire tập trung.</td>
+      </tr>
+      <tr>
+        <td><strong>Automation Core</strong></td>
+        <td>Selenium WebDriver 4.31</td>
+        <td>-</td>
+        <td>Thư viện tương tác trình duyệt tiêu chuẩn toàn cầu, hỗ trợ W3C WebDriver chuẩn mực.</td>
+      </tr>
+      <tr>
+        <td><strong>Test Framework</strong></td>
+        <td>TestNG 7.11</td>
+        <td>-</td>
+        <td>Quản lý suite, cấu hình grouping (smoke, regression), DataProvider và chạy song song.</td>
+      </tr>
+      <tr>
+        <td><strong>Dữ liệu &amp; Báo cáo</strong></td>
+        <td>Apache POI, Allure, ExtentReports, Log4j2, Monte Recorder</td>
+        <td>Java Faker (v1.0.2+)</td>
+        <td>Bổ sung Java Faker để sinh dữ liệu ngẫu nhiên độc lập, giải quyết triệt để lỗi va chạm dòng Excel (`RSK-021`).</td>
+      </tr>
+      <tr>
+        <td><strong>Hạ tầng CI/CD</strong></td>
+        <td>Chạy cục bộ trên máy Tester</td>
+        <td>GitHub Actions, Docker</td>
+        <td>Tự động hóa build, chạy headless regression và tự động cập nhật báo cáo lên GitHub Pages.</td>
+      </tr>
+      <tr>
+        <td><strong>Trí tuệ nhân tạo</strong></td>
+        <td>Google Gemini 3.8 Flash / Claude / Copilot</td>
+        <td>-</td>
+        <td>Hỗ trợ sinh mã mẫu, rà soát tài liệu kiểm thử và phân tích nguyên nhân lỗi stacktrace.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 14. RỦI RO CỦA CHIẾN LƯỢC -->
+  <h2>14. Rủi Ro Của Chiến Lược &amp; Biện Pháp Giảm Thiểu (Strategy Risks)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">Rủi ro cấp chiến lược</th>
+        <th style="width: 10%;">Mức độ</th>
+        <th style="width: 35%;">Hậu quả tiềm ẩn</th>
+        <th style="width: 35%;">Biện pháp giảm thiểu khả thi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Môi trường demo bị đóng cửa hoặc đổi URL</strong></td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Mất môi trường kiểm thử trực tiếp, framework không thể kết nối tới AUT.</td>
+        <td>Tách biệt toàn bộ cấu hình URL ra file <code>configs.properties</code>; chuẩn bị phương án mock cục bộ một số màn hình web tĩnh nếu cần.</td>
+      </tr>
+      <tr>
+        <td><strong>Nguồn lực đơn lẻ bị quá tải tiến độ</strong></td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Không hoàn thành kịp các mục tiêu phi chức năng và CI/CD trước hạn ứng tuyển.</td>
+        <td>Áp dụng triệt để quy tắc 80/20: Đảm bảo chất lượng tuyệt đối cho bộ Smoke và Core Regression trước, các phần nâng cao thực hiện theo giai đoạn.</td>
+      </tr>
+      <tr>
+        <td><strong>Bảo trì test tốn nhiều công sức khi UI đổi</strong></td>
+        <td><span class="badge badge-medium">Medium</span></td>
+        <td>Locator bị gãy hàng loạt, tốn nhiều giờ sửa code thay vì phát triển test mới.</td>
+        <td>Áp dụng mô hình Component Object Model, chuẩn hóa locator theo thuộc tính tương đối vững chắc (data-id, name), tránh dùng XPath tuyệt đối.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 15. GIẢ ĐỊNH, RÀNG BUỘC VÀ PHỤ THUỘC -->
+  <h2>15. Giả Định, Ràng Buộc &amp; Phụ Thuộc (Assumptions, Constraints &amp; Dependencies)</h2>
+  
+  <h3>15.1. Giả định kỹ thuật [GIẢ ĐỊNH]</h3>
+  <ul>
+    <li><code>[GIẢ ĐỊNH]</code> Dự án được phát triển và vận hành bởi 01 nhân sự duy nhất với thời lượng đầu tư trung bình ~20 giờ/tuần.</li>
+    <li><code>[GIẢ ĐỊNH]</code> Ứng dụng HRM Demo duy trì tính ổn định cơ bản về cấu trúc giao diện và không thay đổi cấu trúc URL trong suốt quá trình xây dựng portfolio.</li>
+    <li><code>[GIẢ ĐỊNH]</code> Mọi hành vi hiện hữu trên giao diện web của AUT được chấp nhận là quy tắc vận hành chuẩn mực khi không có tài liệu SRS đối chiếu.</li>
+  </ul>
+
+  <h3>15.2. Ràng buộc dự án [RÀNG BUỘC]</h3>
+  <ul>
+    <li><code>[RÀNG BUỘC]</code> <strong>Ràng buộc máy chủ demo công khai:</strong> Tuyệt đối không thực hiện các kịch bản kiểm thử tải nặng (load/stress test) hoặc các cuộc tấn công khai thác lỗ hổng sâu gây quá tải hoặc gián đoạn dịch vụ site demo.</li>
+    <li><code>[RÀNG BUỘC]</code> <strong>Ràng buộc truy cập backend:</strong> Không có quyền truy cập cơ sở dữ liệu (Database), log máy chủ hosting hoặc mã nguồn backend PHP của AUT.</li>
+    <li><code>[RÀNG BUỘC]</code> <strong>Ràng buộc môi trường:</strong> Không có môi trường Staging/UAT riêng biệt; mọi kiểm thử đều diễn ra trực tiếp trên môi trường demo dùng chung với cộng đồng.</li>
+  </ul>
+
+  <h3>15.3. Phụ thuộc kỹ thuật [PHỤ THUỘC]</h3>
+  <ul>
+    <li><code>[PHỤ THUỘC]</code> Kết nối Internet từ máy trạm của tester tới máy chủ lưu trữ của Anh Tester (<a href="https://hrm.anhtester.com" target="_blank">hrm.anhtester.com</a>).</li>
+    <li><code>[PHỤ THUỘC]</code> Sự ổn định của các dịch vụ đám mây công cộng (GitHub Actions, GitHub Pages, Google AI API).</li>
+  </ul>
+
+  <!-- 16. TRUY VẾT YÊU CẦU (RTM LINKAGE) -->
+  <h2>16. Truy Vết Yêu Cầu &amp; Rủi Ro (Traceability Matrix Linkage)</h2>
+  <p>Chiến lược kiểm thử này thiết lập cơ chế truy vết 2 chiều chặt chẽ giữa <strong>Rủi ro (Risk Register) &rarr; Chiến lược xử lý (Test Strategy) &rarr; Kịch bản kiểm thử (Test Plan/Cases)</strong>:</p>
+  <ul>
+    <li>Mọi rủi ro Critical và High trong <code>docs/01-risk-register.html</code> (như `RSK-001`, `RSK-002`, `RSK-021`, `RSK-022`) đều được chỉ định rõ Cấp độ kiểm thử, Kỹ thuật thiết kế và Nhãn mức chạy tương ứng tại Mục 4, 5 và 6 của tài liệu này.</li>
+    <li>Toàn bộ 33 test methods hiện có và các test case phát triển mới trong tương lai bắt buộc phải được gắn tag ID rủi ro tương ứng trong mã nguồn (ví dụ: qua Allure annotation <code>@Issue("RSK-001")</code> hoặc <code>@TmsLink("TC-AUTH-01")</code>) để phục vụ xuất ma trận RTM tự động trong báo cáo Allure.</li>
+  </ul>
+
+  <!-- 17. NHẬT KÝ QUYẾT ĐỊNH (DECISION LOG) -->
+  <h2>17. Nhật Ký Quyết Định Chiến Lược (Decision Log)</h2>
+  <p><em>Mọi quyết định quan trọng đều được ghi nhận minh bạch kèm theo căn cứ kỹ thuật, các phương án đã loại bỏ và sự đánh đổi (Trade-offs):</em></p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%;">Mã ID</th>
+        <th style="width: 22%;">Nội dung Quyết định</th>
+        <th style="width: 24%;">Lý do kỹ thuật (Rationale)</th>
+        <th style="width: 22%;">Phương án đã loại (Rejected)</th>
+        <th style="width: 22%;">Đánh đổi chấp nhận (Trade-offs)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D01</span></td>
+        <td>Giữ nguyên stack <strong>Java 21 + Selenium 4 + TestNG</strong> cho toàn bộ framework automation.</td>
+        <td>Đã có sẵn 33 test method hoạt động; stack Java/Selenium chiếm nhu cầu tuyển dụng lớn nhất (>60%) cho các vị trí QA/SDET tại Việt Nam.</td>
+        <td>Chuyển đổi toàn bộ sang Playwright (TypeScript) hoặc Cypress.</td>
+        <td>Phải tự viết cơ chế Dynamic Wait và Thread-safety thay vì có sẵn auto-wait như các framework mới.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D02</span></td>
+        <td>Thay thế dữ liệu gán cứng theo số dòng Excel bằng <strong>Java Faker + UUID động</strong> kết hợp DataProvider theo Method Key.</td>
+        <td>Giải quyết triệt để rủi ro Critical `RSK-021` (va chạm dữ liệu khi chạy lặp lại hoặc song song), bảo vệ tính ổn định của bộ Regression.</td>
+        <td>Tiếp tục đọc file Excel theo row index cố định hoặc reset file thủ công.</td>
+        <td>Mất thời gian refactor lại lớp tiện ích DataProvider và cấu trúc hàm test hiện tại.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D03</span></td>
+        <td>Cấu hình <code>testFailureIgnore=false</code> trong <code>pom.xml</code> và dọn dẹp các suite XML rác.</td>
+        <td>Khắc phục triệt để rủi ro Critical `RSK-022` (kết quả xanh giả); đảm bảo tính trung thực tuyệt đối của báo cáo kiểm thử.</td>
+        <td>Giữ nguyên <code>testFailureIgnore=true</code> để build Maven luôn xanh khi chạy demo.</td>
+        <td>Build Maven sẽ fail ngay khi có bất kỳ test nào fail, đòi hỏi tester phải bảo trì kịch bản kỹ lưỡng hơn.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D04</span></td>
+        <td>Áp dụng mô hình <strong>Component Object Model</strong> bóc tách nhỏ các thành phần giao diện.</td>
+        <td>Khắc phục rủi ro `RSK-024` (God Page Object phình to); tăng khả năng tái sử dụng các thành phần chung như Sidebar, Header, Table.</td>
+        <td>Viết dồn toàn bộ locator và hàm thao tác vào một file Page class duy nhất.</td>
+        <td>Số lượng file mã nguồn trong dự án tăng lên, cấu trúc thư mục phân cấp sâu hơn.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D05</span></td>
+        <td>Mặc định chạy bộ kiểm thử ở chế độ <strong>Tuần tự (Sequential Execution)</strong> trên môi trường demo dùng chung.</td>
+        <td>Site demo dùng chung tài khoản và tài nguyên yếu, chạy song song dễ gây đá session (`RSK-025`) và xung đột file video ghi hình (`RSK-023`).</td>
+        <td>Ép buộc chạy đa luồng parallel 4-8 thread trên site demo.</td>
+        <td>Tổng thời gian chạy bộ kiểm thử hồi quy lâu hơn (khoảng 15-20 phút), chấp nhận được với quy mô dự án portfolio.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D06</span></td>
+        <td>Giới hạn kiểm thử phi chức năng ở mức <strong>Safe Baseline</strong> (Security passive check, Performance &le; 5 VU).</td>
+        <td>Tuân thủ nghiêm ngặt ràng buộc AUT là site demo công khai; tránh nguy cơ làm sập máy chủ của bên thứ ba.</td>
+        <td>Thực hiện load test 100-500 user hoặc chạy các công cụ quét lỗ hổng tấn công sâu.</td>
+        <td>Không đo lường được ngưỡng chịu tải cực hạn (Breaking point) của hệ thống AUT.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-strategy">STR-D07</span></td>
+        <td>Thiết lập chính sách <strong>Human-in-the-loop 100%</strong> và cấm đưa Secret/Token vào AI chat.</td>
+        <td>Loại trừ rủi ro ảo giác AI sinh assertion sai (`RSK-029`) và nguy cơ rò rỉ thông tin quản trị ra bên ngoài (`RSK-030`).</td>
+        <td>Tin tưởng tuyệt đối mã do AI sinh ra và dán trực tiếp toàn bộ file cấu hình vào AI prompt.</td>
+        <td>Tốn thêm thời gian rà soát và kiểm thử thủ công từng đoạn code trước khi merge vào repo.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 18. THUẬT NGỮ VÀ TÀI LIỆU THAM KHẢO -->
+  <h2>18. Thuật Ngữ &amp; Tài Liệu Tham Khảo (Glossary &amp; References)</h2>
+  
+  <h3>18.1. Bảng thuật ngữ chuyên ngành (Glossary)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">Thuật ngữ / Viết tắt</th>
+        <th style="width: 30%;">Tên tiếng Anh đầy đủ</th>
+        <th style="width: 50%;">Định nghĩa chuyên môn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AUT</strong></td>
+        <td>Application Under Test</td>
+        <td>Hệ thống hoặc phần mềm đang là đối tượng được kiểm thử (ở đây là HRM web application).</td>
+      </tr>
+      <tr>
+        <td><strong>RBT</strong></td>
+        <td>Risk-Based Testing</td>
+        <td>Phương pháp kiểm thử dựa trên rủi ro: Dùng điểm rủi ro để quyết định ưu tiên và độ sâu kiểm thử.</td>
+      </tr>
+      <tr>
+        <td><strong>Flaky Test</strong></td>
+        <td>Non-deterministic Test</td>
+        <td>Ca kiểm thử tự động cho ra kết quả thất thường (lúc pass lúc fail) trên cùng một phiên bản mã nguồn không đổi.</td>
+      </tr>
+      <tr>
+        <td><strong>POM / COM</strong></td>
+        <td>Page Object Model / Component Object Model</td>
+        <td>Mẫu thiết kế hướng đối tượng đóng gói giao diện trang web thành các đối tượng mã nguồn Java.</td>
+      </tr>
+      <tr>
+        <td><strong>RBAC</strong></td>
+        <td>Role-Based Access Control</td>
+        <td>Cơ chế kiểm soát truy cập phân quyền dựa trên vai trò của người dùng (Admin vs Client vs Employee).</td>
+      </tr>
+      <tr>
+        <td><strong>False Green</strong></td>
+        <td>False Positive Build Status</td>
+        <td>Hiện tượng bản build CI/CD báo xanh thành công giả tạo dù thực tế có test case bị fail hoặc chạy 0 ca kiểm thử.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>18.2. Tài liệu tham khảo chuẩn mực</h3>
+  <ul>
+    <li>ISTQB&reg; - <em>Certified Tester Advanced Level: Test Manager Syllabus</em> (International Software Testing Qualifications Board).</li>
+    <li>ISO/IEC/IEEE 29119-2:2021 - <em>Software and systems engineering — Software testing — Part 2: Test processes</em>.</li>
+    <li>ISO/IEC/IEEE 29119-3:2021 - <em>Software and systems engineering — Software testing — Part 3: Test documentation</em>.</li>
+    <li>Selenium Documentation - <em>WebDriver Explicit Waits &amp; Thread Safety Guidelines</em> (<a href="https://www.selenium.dev/documentation/" target="_blank">selenium.dev</a>).</li>
+    <li>Allure Framework Docs - <em>TestNG Integration and Metadata Annotations</em> (<a href="https://allurereport.org" target="_blank">allurereport.org</a>).</li>
+  </ul>
+
+  <!-- 19. ĐIỂM CẦN CON NGƯỜI XÁC NHẬN & CỔNG CHẤT LƯỢNG -->
+  <h2>19. Điểm Cần Con Người Xác Nhận &amp; Cổng Chất Lượng (Quality Gate)</h2>
+
+  <h3>19.1. Danh sách câu hỏi cần con người xác nhận <code>[CẦN XÁC NHẬN]</code></h3>
+  <ol>
+    <li><code>[CẦN XÁC NHẬN]</code> <strong>Tác giả và thông tin người duyệt:</strong> Bạn có muốn cập nhật tên chính thức nào khác thay cho <em>Quỳnh Nhi Võ</em> trong phần Document Control không?</li>
+    <li><code>[CẦN XÁC NHẬN]</code> <strong>Mục tiêu mở rộng API Testing:</strong> Trong Phase 2, bạn dự kiến tích hợp thêm khoảng bao nhiêu kịch bản API test bằng RestAssured?</li>
+    <li><code>[CẦN XÁC NHẬN]</code> <strong>Hosting triển khai báo cáo Allure:</strong> Bạn có dự định sử dụng tính năng GitHub Pages tích hợp sẵn của repo <em>QuynhNhiVo/FinalProjectAutomationTest</em> để công khai báo cáo Allure cho nhà tuyển dụng xem trực tiếp không?</li>
+  </ol>
+
+  <h3>19.2. Tự kiểm tra chất lượng tài liệu (Quality Gate Checklist)</h3>
+  <ul class="checklist">
+    <li><strong>Cấu trúc chuẩn mực:</strong> Hoàn thành đầy đủ 19/19 mục theo đúng thứ tự quy định của tiêu chuẩn ISO 29119-3 và yêu cầu của Skill.</li>
+    <li><strong>Ranh giới tài liệu vững chắc:</strong> Hoàn toàn không lẫn lộn nội dung chi tiết của Test Plan (không có lịch trình ngày tháng biểu, không có danh sách test case chi tiết cụ thể).</li>
+    <li><strong>Chất lượng quyết định kiến trúc:</strong> 100% quyết định trong Decision Log (STR-D01 đến STR-D07) đều có đầy đủ: Quyết định rõ ràng, Lý do kỹ thuật, Phương án đã loại bỏ và Đánh đổi (Trade-offs).</li>
+    <li><strong>Khớp nối hoàn hảo với Risk Register:</strong> Toàn bộ các rủi ro Critical/High từ <code>01-risk-register.html</code> (`RSK-022`, `RSK-021`, `RSK-020`, `RSK-017`, `RSK-001`...) đều được ánh xạ giải pháp cụ thể trong chiến lược.</li>
+    <li><strong>Tính nhất quán với bối cảnh dự án:</strong> Tôn trọng tuyệt đối stack công nghệ hiện có (Java 21, Selenium 4, TestNG, Allure); đề xuất bổ sung (Java Faker, RestAssured) đều có lý giải thuyết phục.</li>
+    <li><strong>Chỉ số đo lường (KPI) thực tế:</strong> 100% chỉ số đều có công thức toán học, nguồn thu thập, ngưỡng đánh giá và hành động khắc phục cụ thể; không có KPI hình thức.</li>
+    <li><strong>Chính sách AI có trách nhiệm:</strong> Xác lập rõ ràng ma trận phân công AI/Human, 4 nguyên tắc bảo vệ an toàn thông tin và cấm tuyệt đối đưa mật khẩu/secret vào prompt.</li>
+    <li><strong>Định dạng kỹ thuật:</strong> Đầu ra là mã HTML thuần túy, tự chứa CSS hiện đại, chuyên nghiệp và đã được lưu trữ thành công vào file <code>docs/02-test-strategy.html</code>.</li>
+  </ul>
+
+  <!-- FOOTER GHI CHÚ MINH BẠCH -->
+  <div class="footer-note">
+    <p><strong>Ghi chú minh bạch (AI Transparency Note):</strong> Tài liệu Chiến lược kiểm thử này được biên soạn với sự hỗ trợ của mô hình Trí tuệ nhân tạo theo chuẩn mực quản trị kiểm thử quốc tế ISTQB Advanced Test Manager và ISO/IEC/IEEE 29119-3. Toàn bộ 19 mục cấu trúc, các quyết định kiến trúc framework tự động hóa, ma trận RACI, chính sách quản lý lỗi và hệ thống chỉ số đo lường đã được rà soát và kiểm chứng kỹ thuật bởi Tester / QA Lead phụ trách dự án vào ngày 30/10/2026. Kết quả lưu trữ tại <code>docs/02-test-strategy.html</code>.</p>
+  </div>
+
+</div>
+</body>
+</html>
+

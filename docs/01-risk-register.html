@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sổ Đăng Ký Rủi Ro & Ánh Xạ Kiểm Thử Theo Rủi Ro (Risk Register & Mapping)</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg-alt: #f9fafb;
+      --critical: #dc2626;
+      --critical-bg: #fee2e2;
+      --high: #ea580c;
+      --high-bg: #ffedd5;
+      --medium: #d97706;
+      --medium-bg: #fef3c7;
+      --low: #16a34a;
+      --low-bg: #dcfce7;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-main);
+      background-color: #ffffff;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 12px;
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    h2 {
+      color: #1e40af;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 36px;
+      font-size: 20px;
+    }
+
+    h3 {
+      color: #374151;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    p,
+    li {
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f3f4f6;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td {
+      background-color: var(--bg-alt);
+    }
+
+    tr:hover td {
+      background-color: #f0fdf4;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-critical {
+      background-color: var(--critical-bg);
+      color: var(--critical);
+      border: 1px solid #f87171;
+    }
+
+    .badge-high {
+      background-color: var(--high-bg);
+      color: var(--high);
+      border: 1px solid #fdba74;
+    }
+
+    .badge-medium {
+      background-color: var(--medium-bg);
+      color: var(--medium);
+      border: 1px solid #fde047;
+    }
+
+    .badge-low {
+      background-color: var(--low-bg);
+      color: var(--low);
+      border: 1px solid #86efac;
+    }
+
+    .badge-info {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+
+    .heatmap-table {
+      width: auto;
+      min-width: 650px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .heatmap-table th,
+    .heatmap-table td {
+      text-align: center;
+      width: 110px;
+      height: 55px;
+      padding: 6px;
+    }
+
+    .cell-critical {
+      background-color: #fca5a5 !important;
+      font-weight: bold;
+      color: #7f1d1d;
+    }
+
+    .cell-high {
+      background-color: #fdba74 !important;
+      font-weight: bold;
+      color: #7c2d12;
+    }
+
+    .cell-medium {
+      background-color: #fde047 !important;
+      color: #713f12;
+    }
+
+    .cell-low {
+      background-color: #86efac !important;
+      color: #14532d;
+    }
+
+    .checklist {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .checklist li {
+      padding: 6px 0;
+      font-size: 13.5px;
+    }
+
+    .checklist li::before {
+      content: "✔ ";
+      color: #16a34a;
+      font-weight: bold;
+    }
+
+    .csv-container {
+      background-color: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .csv-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1e293b;
+      padding: 10px 16px;
+      border-bottom: 1px solid #334155;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .csv-file-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    .csv-tag {
+      background-color: #3b82f6;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .csv-tag-alt {
+      background-color: #475569;
+      color: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .csv-btn-copy {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .csv-btn-copy:hover {
+      background-color: #1d4ed8;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+    }
+
+    .csv-btn-copy:active {
+      transform: scale(0.98);
+    }
+
+    .csv-pre {
+      margin: 0;
+      padding: 16px 20px;
+      overflow-x: auto;
+      background-color: #0b1120;
+      max-height: 480px;
+      scrollbar-width: thin;
+      scrollbar-color: #475569 #0b1120;
+    }
+
+    .csv-pre code {
+      font-family: "JetBrains Mono", Consolas, "SFMono-Regular", Monaco, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #e2e8f0;
+      white-space: pre;
+      display: block;
+      letter-spacing: 0.2px;
+    }
+
+    .schema-container {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 16px 0;
+    }
+
+    .schema-badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      font-size: 11.5px;
+      margin: 2px 4px;
+    }
+
+    .footer-note {
+      margin-top: 50px;
+      padding-top: 16px;
+      border-top: 1px dashed #9ca3af;
+      font-size: 12.5px;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .callout {
+      background-color: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout-warning {
+      background-color: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 4px 4px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>Sổ Đăng Ký Rủi Ro & Ánh Xạ Kiểm Thử Theo Rủi Ro (Risk Register & Mapping)</h1>
+    <p><strong>Dự án:</strong> FinalProjectAutomationTest (HRM Demo System Testing Portfolio)</p>
+
+    <!-- 1. DOCUMENT CONTROL -->
+    <h2>1. Thông Tin Quản Trị Tài Liệu (Document Control)</h2>
+    <table>
+      <tr>
+        <th style="width: 20%;">Thuộc tính</th>
+        <th>Giá trị chi tiết</th>
+      </tr>
+      <tr>
+        <td><strong>Tên tài liệu</strong></td>
+        <td>Sổ Đăng Ký Rủi Ro & Ánh Xạ Kiểm Thử Theo Rủi Ro (Risk Register & Test Mapping)</td>
+      </tr>
+      <tr>
+        <td><strong>Mã định danh</strong></td>
+        <td>DOC-01-RR-MAP</td>
+      </tr>
+      <tr>
+        <td><strong>Phiên bản</strong></td>
+        <td>0.1 (Draft)</td>
+      </tr>
+      <tr>
+        <td><strong>Trạng thái</strong></td>
+        <td><span class="badge badge-info">Draft - Chờ Duyệt</span></td>
+      </tr>
+      <tr>
+        <td><strong>Tác giả</strong></td>
+        <td>Quỳnh Nhi Võ <code></code></td>
+      </tr>
+      <!--       <tr>
+        <td><strong>Người phê duyệt</strong></td>
+        <td>Senior Test Manager / Mentor <code></code></td>
+      </tr> -->
+      <tr>
+        <td><strong>Ngày tạo</strong></td>
+        <td>29/10/2026</td>
+      </tr>
+      <tr>
+        <td><strong>Ngày review kế tiếp</strong></td>
+        <td>15/11/2026 <code></code></td>
+      </tr>
+      <tr>
+        <td><strong>Lịch sử thay đổi</strong></td>
+        <td>
+          <strong>v0.1 (29/10/2026):</strong> Khởi tạo bản thảo đầu tiên gồm 32 rủi ro thuộc 5 danh mục theo chuẩn ISTQB
+          ATM & ISO/IEC/IEEE 29119, xây dựng ma trận phân bổ L/I, Heat map 5x5, ánh xạ kiểm thử (RBTT) và kế hoạch xử lý
+          Top 10 rủi ro.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Tài liệu tham chiếu</strong></td>
+        <td>
+          1. ISTQB Advanced Level Test Manager (ATM) Syllabus v2012 / v2024 (Risk-based Testing).<br>
+          2. ISO/IEC/IEEE 29119-2:2021 & 29119-3:2021 (Test processes and documentation).<br>
+          3. Kho mã nguồn: <a href="https://github.com/QuynhNhiVo/FinalProjectAutomationTest" target="_blank">GitHub:
+            QuynhNhiVo/FinalProjectAutomationTest</a>.<br>
+          4. Hệ thống AUT: <a href="https://hrm.anhtester.com" target="_blank">https://hrm.anhtester.com</a>.
+        </td>
+      </tr>
+    </table>
+
+    <!-- 2. PHẠM VI VÀ PHƯƠNG PHÁP -->
+    <h2>2. Phạm Vi & Phương Pháp Tiếp Cận (Scope & Methodology)</h2>
+    <div class="callout">
+      <p><strong>Mục tiêu:</strong> Xác định, lượng hóa và thiết lập chiến lược kiểm soát rủi ro toàn diện cho dự án
+        kiểm thử tự động hệ thống HRM demo, nhằm tối ưu hóa thứ tự thực thi kiểm thử ("kiểm thử cái gì trước, sâu đến
+        mức nào, bằng mức chạy nào"), phục vụ portfolio ứng tuyển Tester/QC.</p>
+    </div>
+    <p><strong>Phạm vi hệ thống kiểm thử (AUT):</strong> HRM demo (<a href="https://hrm.anhtester.com"
+        target="_blank">https://hrm.anhtester.com</a>) gồm 8 phân hệ cốt lõi: Đăng nhập (Admin/Client), Dashboard, Quản
+      lý Khách hàng (Clients), Nhân viên/Team (Employees), Dự án (Projects), Công việc (Tasks), Đính kèm tệp
+      (Attachments) và Cập nhật trạng thái (Status Updates).</p>
+    <p><strong>Ràng buộc dự án:</strong></p>
+    <ul>
+      <li>Không thực hiện tải nặng (load/stress test) lên site demo công khai.</li>
+      <li>Không có quyền truy cập trực tiếp vào Cơ sở dữ liệu (Database) hoặc mã nguồn backend của AUT.</li>
+      <li>Không có môi trường Staging/UAT riêng biệt; môi trường demo có thể bị reset dữ liệu bất ngờ bởi bên thứ ba.
+      </li>
+      <li>Nguồn lực thực hiện: 01 Tester đảm nhiệm toàn bộ vai trò kiểm thử và tự động hóa, ước tính 20 giờ/tuần
+        <code>[GIẢ ĐỊNH]</code>.
+      </li>
+    </ul>
+    <p><strong>Phương pháp Risk-Based Testing (RBT):</strong> Áp dụng quy chuẩn ISTQB ATM và ISO 29119: Đánh giá xác
+      suất (Likelihood - L) và mức độ tác động (Impact - I) dựa trên căn cứ kỹ thuật và bối cảnh cụ thể; điểm rủi ro
+      (Risk Score = L × I) trực tiếp định hướng độ sâu kiểm thử (Extensive, Balanced, Opportunity-based) và nhóm chạy tự
+      động hóa (Smoke, Regression, E2E).</p>
+
+    <!-- 3. THANG ĐÁNH GIÁ -->
+    <h2>3. Thang Đánh Giá & Phân Loại Rủi Ro (Evaluation Scale)</h2>
+    <table>
+      <tr>
+        <th style="width: 15%;">Mức điểm</th>
+        <th style="width: 42%;">Khả năng xảy ra (Likelihood - L)</th>
+        <th style="width: 43%;">Mức độ tác động (Impact - I)</th>
+      </tr>
+      <tr>
+        <td><strong>1 (Rất thấp)</strong></td>
+        <td><strong>Hiếm khi:</strong> Chỉ xảy ra trong các điều kiện ngoại lệ hiếm gặp hoặc cấu hình đặc biệt hiếm hoi.
+        </td>
+        <td><strong>Không đáng kể:</strong> Lỗi chính tả nhỏ, lệch hiển thị nhẹ không ảnh hưởng thao tác người dùng.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>2 (Thấp)</strong></td>
+        <td><strong>Ít:</strong> Khả năng thấp nhưng đã từng xuất hiện ở một số kịch bản biên hoặc môi trường hẹp.</td>
+        <td><strong>Nhỏ:</strong> Gây bất tiện nhỏ cho thao tác, có giải pháp thay thế đơn giản (workaround).</td>
+      </tr>
+      <tr>
+        <td><strong>3 (Vừa)</strong></td>
+        <td><strong>Có thể:</strong> Khả năng xảy ra ở mức trung bình trong điều kiện vận hành chuẩn hoặc mạng không ổn
+          định.</td>
+        <td><strong>Vừa:</strong> Ảnh hưởng đến một phần chức năng phụ, sai lệch dữ liệu hiển thị không cốt lõi.</td>
+      </tr>
+      <tr>
+        <td><strong>4 (Cao)</strong></td>
+        <td><strong>Khả năng cao:</strong> Rất dễ xảy ra do thiếu cơ chế kiểm soát, dữ liệu dùng chung hoặc thiết kế
+          mong manh.</td>
+        <td><strong>Lớn:</strong> Phá vỡ chức năng chính, hỏng dữ liệu liên kết hoặc gây fail hàng loạt kịch bản test.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>5 (Rất cao)</strong></td>
+        <td><strong>Gần như chắc chắn:</strong> Vấn đề đã hoặc đang diễn ra định kỳ trong hiện trạng dự án.</td>
+        <td><strong>Nghiêm trọng:</strong> Lỗ hổng bảo mật rò rỉ dữ liệu, hỏng toàn bộ kết quả test ("xanh giả"), sập hệ
+          thống.</td>
+      </tr>
+    </table>
+
+    <p><strong>Công thức tính điểm rủi ro:</strong> <code>Score = Likelihood (L) × Impact (I)</code></p>
+    <p><strong>Quy tắc phân mức rủi ro:</strong></p>
+    <ul>
+      <li><span class="badge badge-critical">Critical</span>: <strong>Điểm ≥ 20</strong> (Màu đỏ) – Rủi ro khẩn cấp, bắt
+        buộc xử lý ngay, áp dụng độ sâu kiểm thử Extensive và test hàng ngày.</li>
+      <li><span class="badge badge-high">High</span>: <strong>Điểm 10 – 16</strong> (Màu cam) – Rủi ro cao, cần biện
+        pháp giảm thiểu chặt chẽ và theo dõi sát.</li>
+      <li><span class="badge badge-medium">Medium</span>: <strong>Điểm 5 – 9</strong> (Màu vàng) – Rủi ro trung bình, áp
+        dụng kiểm thử cân bằng (Balanced testing).</li>
+      <li><span class="badge badge-low">Low</span>: <strong>Điểm ≤ 4</strong> (Màu xanh lá) – Rủi ro thấp, kiểm thử theo
+        cơ hội (Opportunity-based) hoặc chấp nhận.</li>
+    </ul>
+
+    <!-- 4. RISK REGISTER TABLE -->
+    <h2>4. Sổ Đăng Ký Rủi Ro Chi Tiết (Risk Register)</h2>
+    <p><em>Gồm 32 rủi ro được định danh duy nhất (RSK-001 đến RSK-032), cấu trúc theo cú pháp chuẩn: "Do &lt;nguyên
+        nhân&gt;, có thể xảy ra &lt;sự kiện&gt;, dẫn tới &lt;hậu quả&gt;".</em></p>
+
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 4%;">ID</th>
+            <th style="width: 7%;">Loại</th>
+            <th style="width: 8%;">Phân hệ</th>
+            <th style="width: 20%;">Mô tả rủi ro (Nguyên nhân &rarr; Sự kiện &rarr; Hậu quả)</th>
+            <th style="width: 3%;">L</th>
+            <th style="width: 8%;">Lý do L</th>
+            <th style="width: 3%;">I</th>
+            <th style="width: 8%;">Lý do I</th>
+            <th style="width: 4%;">Score</th>
+            <th style="width: 6%;">Mức</th>
+            <th style="width: 6%;">Chiến lược</th>
+            <th style="width: 13%;">Giảm thiểu (Mitigation)</th>
+            <th style="width: 10%;">Dự phòng (Contingency)</th>
+            <th style="width: 7%;">Trigger</th>
+            <th style="width: 6%;">Owner</th>
+            <th style="width: 5%;">Residual (L×I=S)</th>
+            <th style="width: 5%;">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- PRODUCT RISKS -->
+          <tr>
+            <td><strong>RSK-001</strong></td>
+            <td>PRODUCT</td>
+            <td>Đăng nhập (Auth)</td>
+            <td>Do thiếu kiểm tra phân quyền truy cập chéo giữa vai trò Admin và Client trên các endpoint URL, có thể
+              xảy ra việc tài khoản Client truy cập trái phép vào trang quản trị nhân sự và dự án của Admin, dẫn tới rò
+              rỉ dữ liệu nhạy cảm của toàn bộ doanh nghiệp.</td>
+            <td>3</td>
+            <td>Cơ chế session ứng dụng web demo thường quản lý phân quyền lỏng lẻo ở tầng router frontend.</td>
+            <td>5</td>
+            <td>Vi phạm bảo mật phân quyền nghiêm trọng, làm lộ toàn bộ thông tin nội bộ.</td>
+            <td><strong>15</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Thiết kế ma trận phân quyền (CRUD Matrix) và bổ sung test case tự động kiểm tra truy cập URL quản trị
+              bằng session Client. <em>(Dấu hiệu: Test suite RBAC pass 100%)</em></td>
+            <td>Báo cáo lỗi bảo mật cho quản trị viên site demo và chặn kiểm thử tự động các luồng phụ thuộc.</td>
+            <td>Tài khoản Client mở được trang quản trị Admin mà không bị redirect về login/403.</td>
+            <td>QA Lead</td>
+            <td>2 × 4 = 8 (Med)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-002</strong></td>
+            <td>PRODUCT</td>
+            <td>Đăng nhập (Auth)</td>
+            <td>Do hệ thống không giới hạn số lần đăng nhập sai và thông báo lỗi hiển thị chi tiết (phân biệt 'sai mật
+              khẩu' với 'tài khoản không tồn tại'), có thể xảy ra việc kẻ xấu brute-force dò mật khẩu hoặc liệt kê tài
+              khoản quản trị, dẫn tới nguy cơ chiếm quyền tài khoản Admin.</td>
+            <td>3</td>
+            <td>Các web demo thường không cấu hình rate-limiting hay CAPTCHA ở trang đăng nhập.</td>
+            <td>4</td>
+            <td>Tài khoản Admin bị chiếm đoạt gây mất quyền kiểm soát toàn bộ hệ thống kiểm thử.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Xây dựng kịch bản kiểm thử bảo mật cơ bản kiểm tra thông điệp lỗi đăng nhập đồng nhất ("Invalid
+              credentials") và thử lặp lại n lần đăng nhập sai. <em>(Dấu hiệu: Kịch bản negative auth hoàn thành)</em>
+            </td>
+            <td>Đổi mật khẩu tài khoản test quản trị ngay khi phát hiện hành vi nghi vấn.</td>
+            <td>Thông báo lỗi hiển thị rõ ràng sự tồn tại của tên người dùng.</td>
+            <td>Automation Engineer</td>
+            <td>2 × 3 = 6 (Med)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-003</strong></td>
+            <td>PRODUCT</td>
+            <td>Dashboard</td>
+            <td>Do widget thống kê trên Dashboard truy vấn và tính toán dữ liệu tổng hợp không đồng bộ theo thời gian
+              thực, có thể xảy ra việc số liệu tổng hợp (tổng nhân viên, task đang mở) bị sai lệch so với dữ liệu thực
+              tế tại các bảng danh mục, dẫn tới người quản lý nhận thông tin báo cáo sai.</td>
+            <td>3</td>
+            <td>Môi trường demo có nhiều tester thao tác thêm/xóa dữ liệu cùng lúc dễ làm cache dashboard bị trễ.</td>
+            <td>3</td>
+            <td>Gây hiểu nhầm về số liệu báo cáo nhưng không làm mất dữ liệu gốc của hệ thống.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Xây dựng test case so sánh số đếm trên widget Dashboard với số dòng thực tế lấy từ API/bảng danh sách
+              Client/Project. <em>(Dấu hiệu: Assertion khớp số liệu 100%)</em></td>
+            <td>Thêm bước refresh trang cứng (Ctrl+F5) hoặc xóa cache trình duyệt trước khi đọc metric.</td>
+            <td>Số liệu widget khác biệt > 0 bản ghi so với bảng danh sách.</td>
+            <td>Test Author</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-004</strong></td>
+            <td>PRODUCT</td>
+            <td>Dashboard</td>
+            <td>Do Dashboard tải đồng thời nhiều bảng biểu đồ và sự kiện mà không áp dụng lazy-loading, có thể xảy ra
+              hiện tượng treo trình duyệt hoặc timeout tải trang khi lượng dữ liệu demo tích tụ lớn, dẫn tới người dùng
+              không thể thao tác sau khi đăng nhập.</td>
+            <td>2</td>
+            <td>Dữ liệu trên site demo ở mức trung bình, hiếm khi quá tải đến mức crash UI.</td>
+            <td>3</td>
+            <td>Gây chậm trễ và gián đoạn trải nghiệm của người dùng ngay màn hình chính.</td>
+            <td><strong>6</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Cấu hình PageLoadTimeout và Explicit Wait linh hoạt (Dynamic Wait) thay vì chờ cứng toàn trang. <em>(Dấu
+                hiệu: Không còn TimeoutException ở Dashboard)</em></td>
+            <td>Điều hướng trực tiếp qua URL phân hệ con nếu Dashboard bị treo.</td>
+            <td>Thời gian tải trang Dashboard vượt quá 15 giây.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-005</strong></td>
+            <td>PRODUCT</td>
+            <td>Quản lý Client</td>
+            <td>Do hệ thống không kiểm tra tính duy nhất (Uniqueness) của tên công ty hoặc email khách hàng khi tạo mới,
+              có thể xảy ra việc tạo trùng lặp hàng loạt hồ sơ khách hàng giống nhau, dẫn tới dữ liệu phân tán và sai
+              lệch khi gán dự án/hóa đơn.</td>
+            <td>4</td>
+            <td>Hệ thống demo thường lỏng lẻo trong việc validate trùng lặp dữ liệu khách hàng.</td>
+            <td>3</td>
+            <td>Làm phân mảnh dữ liệu khách hàng, gây khó khăn cho việc tra cứu và liên kết dự án.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Bổ sung bộ test case kiểm tra biên và kiểm tra tính duy nhất (Unique validation test); tạo dữ liệu kèm
+              hậu tố thời gian động (timestamp/UUID). <em>(Dấu hiệu: Test case duplicate validation hoàn thành)</em>
+            </td>
+            <td>Lọc danh sách Client theo ngày tạo mới nhất để lấy đúng ID vừa sinh.</td>
+            <td>Tạo thành công 2 client có cùng tên công ty và email mà không có cảnh báo.</td>
+            <td>Test Author</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-006</strong></td>
+            <td>PRODUCT</td>
+            <td>Quản lý Client</td>
+            <td>Do các trường thông tin Client (Tên, Địa chỉ, Ghi chú) không lọc mã độc HTML/Javascript đầu vào
+              (Sanitization), có thể xảy ra lỗ hổng Stored XSS khi xem chi tiết khách hàng, dẫn tới mã độc chạy tự động
+              trên trình duyệt của người dùng khác đang xem hồ sơ đó.</td>
+            <td>2</td>
+            <td>Các framework web hiện đại thường có cơ chế auto-escape ký tự đặc biệt mặc định.</td>
+            <td>4</td>
+            <td>Nguy cơ đánh cắp cookie/session của người dùng quản trị khi mở trang xem chi tiết Client.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Thực hiện test injection an toàn bằng payload văn bản vô hại (ví dụ:
+              <code>&lt;script&gt;console.log('test')&lt;/script&gt;</code>) và kiểm tra encoding trên DOM. <em>(Dấu
+                hiệu: Ký tự được render dạng chuỗi an toàn)</em>
+            </td>
+            <td>Xóa ngay bản ghi khách hàng chứa ký tự độc nếu script bị kích hoạt.</td>
+            <td>Trình duyệt hiển thị hộp thoại alert hoặc thực thi script lạ trong console.</td>
+            <td>QA Lead</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-007</strong></td>
+            <td>PRODUCT</td>
+            <td>Nhân viên (Employees)</td>
+            <td>Do hệ thống không thu hồi kịp thời quyền truy cập hoặc không vô hiệu hóa phiên làm việc khi nhân viên
+              chuyển trạng thái sang 'Inactive', có thể xảy ra việc nhân sự đã thôi việc vẫn tiếp tục đăng nhập và thao
+              tác dữ liệu, dẫn tới vi phạm an toàn thông tin nội bộ.</td>
+            <td>2</td>
+            <td>Cơ chế cập nhật trạng thái thường cập nhật cờ active trong bảng dữ liệu ngay lập tức.</td>
+            <td>4</td>
+            <td>Rò rỉ thông tin mật và phá hoại dữ liệu từ người dùng không còn quyền hạn.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Thiết kế kịch bản State Transition Test: Đổi trạng thái nhân viên thành Inactive, sau đó kiểm tra đăng
+              nhập bằng tài khoản đó và xác minh bị chặn. <em>(Dấu hiệu: Test case chuyển trạng thái pass)</em></td>
+            <td>Kích hoạt chức năng đổi mật khẩu cưỡng bức cho tài khoản nhân viên.</td>
+            <td>Tài khoản nhân viên ở trạng thái Inactive vẫn đăng nhập thành công.</td>
+            <td>Test Author</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-008</strong></td>
+            <td>PRODUCT</td>
+            <td>Nhân viên (Employees)</td>
+            <td>Do form quản lý nhân viên không kiểm tra chặt chẽ tính hợp lệ của định dạng số điện thoại, ngày sinh và
+              email, có thể xảy ra việc lưu trữ dữ liệu rác sai cấu trúc, dẫn tới lỗi xử lý ngầm (Uncaught
+              Exception/500) ở các phân hệ phụ thuộc như tính lương hay gửi thông báo.</td>
+            <td>4</td>
+            <td>Các form thêm nhân viên trên bản demo thường thiếu regex validate phía backend.</td>
+            <td>2</td>
+            <td>Gây lỗi giao diện cục bộ hoặc lỗi gửi mail thông báo, không làm gián đoạn toàn hệ thống.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Áp dụng kỹ thuật Phân vùng tương đương (EP) và Phân tích giá trị biên (BVA) để xây dựng bộ test dữ liệu
+              đầu vào cho form nhân viên. <em>(Dấu hiệu: Bộ test validation dữ liệu hoàn thiện)</em></td>
+            <td>Chỉnh sửa lại thông tin nhân viên qua form edit với dữ liệu chuẩn.</td>
+            <td>Form chấp nhận lưu số điện thoại chứa chữ cái hoặc email không có ký tự @.</td>
+            <td>Test Author</td>
+            <td>2 × 1 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-009</strong></td>
+            <td>PRODUCT</td>
+            <td>Dự án (Projects)</td>
+            <td>Do thiếu ràng buộc khóa ngoại toàn vẹn (Cascade Delete/Foreign Key) khi xóa một dự án đang có các công
+              việc và tài liệu liên kết, có thể xảy ra hiện tượng mồ côi dữ liệu (orphaned records), dẫn tới trang công
+              việc (Tasks) bị crash lỗi 500 khi cố gắng hiển thị dự án đã bị xóa.</td>
+            <td>3</td>
+            <td>Hệ thống mã nguồn mở thường hay bỏ qua cascade delete chặt chẽ giữa các bảng liên quan.</td>
+            <td>4</td>
+            <td>Phá vỡ tính toàn vẹn của cơ sở dữ liệu và làm crash màn hình công việc liên quan.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Viết kịch bản kiểm thử tích hợp (Integration Test): Tạo dự án &rarr; Gán task &rarr; Xóa dự án &rarr;
+              Kiểm tra màn hình Task xử lý thông báo phù hợp thay vì sập lỗi 500. <em>(Dấu hiệu: UI hiển thị thông báo
+                graceful)</em></td>
+            <td>Ghi nhận bug nghiêm trọng lên hệ thống issue và ngừng chạy kịch bản xóa dự án có dữ liệu liên kết.</td>
+            <td>Trang Tasks báo lỗi HTTP 500 Internal Server Error sau khi xóa dự án cha.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-010</strong></td>
+            <td>PRODUCT</td>
+            <td>Dự án (Projects)</td>
+            <td>Do dropdown gán thành viên dự án không lọc theo trạng thái hoạt động của nhân sự, có thể xảy ra việc
+              người quản lý gán nhầm nhân viên đã nghỉ việc (Inactive) vào dự án mới, dẫn tới tắc nghẽn quy trình giao
+              việc và báo cáo tiến độ sai lệch.</td>
+            <td>3</td>
+            <td>Truy vấn danh sách nhân viên thường chỉ lấy <code>SELECT * FROM employees</code> mà bỏ qua cờ trạng
+              thái.</td>
+            <td>2</td>
+            <td>Gây bất tiện thao tác, có thể sửa đổi bằng cách xóa nhân viên đó khỏi dự án.</td>
+            <td><strong>6</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Viết test case kiểm tra danh sách dropdown thành viên chỉ chứa các nhân viên có trạng thái Active.
+              <em>(Dấu hiệu: Kịch bản dropdown filter pass)</em>
+            </td>
+            <td>Chọn lại thành viên khác đang active trong danh sách.</td>
+            <td>Nhân viên đã vô hiệu hóa vẫn xuất hiện trong danh sách lựa chọn thành viên dự án.</td>
+            <td>Test Author</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-011</strong></td>
+            <td>PRODUCT</td>
+            <td>Công việc (Tasks)</td>
+            <td>Do quy trình chuyển đổi trạng thái công việc (To Do &rarr; In Progress &rarr; Done) không kiểm soát điều
+              kiện tiên quyết (Checklist/Subtasks), có thể xảy ra việc người dùng nhảy cóc trạng thái sang Done khi chưa
+              hoàn thành các hạng mục con, dẫn tới sai lệch quy trình quản trị chất lượng.</td>
+            <td>3</td>
+            <td>Giao diện kéo thả Kanban thường cho phép kéo tự do giữa các cột mà không chặn logic ngầm.</td>
+            <td>3</td>
+            <td>Gây sai lệch báo cáo tiến độ và chất lượng dự án thực tế.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Áp dụng bảng chuyển trạng thái (State Transition Table) để kiểm thử toàn diện các luồng hợp lệ và không
+              hợp lệ của Task workflow. <em>(Dấu hiệu: Bảng state transition đạt độ phủ 100%)</em></td>
+            <td>Chuyển trạng thái task trở lại bước trước đó để tiếp tục hoàn thiện subtask.</td>
+            <td>Task chuyển sang trạng thái Done dù còn 100% checklist chưa hoàn thành.</td>
+            <td>Test Author</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-012</strong></td>
+            <td>PRODUCT</td>
+            <td>Công việc (Tasks)</td>
+            <td>Do thiếu cơ chế khóa lạc quan (Optimistic Locking) khi nhiều người cùng chỉnh sửa chi tiết một công
+              việc, có thể xảy ra việc người lưu sau ghi đè mất toàn bộ nội dung chỉnh sửa của người trước mà không có
+              cảnh báo xung đột, dẫn tới mất mát dữ liệu ghi chú quan trọng.</td>
+            <td>3</td>
+            <td>Môi trường demo dùng chung không hỗ trợ concurrency lock giữa các phiên làm việc.</td>
+            <td>3</td>
+            <td>Mất dữ liệu cập nhật gần nhất của người dùng, gây tranh chấp thông tin.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Thiết kế kịch bản test kiểm tra xung đột dữ liệu: Mở 2 tab trình duyệt cùng sửa 1 task và kiểm tra phản
+              hồi của hệ thống khi lưu liên tiếp. <em>(Dấu hiệu: Có cảnh báo xung đột dữ liệu)</em></td>
+            <td>Kiểm tra lịch sử chỉnh sửa (Activity log) để phục hồi lại nội dung bị ghi đè.</td>
+            <td>Dữ liệu lưu trước bị mất hoàn toàn mà không có thông báo xác nhận ghi đè.</td>
+            <td>Automation Engineer</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-013</strong></td>
+            <td>PRODUCT</td>
+            <td>Tệp đính kèm (Attachments)</td>
+            <td>Do thiếu kiểm tra định dạng MIME thực tế và phần mở rộng tệp phía server (chỉ kiểm tra đuôi file phía
+              client), có thể xảy ra việc người dùng tải lên các tệp mã độc (.php, .sh, .exe trá hình), dẫn tới nguy cơ
+              thực thi mã độc từ xa (RCE) trên máy chủ hosting demo.</td>
+            <td>3</td>
+            <td>Nhiều ứng dụng PHP demo bỏ qua việc kiểm tra Magic Bytes ở tầng backend khi upload tệp.</td>
+            <td>5</td>
+            <td>Máy chủ bị kiểm soát hoàn toàn, mất toàn bộ dữ liệu và trang web bị sập.</td>
+            <td><strong>15</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Thực hiện test upload an toàn với các file giả lập phần mở rộng kép (vd: <code>file.php.jpg</code>,
+              <code>test.exe</code>) ở mức an toàn không gây hại, xác minh server từ chối lưu trữ. <em>(Dấu hiệu: Server
+                chặn và trả lỗi upload)</em>
+            </td>
+            <td>Xóa ngay tệp lạ qua giao diện quản trị tệp nếu tải lên thành công.</td>
+            <td>Hệ thống cho phép tải lên và hiển thị liên kết tải trực tiếp tệp thực thi.</td>
+            <td>QA Lead</td>
+            <td>1 × 4 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-014</strong></td>
+            <td>PRODUCT</td>
+            <td>Tệp đính kèm (Attachments)</td>
+            <td>Do hệ thống không giới hạn dung lượng tối đa của từng tệp tải lên hoặc tổng dung lượng lưu trữ, có thể
+              xảy ra việc tải lên các tệp kích thước lớn làm cạn kiệt dung lượng đĩa của máy chủ, dẫn tới hệ thống bị từ
+              chối dịch vụ (DoS) và không thể ghi thêm dữ liệu mới.</td>
+            <td>2</td>
+            <td>Cấu hình web server/PHP thường có sẵn chỉ thị <code>upload_max_filesize</code> mặc định (2MB - 10MB).
+            </td>
+            <td>4</td>
+            <td>Gây sập tạm thời hệ thống demo do cạn kiệt ổ cứng máy chủ.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Kiểm thử giá trị biên (BVA) cho kích thước file upload: file 0 byte, file đúng ngưỡng cho phép, và file
+              vượt ngưỡng giới hạn cho phép. <em>(Dấu hiệu: Báo lỗi dung lượng vượt mức rõ ràng)</em></td>
+            <td>Dọn dẹp các tệp đính kèm lớn đã upload trong phần quản lý media.</td>
+            <td>Server xử lý upload file > 50MB mà không có phản hồi chặn dung lượng.</td>
+            <td>Test Author</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-015</strong></td>
+            <td>PRODUCT</td>
+            <td>Cập nhật trạng thái</td>
+            <td>Do việc cập nhật trạng thái các thực thể không ghi nhận đầy đủ nhật ký hoạt động (Audit Trail), có thể
+              xảy ra việc trạng thái bị thay đổi mà không thể truy vết ai đã đổi và vào thời gian nào, dẫn tới mất khả
+              năng kiểm toán dữ liệu và khó giải trình nguyên nhân sai lệch.</td>
+            <td>4</td>
+            <td>Bảng log trên môi trường demo thường bỏ qua ghi nhận chi tiết đối với một số hành động cập nhật nhanh.
+            </td>
+            <td>2</td>
+            <td>Không ảnh hưởng trực tiếp đến trạng thái hiện tại nhưng gây khó khăn trong việc điều tra truy vết.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Viết test case kiểm tra bảng Activity Log sau mỗi thao tác đổi trạng thái dự án/task để xác minh tính
+              chính xác của người dùng và thời gian đổi. <em>(Dấu hiệu: Log ghi nhận đầy đủ user và timestamp)</em></td>
+            <td>Truy vấn gián tiếp qua email thông báo nếu có gửi thông báo thay đổi.</td>
+            <td>Trạng thái thay đổi nhưng mục Lịch sử hoạt động của thực thể hoàn toàn trống.</td>
+            <td>Test Author</td>
+            <td>2 × 1 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-016</strong></td>
+            <td>PRODUCT</td>
+            <td>Cập nhật trạng thái</td>
+            <td>Do chức năng cập nhật trạng thái hàng loạt (Bulk Status Update) không được thực thi trong một
+              transaction cơ sở dữ liệu duy nhất, có thể xảy ra lỗi gián đoạn nửa chừng khiến một số bản ghi được cập
+              nhật còn một số khác bị giữ nguyên, dẫn tới dữ liệu ở trạng thái không đồng nhất.</td>
+            <td>2</td>
+            <td>Thao tác bulk update chỉ diễn ra khi người dùng chủ động chọn nhiều bản ghi cùng lúc.</td>
+            <td>4</td>
+            <td>Gây bất nhất dữ liệu hàng loạt bản ghi, tốn nhiều công sức để rà soát sửa lỗi thủ công.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Xây dựng kịch bản kiểm thử cập nhật hàng loạt với số lượng bản ghi biên (10-20 bản ghi) và xác minh tất
+              cả đều cập nhật thành công đồng nhất. <em>(Dấu hiệu: 100% bản ghi được chọn cập nhật đúng)</em></td>
+            <td>Thực hiện lọc lại và chạy lại thao tác bulk update lần thứ hai cho các bản ghi bị sót.</td>
+            <td>Sau khi bulk update, chỉ có một phần số bản ghi được chọn thay đổi trạng thái.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <!-- PROJECT RISKS -->
+          <tr>
+            <td><strong>RSK-017</strong></td>
+            <td>PROJECT</td>
+            <td>Môi trường demo</td>
+            <td>Do môi trường kiểm thử là site demo công khai không thuộc quyền quản trị của dự án, có thể xảy ra việc
+              bên thứ ba đột ngột reset cơ sở dữ liệu hoặc thay đổi cấu trúc giao diện, dẫn tới kịch bản test tự động bị
+              gãy hàng loạt và đình trệ tiến độ portfolio.</td>
+            <td>4</td>
+            <td>Site demo công cộng thường xuyên được reset định kỳ hoặc cập nhật tính năng mới mà không thông báo.</td>
+            <td>4</td>
+            <td>Hỏng toàn bộ kết quả chạy test, mất nhiều ngày để cập nhật lại locator và dữ liệu kiểm thử.</td>
+            <td><strong>16</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Xây dựng bộ kịch bản tự động khởi tạo dữ liệu mồi (Data Seeding Script) độc lập trước khi chạy suite
+              test và bóc tách locator vào Object Repository tập trung. <em>(Dấu hiệu: Suite test có thể chạy thành công
+                ngay sau khi DB reset)</em></td>
+            <td>Kích hoạt script khởi tạo dữ liệu tự động hoặc chuyển hướng sang chạy mock cục bộ nếu có thể.</td>
+            <td>Bộ test Smoke đồng loạt fail với lỗi không tìm thấy tài khoản test mặc định.</td>
+            <td>QA Lead</td>
+            <td>2 × 3 = 6 (Med)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-018</strong></td>
+            <td>PROJECT</td>
+            <td>Tiến độ & Nguồn lực</td>
+            <td>Do dự án chỉ có 1 nhân sự đảm nhiệm toàn bộ quy trình từ phân tích rủi ro, thiết kế test đến lập trình
+              framework tự động hóa, có thể xảy ra tình trạng quá tải và trễ hạn bàn giao portfolio trước mốc phỏng vấn
+              quan trọng, dẫn tới mất cơ hội ứng tuyển việc làm.</td>
+            <td>4</td>
+            <td>Nhân sự đơn lẻ rất dễ bị trễ hạn khi gặp các sự cố kỹ thuật phức tạp hoặc thiếu tập trung.</td>
+            <td>3</td>
+            <td>Gây chậm tiến độ nộp hồ sơ ứng tuyển hoặc phải cắt giảm chất lượng tài liệu minh chứng.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Lập kế hoạch phân rã công việc WBS chi tiết theo từng tuần, áp dụng quy tắc 80/20 ưu tiên hoàn thiện
+              phân hệ cốt lõi trước và dùng AI hỗ trợ sinh mã mẫu. <em>(Dấu hiệu: Bảng tiến độ cá nhân cập nhật hàng
+                tuần đúng hạn)</em></td>
+            <td>Cắt giảm các phân hệ có rủi ro thấp (Attachments, Bulk update) khỏi phạm vi tự động hóa ban đầu.</td>
+            <td>Tiến độ hoàn thành trễ hơn 3 ngày so với kế hoạch mốc Milestone tuần.</td>
+            <td>Tester</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-019</strong></td>
+            <td>PROJECT</td>
+            <td>Yêu cầu nghiệp vụ</td>
+            <td>Do hệ thống AUT không có tài liệu đặc tả yêu cầu (SRS/PRD) chính thức, có thể xảy ra việc người kiểm thử
+              suy đoán sai hành vi mong muốn (expected result), dẫn tới viết kịch bản test assertion sai hoặc báo cáo
+              bug giả cho những tính năng thiết kế đúng ý đồ tác giả.</td>
+            <td>4</td>
+            <td>Dự án portfolio dựa trên ứng dụng demo bên ngoài hoàn toàn không có tài liệu kỹ thuật đi kèm.</td>
+            <td>3</td>
+            <td>Làm mất uy tín chuyên môn của hồ sơ portfolio khi người phỏng vấn phát hiện assertion vô lý.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Tạo tài liệu giả định nghiệp vụ (Business Rules Assumptions), đối chiếu chéo hành vi hệ thống với các
+              chuẩn ERP/HRM phổ biến và ghi chú rõ ràng các giả định. <em>(Dấu hiệu: Danh mục quy tắc nghiệp vụ giả định
+                được lưu trữ)</em></td>
+            <td>Điều chỉnh lại expected result ngay khi xác định được quy tắc nghiệp vụ thực tế của AUT.</td>
+            <td>Phát hiện test case fail nhưng thao tác tay trên web lại hoạt động hoàn toàn tự nhiên.</td>
+            <td>QA Lead</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <!-- AUTOMATION RISKS -->
+          <tr>
+            <td><strong>RSK-020</strong></td>
+            <td>AUTOMATION</td>
+            <td>Độ ổn định test (Flakiness)</td>
+            <td>Do các locator sử dụng phụ thuộc vào cấu trúc DOM mong manh (chỉ số index, text cố định dễ đổi) hoặc cơ
+              chế đồng bộ hóa yếu, có thể xảy ra tình trạng test lúc pass lúc fail (Flaky Tests), dẫn tới xói mòn độ tin
+              cậy của toàn bộ bộ kiểm thử tự động.</td>
+            <td>4</td>
+            <td>Giao diện web dùng Ajax/Single Page tải bất đồng bộ thường làm Selenium click trượt hoặc gặp
+              StaleElement.</td>
+            <td>4</td>
+            <td>Tốn rất nhiều thời gian điều tra lỗi giả, làm sai lệch báo cáo chất lượng kiểm thử trong portfolio.</td>
+            <td><strong>16</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Chuẩn hóa locator bằng CSS/XPath tương đối vững chắc (dựa trên data-id, name), đóng gói toàn bộ thao tác
+              qua Explicit Wait linh hoạt trong DriverManager/WebUI helpers. <em>(Dấu hiệu: Tỷ lệ flaky test giảm xuống
+                &lt; 2% trên 10 lần chạy lặp)</em></td>
+            <td>Tạm thời cách ly test case flaky khỏi suite chính vào một suite quarantine để refactor.</td>
+            <td>Một test case thay đổi kết quả (pass/fail) giữa 2 lần chạy liên tiếp trên cùng commit code.</td>
+            <td>Automation Engineer</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-021</strong></td>
+            <td>AUTOMATION</td>
+            <td>Dữ liệu kiểm thử (Test Data)</td>
+            <td>Do dữ liệu kiểm thử trong file Excel được gắn cứng theo chỉ số dòng (Row Index) và 9 test method đang
+              phụ thuộc vào dữ liệu có sẵn, có thể xảy ra va chạm dữ liệu khi chạy lặp lại hoặc chạy song song, dẫn tới
+              test bị fail do dữ liệu bị sửa đổi hoặc xóa mất bởi test khác.</td>
+            <td>5</td>
+            <td>Hiện trạng mã nguồn đã xác nhận dữ liệu Excel gắn cứng theo số dòng và có 9 test dependent.</td>
+            <td>4</td>
+            <td>Làm gãy bộ kiểm thử hồi quy, hoàn toàn ngăn cản khả năng mở rộng chạy kiểm thử song song đa luồng.</td>
+            <td><strong>20</strong></td>
+            <td><span class="badge badge-critical">Critical</span></td>
+            <td>Mitigate</td>
+            <td>Refactor DataProvider để đọc dữ liệu động dựa trên Test Method Name/Key thay vì số dòng cố định; tích
+              hợp Faker Library để sinh dữ liệu ngẫu nhiên độc lập; cô lập 9 test phụ thuộc. <em>(Dấu hiệu: Chạy test 3
+                lần liên tiếp không bị trùng dữ liệu)</em></td>
+            <td>Chạy tuần tự từng test đơn lẻ và phục hồi file Excel gốc từ bản backup trong Git.</td>
+            <td>Test fail với lỗi "Tên/Email đã tồn tại" hoặc "Bản ghi không tìm thấy" ngay lần chạy thứ 2.</td>
+            <td>Automation Engineer</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-022</strong></td>
+            <td>AUTOMATION</td>
+            <td>Cấu hình Build & Suite</td>
+            <td>Do tệp <code>pom.xml</code> đang cấu hình <code>testFailureIgnore=true</code> và một số testng suite XML
+              tham chiếu tới method không tồn tại, có thể xảy ra việc Maven build vẫn báo SUCCESS dù có test fail hoặc
+              chạy 0 test case, dẫn tới kết quả "xanh giả" gây ngộ nhận nghiêm trọng về chất lượng phần mềm.</td>
+            <td>5</td>
+            <td>Hiện trạng cấu hình pom.xml và suite XML cũ chứa method sai tên đã được xác nhận thực tế trong dự án.
+            </td>
+            <td>5</td>
+            <td>Hậu quả tối nghiêm trọng: Che giấu toàn bộ lỗi phần mềm, portfolio thể hiện sai lệch năng lực chuyên
+              môn.</td>
+            <td><strong>25</strong></td>
+            <td><span class="badge badge-critical">Critical</span></td>
+            <td>Mitigate</td>
+            <td>Sửa ngay <code>pom.xml</code> chuyển thành <code>testFailureIgnore=false</code>; chuẩn hóa và xóa bỏ
+              toàn bộ testng suite rác; thêm assertion kiểm tra số lượng test thực thi > 0 trong báo cáo Allure.
+              <em>(Dấu hiệu: Build fail đỏ ngay khi có 1 test fail, suite chạy đúng 33 test)</em>
+            </td>
+            <td>Thực hiện kiểm tra thủ công log console của Maven để đếm số test thực chạy trước khi tin tưởng kết quả
+              build.</td>
+            <td>Maven báo BUILD SUCCESS nhưng trong báo cáo Allure ghi nhận 0 test hoặc có test failed.</td>
+            <td>QA Lead</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-023</strong></td>
+            <td>AUTOMATION</td>
+            <td>Chạy song song (Parallelism)</td>
+            <td>Do framework sử dụng ThreadLocal DriverManager nhưng các tài nguyên chia sẻ như thư viện ghi hình Monte
+              Screen Recorder và file ghi Excel chưa được đồng bộ luồng (Thread-safe), có thể xảy ra xung đột tương
+              tranh (Race Condition) khi chạy song song, dẫn tới file video bị ghi đè hoặc tiến trình JVM bị sập.</td>
+            <td>3</td>
+            <td>Monte Recorder và File I/O mặc định không thread-safe nếu cấu hình multi-thread trong TestNG.</td>
+            <td>3</td>
+            <td>Hỏng file video bằng chứng kiểm thử và làm crash luồng chạy automation.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Cấu hình tên file video và thư mục output kèm Thread ID độc lập; tạm thời tắt quay màn hình khi chạy
+              song song và chỉ bật cho các test Smoke tuần tự. <em>(Dấu hiệu: Chạy parallel 2 thread không có lỗi ghi
+                file)</em></td>
+            <td>Chuyển cấu hình suite TestNG về chạy tuần tự (parallel="none").</td>
+            <td>File video ghi lại màn hình bị lỗi hỏng (corrupted) hoặc kích thước 0 KB sau khi chạy song song.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-024</strong></td>
+            <td>AUTOMATION</td>
+            <td>Bảo trì mã nguồn (Maintainability)</td>
+            <td>Do các Page Object class có xu hướng phình to chứa quá nhiều phương thức (God Object Pattern) và thiếu
+              lớp tiện ích nghiệp vụ chung (Service Helper), có thể xảy ra việc trùng lặp mã nguồn và khó sửa đổi khi
+              AUT thay đổi UI, dẫn tới chi phí bảo trì kịch bản kiểm thử tăng cao.</td>
+            <td>3</td>
+            <td>Số lượng test mở rộng nhanh dễ dẫn tới việc viết dồn toàn bộ locator và action vào một file duy nhất.
+            </td>
+            <td>2</td>
+            <td>Tăng thời gian refactor code nhưng không ảnh hưởng trực tiếp đến kết quả kiểm thử.</td>
+            <td><strong>6</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Áp dụng nguyên tắc Single Responsibility Principle: Phân tách Page Object thành các Component nhỏ
+              (Header, Sidebar, Table, Modal) và tái sử dụng Helper dùng chung. <em>(Dấu hiệu: Mỗi Page Object không quá
+                300 dòng code)</em></td>
+            <td>Tạo lớp Wrapper cục bộ để gom nhóm tạm thời trước khi refactor toàn bộ.</td>
+            <td>Một thay đổi nhỏ trên thanh menu header đòi hỏi phải sửa đổi ở > 5 file Page Object khác nhau.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <!-- ENVIRONMENT/DATA RISKS -->
+          <tr>
+            <td><strong>RSK-025</strong></td>
+            <td>ENVIRONMENT/DATA</td>
+            <td>Tài khoản test dùng chung</td>
+            <td>Do tài khoản kiểm thử (Admin/Client) được chia sẻ công khai cho nhiều học viên/tester khác cùng lúc đăng
+              nhập, có thể xảy ra việc phiên làm việc bị đá ra đột ngột (Session Kickout/Invalidation), dẫn tới hàng
+              loạt kịch bản test đang chạy bị fail ngẫu nhiên giữa chừng.</td>
+            <td>4</td>
+            <td>Site anhtester.com có lưu lượng học viên thực hành lớn, thường xuyên dùng chung tài khoản demo có sẵn.
+            </td>
+            <td>4</td>
+            <td>Làm đứt gãy luồng chạy regression dài, gây fail giả mạo trên hàng chục test case.</td>
+            <td><strong>16</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Tạo riêng một tài khoản test chuyên dụng có mật khẩu riêng (nếu hệ thống cho phép) hoặc cấu hình test
+              chạy vào khung giờ thấp điểm (đêm/sáng sớm); thiết kế cơ chế auto-relogin khi phát hiện bị đẩy về trang
+              login. <em>(Dấu hiệu: Tỷ lệ đứt phiên giảm > 80%)</em></td>
+            <td>Chạy lại riêng rẽ các test bị fail do mất session vào khung giờ vắng.</td>
+            <td>Trình duyệt tự động bị chuyển hướng về URL <code>/login</code> trong khi đang thao tác dở trang khác.
+            </td>
+            <td>QA Lead</td>
+            <td>2 × 3 = 6 (Med)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-026</strong></td>
+            <td>ENVIRONMENT/DATA</td>
+            <td>Dữ liệu rác tích tụ</td>
+            <td>Do các kịch bản test không có bước dọn dẹp dữ liệu (TearDown/Data Cleanup) sau khi tạo mới và không có
+              quyền truy cập cơ sở dữ liệu để TRUNCATE, có thể xảy ra việc rác dữ liệu tích tụ làm tràn bảng và chậm
+              truy vấn tìm kiếm, dẫn tới timeout tìm kiếm locator trên các bảng dữ liệu lớn.</td>
+            <td>4</td>
+            <td>Chạy 33 test lặp đi lặp lại tạo ra hàng trăm bản ghi rác mà không được xóa tự động.</td>
+            <td>3</td>
+            <td>Làm chậm thời gian thực thi của bộ test và làm lệch phân trang dữ liệu khi tìm kiếm bản ghi.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Thêm phương thức xóa bản ghi vừa tạo trong khối <code>@AfterMethod</code> hoặc gán tiền tố nhận diện rõ
+              ràng (vd: <code>AUTO_DEL_...</code>) để chạy kịch bản quét dọn định kỳ qua UI. <em>(Dấu hiệu: Bản ghi test
+                được xóa ngay sau khi assert xong)</em></td>
+            <td>Sử dụng bộ lọc tìm kiếm chính xác theo mã hoặc tên duy nhất thay vì duyệt từng trang bảng.</td>
+            <td>Thời gian tìm kiếm một bản ghi trong bảng dữ liệu vượt quá thời gian timeout (10s).</td>
+            <td>Automation Engineer</td>
+            <td>2 × 2 = 4 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-027</strong></td>
+            <td>ENVIRONMENT/DATA</td>
+            <td>Tương thích trình duyệt</td>
+            <td>Do sự khác biệt về engine hiển thị và xử lý JavaScript giữa Chrome, Edge và Firefox (kể cả chế độ
+              Headless), có thể xảy ra việc test chạy pass trên Chrome nhưng fail trên Firefox do cơ chế cuộn trang hoặc
+              xử lý action click khác nhau, dẫn tới thiếu nhất quán trong báo cáo tương thích trình duyệt.</td>
+            <td>3</td>
+            <td>Sự khác biệt về timing và headless rendering giữa các engine Chromium và Gecko luôn tồn tại.</td>
+            <td>2</td>
+            <td>Chỉ ảnh hưởng khi chạy cross-browser, dễ khắc phục bằng cách chuẩn hóa wait và click qua JS.</td>
+            <td><strong>6</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Đóng gói thao tác click với cơ chế dự phòng: Thử click thông thường bằng Selenium &rarr; nếu gặp
+              <code>ElementClickInterceptedException</code> thì tự động fallback sang JavaScript Executor click.
+              <em>(Dấu hiệu: Test chạy đồng nhất trên Chrome/Firefox/Edge)</em>
+            </td>
+            <td>Chỉ định Chrome làm trình duyệt kiểm chuẩn chính thức (Golden Browser) cho toàn bộ portfolio.</td>
+            <td>Test case báo lỗi <code>ElementClickInterceptedException</code> trên Firefox nhưng chạy bình thường trên
+              Chrome.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-028</strong></td>
+            <td>ENVIRONMENT/DATA</td>
+            <td>Đường truyền mạng</td>
+            <td>Do kết nối mạng từ máy tester tới máy chủ hosting demo bị chập chờn hoặc giới hạn băng thông, có thể xảy
+              ra việc tải tài nguyên CSS/JS bị chậm trễ, dẫn tới các lỗi <code>TimeoutException</code> ngẫu nhiên trong
+              quá trình Selenium chờ element hiển thị.</td>
+            <td>3</td>
+            <td>Hạ tầng mạng công cộng và hosting demo giá rẻ thường có độ trễ thất thường vào giờ cao điểm.</td>
+            <td>3</td>
+            <td>Gây fail giả mạo do nghẽn mạng, tốn thời gian chạy lại kiểm thử nhiều lần.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Cấu hình thời gian Explicit Wait hợp lý (nâng từ 5s lên 10-15s cho các element tải chậm); tích hợp cơ
+              chế RetryAnalyzer cho phép tự động thử lại 1 lần với các test lỗi timeout do mạng. <em>(Dấu hiệu: Giảm
+                thiểu 90% lỗi fail do timeout mạng)</em></td>
+            <td>Chuyển sang mạng kết nối dự phòng hoặc tạm hoãn chạy automation lúc mạng quá tải.</td>
+            <td>Trình duyệt xuất hiện vòng quay loading quá thời gian chờ tiêu chuẩn mà không hiển thị nội dung.</td>
+            <td>Automation Engineer</td>
+            <td>2 × 1 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <!-- AI-USAGE RISKS -->
+          <tr>
+            <td><strong>RSK-029</strong></td>
+            <td>AI-USAGE</td>
+            <td>Ảo giác AI (Hallucination)</td>
+            <td>Do mô hình AI tự suy diễn các quy tắc nghiệp vụ không có thực (Hallucination) khi sinh test case hoặc mã
+              assertion, có thể xảy ra việc kịch bản kiểm thử assert sai tiêu chí hoặc assertion vô nghĩa (luôn pass),
+              dẫn tới lọt lỗi nghiêm trọng vào sản phẩm và giảm giá trị thẩm định chất lượng.</td>
+            <td>3</td>
+            <td>LLM thường tự hoàn thiện kịch bản theo phỏng đoán nếu tài liệu prompt không cung cấp đầy đủ ngữ cảnh.
+            </td>
+            <td>4</td>
+            <td>Tạo ra cảm giác an tâm giả mạo về chất lượng phần mềm, làm mất uy tín chuyên môn của tester.</td>
+            <td><strong>12</strong></td>
+            <td><span class="badge badge-high">High</span></td>
+            <td>Mitigate</td>
+            <td>Thực hiện rà soát thủ công (Human-in-the-loop) 100% test case và assertion do AI sinh ra đối chiếu trực
+              tiếp trên giao diện thực tế của AUT trước khi merge code. <em>(Dấu hiệu: Không có assertion nào kiểm tra
+                điều kiện hiển nhiên kiểu <code>assertTrue(true)</code>)</em></td>
+            <td>Viết lại assertion thủ công dựa trên kết quả quan sát trực quan từ màn hình thực tế.</td>
+            <td>Đoạn mã do AI sinh kiểm tra một locator hoặc thuộc tính CSS hoàn toàn không tồn tại trên web.</td>
+            <td>QA Lead</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-030</strong></td>
+            <td>AI-USAGE</td>
+            <td>Rò rỉ thông tin xác thực</td>
+            <td>Do sơ suất đưa thông tin nhạy cảm (mật khẩu thật, token cá nhân, private key) vào prompt khi nhờ AI hỗ
+              trợ viết mã hoặc phân tích lỗi, có thể xảy ra việc dữ liệu bảo mật bị lưu lại trên máy chủ dịch vụ AI công
+              cộng, dẫn tới nguy cơ lộ lọt thông tin quản trị ra bên ngoài.</td>
+            <td>2</td>
+            <td>Tester có nhận thức bảo mật cơ bản, nhưng vẫn có thể sơ ý copy cả file cấu hình dán vào chat.</td>
+            <td>4</td>
+            <td>Vi phạm chính sách an toàn thông tin và nguy cơ bị tấn công tài khoản quản trị.</td>
+            <td><strong>8</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Thiết lập quy tắc che dấu dữ liệu (Data Masking) bắt buộc: Thay thế toàn bộ mật khẩu, token thật bằng
+              giá trị giả định (vd: <code>&lt;MASKED_SECRET&gt;</code>) trước khi dán vào AI chat. <em>(Dấu hiệu: Không
+                xuất hiện credential thật trong lịch sử prompt)</em></td>
+            <td>Lập tức đổi toàn bộ mật khẩu và thu hồi token bị rò rỉ trên hệ thống thực tế.</td>
+            <td>Phát hiện chuỗi mật khẩu hoặc token cá nhân xuất hiện nguyên văn trong log lịch sử trò chuyện AI.</td>
+            <td>QA Lead</td>
+            <td>1 × 3 = 3 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-031</strong></td>
+            <td>AI-USAGE</td>
+            <td>Lạm dụng mã nguồn kém chất lượng</td>
+            <td>Do phụ thuộc quá mức vào mã tự động hóa do AI sinh ra mà không kiểm tra cấu trúc kỹ thuật, có thể xảy ra
+              việc tích hợp mã chứa các anti-pattern (như <code>Thread.sleep</code> cứng, khối catch rỗng để che lỗi),
+              dẫn tới mã nguồn khó bảo trì và giảm độ ổn định của framework.</td>
+            <td>3</td>
+            <td>AI thường đề xuất <code>Thread.sleep()</code> như một giải pháp nhanh cho các vấn đề đồng bộ hóa.</td>
+            <td>3</td>
+            <td>Làm chậm đáng kể thời gian chạy toàn bộ bộ test và hạ thấp điểm đánh giá chất lượng code portfolio.</td>
+            <td><strong>9</strong></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>Mitigate</td>
+            <td>Áp dụng bộ quy chuẩn Clean Code và chạy công cụ static code analysis (SonarLint/Checkstyle); cấm sử dụng
+              <code>Thread.sleep</code> và bắt buộc dùng WebDriver explicit wait. <em>(Dấu hiệu: Quét sonar/checkstyle
+                không còn vi phạm sleep cứng)</em>
+            </td>
+            <td>Refactor ngay lập tức các hàm chứa sleep cứng thành các hàm chờ đợi tường minh (Explicit Wait).</td>
+            <td>Tìm kiếm mã nguồn phát hiện xuất hiện lệnh <code>Thread.sleep()</code> trong các Page Object.</td>
+            <td>Automation Engineer</td>
+            <td>1 × 2 = 2 (Low)</td>
+            <td>Open</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-032</strong></td>
+            <td>AI-USAGE</td>
+            <td>Không thể tái lập dữ liệu</td>
+            <td>Do AI sinh dữ liệu kiểm thử ngẫu nhiên không cố định quy luật sinh (seed) hoặc kịch bản thay đổi qua
+              từng lần hỏi, có thể xảy ra việc kết quả kiểm thử không thể tái lập (Non-reproducible Results), dẫn tới
+              khó khăn trong việc điều tra và tái hiện lỗi khi phát hiện bug.</td>
+            <td>2</td>
+            <td>Tester đã cấu hình các bộ dữ liệu Excel định sẵn cho phần lớn kịch bản quan trọng.</td>
+            <td>2</td>
+            <td>Gây phiền toái khi điều tra bug nhưng có thể truy vết qua log màn hình hoặc video.</td>
+            <td><strong>4</strong></td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td>Accept</td>
+            <td>Lưu trữ dữ liệu đầu vào đã sinh kèm log thực thi của Allure; đối với dữ liệu ngẫu nhiên thì ghi log giá
+              trị sinh vào file report. <em>(Dấu hiệu: Dữ liệu test được in rõ ràng trong Allure Step log)</em></td>
+            <td>Sử dụng bộ dữ liệu tĩnh cố định để tái hiện lại lỗi nếu dữ liệu ngẫu nhiên bị mất dấu.</td>
+            <td>Không thể tìm thấy bản ghi được sinh ra trong báo cáo kiểm thử để kiểm tra lại trên giao diện.</td>
+            <td>Test Author</td>
+            <td>1 × 1 = 1 (Low)</td>
+            <td>Open</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. HEAT MAP 5x5 -->
+    <h2>5. Ma Trận Nhiệt Phân Bổ Rủi Ro (Heat Map 5×5)</h2>
+    <p><em>Ma trận trực quan thể hiện phân bổ của 32 rủi ro theo Likelihood (Hàng) và Impact (Cột). Trục tung Likelihood
+        giảm dần từ 5 xuống 1, trục hoành Impact tăng dần từ 1 đến 5.</em></p>
+
+    <table class="heatmap-table">
+      <thead>
+        <tr>
+          <th rowspan="2" style="background-color: #374151; color: white; width: 120px;">Khả năng xảy ra<br>(Likelihood)
+          </th>
+          <th colspan="5" style="background-color: #1f2937; color: white;">Mức độ tác động (Impact)</th>
+        </tr>
+        <tr>
+          <th style="width: 100px;">1 - Không đáng kể</th>
+          <th style="width: 100px;">2 - Nhỏ</th>
+          <th style="width: 110px;">3 - Vừa</th>
+          <th style="width: 110px;">4 - Lớn</th>
+          <th style="width: 110px;">5 - Nghiêm trọng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>5 - Rất cao</strong></td>
+          <td class="cell-medium">-(5)</td>
+          <td class="cell-high">-(10)</td>
+          <td class="cell-high">-(15)</td>
+          <td class="cell-critical"><strong>RSK-021</strong><br>(20)</td>
+          <td class="cell-critical"><strong>RSK-022</strong><br>(25)</td>
+        </tr>
+        <tr>
+          <td><strong>4 - Khả năng cao</strong></td>
+          <td class="cell-low">-(4)</td>
+          <td class="cell-medium"><strong>RSK-008, RSK-015</strong><br>(8)</td>
+          <td class="cell-high"><strong>RSK-005, RSK-018,<br>RSK-019, RSK-026</strong><br>(12)</td>
+          <td class="cell-high"><strong>RSK-017, RSK-020,<br>RSK-025</strong><br>(16)</td>
+          <td class="cell-critical">-(20)</td>
+        </tr>
+        <tr>
+          <td><strong>3 - Có thể</strong></td>
+          <td class="cell-low">-(3)</td>
+          <td class="cell-medium"><strong>RSK-010, RSK-024,<br>RSK-027</strong><br>(6)</td>
+          <td class="cell-medium"><strong>RSK-003, RSK-011,<br>RSK-012, RSK-023,<br>RSK-028, RSK-031</strong><br>(9)
+          </td>
+          <td class="cell-high"><strong>RSK-002, RSK-009,<br>RSK-029</strong><br>(12)</td>
+          <td class="cell-high"><strong>RSK-001, RSK-013</strong><br>(15)</td>
+        </tr>
+        <tr>
+          <td><strong>2 - Thấp</strong></td>
+          <td class="cell-low">-(2)</td>
+          <td class="cell-low"><strong>RSK-032</strong><br>(4)</td>
+          <td class="cell-medium"><strong>RSK-004</strong><br>(6)</td>
+          <td class="cell-medium"><strong>RSK-006, RSK-007,<br>RSK-014, RSK-016,<br>RSK-030</strong><br>(8)</td>
+          <td class="cell-high">-(10)</td>
+        </tr>
+        <tr>
+          <td><strong>1 - Hiếm khi</strong></td>
+          <td class="cell-low">-(1)</td>
+          <td class="cell-low">-(2)</td>
+          <td class="cell-low">-(3)</td>
+          <td class="cell-low">-(4)</td>
+          <td class="cell-medium">-(5)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Thống kê phân bổ:</strong></p>
+    <ul>
+      <li><span class="badge badge-critical">Critical (Score &ge; 20)</span>: <strong>2 rủi ro</strong> (RSK-021,
+        RSK-022) &ndash; chiếm 6.25% (tập trung vào lỗi cấu hình pom &amp; va chạm dữ liệu Excel).</li>
+      <li><span class="badge badge-high">High (Score 10 &ndash; 16)</span>: <strong>12 rủi ro</strong> (RSK-001,
+        RSK-002, RSK-005, RSK-009, RSK-013, RSK-017, RSK-018, RSK-019, RSK-020, RSK-025, RSK-026, RSK-029) &ndash; chiếm
+        37.50%.</li>
+      <li><span class="badge badge-medium">Medium (Score 5 &ndash; 9)</span>: <strong>17 rủi ro</strong> (RSK-003,
+        RSK-004, RSK-006, RSK-007, RSK-008, RSK-010, RSK-011, RSK-012, RSK-014, RSK-015, RSK-016, RSK-023, RSK-024,
+        RSK-027, RSK-028, RSK-030, RSK-031) &ndash; chiếm 53.12%.</li>
+      <li><span class="badge badge-low">Low (Score &le; 4)</span>: <strong>1 rủi ro</strong> (RSK-032) &ndash; chiếm
+        3.13%.</li>
+    </ul>
+
+    <!-- 6. RISK-BASED TEST MAPPING -->
+    <h2>6. Ánh Xạ Kiểm Thử Theo Rủi Ro (Risk-Based Test Mapping)</h2>
+    <p><em>Áp dụng nguyên lý ISTQB: Mức độ rủi ro quyết định trực tiếp độ sâu kiểm thử (Depth), mức độ ưu tiên, kỹ thuật
+        thiết kế test và nhãn thực thi (Smoke / Regression / E2E). Bao gồm toàn bộ 21 rủi ro thuộc nhóm PRODUCT và
+        AUTOMATION.</em></p>
+
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 7%;">RSK-ID</th>
+            <th style="width: 8%;">Điểm / Mức</th>
+            <th style="width: 10%;">Test Level</th>
+            <th style="width: 11%;">Test Type</th>
+            <th style="width: 14%;">Kỹ thuật thiết kế (Technique)</th>
+            <th style="width: 12%;">Độ sâu kiểm thử (ISTQB Depth)</th>
+            <th style="width: 10%;">Tự động hoá? (Y/N + Lý do)</th>
+            <th style="width: 10%;">Nhãn mức chạy</th>
+            <th style="width: 18%;">Tiêu chí đủ (Exit Criteria)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>RSK-001</strong></td>
+            <td>15 / <span class="badge badge-high">High</span></td>
+            <td>System / Security</td>
+            <td>Security / Functional</td>
+            <td>Bảng quyết định (Decision Table) &amp; Phân tích quyền hạn (RBAC matrix)</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Dễ tự động hóa bằng cách gửi GET/POST trực tiếp URL quản trị với cookie
+              Client.</td>
+            <td>regression</td>
+            <td>100% URL quản trị của Admin trả về HTTP 403 hoặc redirect về Login khi truy cập bằng tài khoản Client.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-002</strong></td>
+            <td>12 / <span class="badge badge-high">High</span></td>
+            <td>System</td>
+            <td>Security / Functional</td>
+            <td>Phân vùng tương đương (EP) &amp; Đoán lỗi (Error Guessing)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Thử nghiệm nhanh các trường hợp sai username, sai password, bỏ trống.</td>
+            <td>smoke, regression</td>
+            <td>Thông báo lỗi đồng nhất, không gợi ý tài khoản tồn tại; kịch bản negative login đạt 100% pass.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-003</strong></td>
+            <td>9 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional / Data Integrity</td>
+            <td>Kiểm thử đối chiếu dữ liệu (Data Reconciliation)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Tự động so khớp text widget với số lượng item trong bảng Client/Project.</td>
+            <td>regression</td>
+            <td>Số liệu hiển thị trên các widget Dashboard khớp chính xác 100% với số đếm từ màn hình danh sách tương
+              ứng.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-004</strong></td>
+            <td>6 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Performance / Usability</td>
+            <td>Kiểm thử phi chức năng thời gian phản hồi (Response Time Measurement)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Đo đếm thời gian từ sau khi submit login đến khi Dashboard render đầy đủ DOM.
+            </td>
+            <td>regression</td>
+            <td>Dashboard tải và hiển thị đầy đủ các widget cốt lõi trong thời gian &le; 10 giây trên mạng tiêu chuẩn.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-005</strong></td>
+            <td>12 / <span class="badge badge-high">High</span></td>
+            <td>System</td>
+            <td>Functional / Integrity</td>
+            <td>Phân tích giá trị biên (BVA) &amp; Kiểm thử ràng buộc toàn vẹn</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Tạo client lặp lại với dữ liệu trùng lặp để kiểm tra phản hồi validation.
+            </td>
+            <td>regression</td>
+            <td>Hệ thống từ chối tạo mới client nếu trùng tên công ty hoặc email, hiển thị thông báo lỗi trường rõ ràng.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-006</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Security (Sanitization)</td>
+            <td>Đoán lỗi (Error Guessing) &amp; Input Fuzzing an toàn</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Tự động gửi payload HTML/JS an toàn vào form Client và assert mã nguồn HTML
+              hiển thị.</td>
+            <td>regression</td>
+            <td>Các ký tự HTML đặc biệt được mã hóa (HTML entity encoded) khi hiển thị trên màn hình chi tiết, không
+              kích hoạt JS.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-007</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional / Security</td>
+            <td>Chuyển trạng thái (State Transition Testing)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Tự động đổi trạng thái Employee thành Inactive rồi kiểm tra login.</td>
+            <td>regression</td>
+            <td>Tài khoản nhân viên Inactive không thể đăng nhập hoặc bị chặn ngay khi tải màn hình sau đăng nhập.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-008</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>Component / System</td>
+            <td>Functional (Validation)</td>
+            <td>Phân vùng tương đương (EP) &amp; Giá trị biên (BVA)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Sử dụng DataProvider chạy hàng loạt bộ dữ liệu định dạng email, sđt sai.</td>
+            <td>regression</td>
+            <td>100% kịch bản nhập sai định dạng số điện thoại/email đều bị chặn và hiển thị message lỗi chuẩn.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-009</strong></td>
+            <td>12 / <span class="badge badge-high">High</span></td>
+            <td>Integration</td>
+            <td>Data Integrity / Reliability</td>
+            <td>Kiểm thử luồng nghiệp vụ liên hoàn (End-to-End Workflow)</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Tạo Project &rarr; tạo Task &rarr; xóa Project &rarr; kiểm tra danh sách
+              Task.</td>
+            <td>e2e, regression</td>
+            <td>Khi xóa dự án cha, các task con được xóa theo (cascade) hoặc tách rời an toàn; màn hình Tasks không bị
+              lỗi 500.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-010</strong></td>
+            <td>6 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional (UI Logic)</td>
+            <td>Kiểm thử phân vùng tương đương danh sách lọc (List Filtering)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Lấy danh sách options trong dropdown và kiểm tra không chứa tên nhân viên
+              Inactive.</td>
+            <td>regression</td>
+            <td>Dropdown gán thành viên dự án không chứa bất kỳ nhân viên nào có trạng thái Inactive.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-011</strong></td>
+            <td>9 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional (Workflow)</td>
+            <td>Bảng chuyển trạng thái (State Transition Matrix)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Tự động cập nhật trạng thái Task từ To Do lên Done khi chưa hoàn thành
+              subtask.</td>
+            <td>regression</td>
+            <td>Hệ thống ngăn chặn hoặc hiển thị hộp thoại xác nhận khi người dùng chuyển Task sang Done mà subtask chưa
+              xong.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-012</strong></td>
+            <td>9 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional / Concurrency</td>
+            <td>Đoán lỗi (Error Guessing) &amp; Concurrency Simulation</td>
+            <td><strong>Opportunity-based</strong></td>
+            <td><strong>N</strong> &ndash; Giới hạn của Selenium chạy đơn lẻ trên site demo; khó kiểm soát chính xác
+              timing 2 session đồng thời.</td>
+            <td>manual</td>
+            <td>Thực hiện test thủ công với 2 tab trình duyệt ghi nhận cảnh báo xung đột dữ liệu khi cùng sửa 1 task.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-013</strong></td>
+            <td>15 / <span class="badge badge-high">High</span></td>
+            <td>System</td>
+            <td>Security / Functional</td>
+            <td>Đoán lỗi (Error Guessing) &amp; Phân vùng file tải lên</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Tự động tải lên file đuôi .exe, .php và assert thông báo từ chối của ứng
+              dụng.</td>
+            <td>regression</td>
+            <td>Hệ thống từ chối lưu trữ và chặn hoàn toàn các tệp thực thi nguy hiểm, trả về thông báo lỗi hợp lệ.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-014</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional (Validation)</td>
+            <td>Phân tích giá trị biên (BVA kích thước tệp: 0MB, 2MB, 50MB)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Sử dụng file dummy được tạo theo các kích thước biên để test upload.</td>
+            <td>regression</td>
+            <td>File vượt quá dung lượng quy định bị chặn ngay tại client hoặc server với thông điệp rõ ràng.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-015</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Audit / Data Integrity</td>
+            <td>Kiểm thử truy vết (Audit Trail Verification)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Đổi trạng thái thực thể &rarr; truy cập bảng Activity Log &rarr; assert log
+              mới nhất.</td>
+            <td>regression</td>
+            <td>Hành động đổi trạng thái sinh đúng 01 bản ghi nhật ký ghi nhận đúng tên user và thời gian thực hiện.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-016</strong></td>
+            <td>8 / <span class="badge badge-medium">Med</span></td>
+            <td>System</td>
+            <td>Functional (Batch Processing)</td>
+            <td>Kiểm thử phân vùng tương đương số lượng bản ghi (Bulk Action Testing)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Chọn 10 checkbox bản ghi &rarr; chọn Bulk Update &rarr; assert trạng thái của
+              cả 10 bản ghi.</td>
+            <td>regression</td>
+            <td>100% bản ghi được chọn trong danh sách đều được chuyển sang trạng thái mới đồng bộ.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-020</strong></td>
+            <td>16 / <span class="badge badge-high">High</span></td>
+            <td>Test Automation</td>
+            <td>Reliability / Synchronization</td>
+            <td>Stress Test độ ổn định của Test Framework (Repeat 10x)</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Chạy lặp lại kịch bản kiểm thử 10 lần liên tục để đo tỷ lệ pass/fail.</td>
+            <td>smoke, regression</td>
+            <td>Tỷ lệ flaky test của các kịch bản cốt lõi (Login, Client, Project) đạt &le; 1% trên 10 lần chạy lặp lại.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-021</strong></td>
+            <td>20 / <span class="badge badge-critical">Critical</span></td>
+            <td>Test Automation</td>
+            <td>Data Management / Isolation</td>
+            <td>Data Isolation &amp; Dynamic Injection Testing</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Thay thế dữ liệu tĩnh dòng Excel bằng Faker và Dynamic UUID.</td>
+            <td>smoke, regression, e2e</td>
+            <td>Tất cả test method có thể chạy lặp lại độc lập hoặc chạy song song mà không bị trùng lặp dữ liệu.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-022</strong></td>
+            <td>25 / <span class="badge badge-critical">Critical</span></td>
+            <td>Test Automation</td>
+            <td>Build &amp; Reporting Integrity</td>
+            <td>Mutation Testing cho cấu hình Build (Test Failure Injection)</td>
+            <td><strong>Extensive</strong></td>
+            <td><strong>Y</strong> &ndash; Cố tình làm fail 1 test và xác minh lệnh <code>mvn test</code> trả về mã
+              thoát lỗi (Build Failure).</td>
+            <td>smoke, regression</td>
+            <td>Maven build bắt buộc chuyển trạng thái BUILD FAILURE khi có ít nhất 1 test fail; suite XML chạy đúng 33
+              test.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-023</strong></td>
+            <td>9 / <span class="badge badge-medium">Med</span></td>
+            <td>Test Automation</td>
+            <td>Concurrency / Thread Safety</td>
+            <td>Parallel Execution Testing (Thread-Safety Verification)</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>Y</strong> &ndash; Chạy TestNG với <code>parallel="methods" thread-count="2"</code> để xác minh
+              tính toàn vẹn.</td>
+            <td>regression</td>
+            <td>Video và log của từng thread được ghi vào các thư mục riêng biệt không bị đè hỏng; JVM không crash.</td>
+          </tr>
+
+          <tr>
+            <td><strong>RSK-024</strong></td>
+            <td>6 / <span class="badge badge-medium">Med</span></td>
+            <td>Test Automation</td>
+            <td>Maintainability / Code Quality</td>
+            <td>Static Code Analysis &amp; Refactoring Review</td>
+            <td><strong>Balanced</strong></td>
+            <td><strong>N</strong> &ndash; Đánh giá bằng công cụ phân tích tĩnh (SonarLint / Checkstyle) và rà soát thủ
+              công.</td>
+            <td>manual</td>
+            <td>Mỗi Page Object class tuân thủ nguyên tắc Single Responsibility, không có class nào vượt quá 300 dòng
+              code.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 7. TOP 10 RỦI RO & HÀNH ĐỘNG ƯU TIÊN -->
+    <h2>7. Danh Sách Top 10 Rủi Ro & Kế Hoạch Hành Động Tuần Này (Priority Actions)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 5%;">Top</th>
+          <th style="width: 8%;">Mã RSK</th>
+          <th style="width: 18%;">Tên rủi ro tóm tắt</th>
+          <th style="width: 8%;">Điểm</th>
+          <th style="width: 9%;">Mức</th>
+          <th style="width: 32%;">Hành động xử lý cụ thể trong tuần này (Action Items)</th>
+          <th style="width: 10%;">Người phụ trách</th>
+          <th style="width: 10%;">Hạn hoàn thành</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>#1</strong></td>
+          <td><strong>RSK-022</strong></td>
+          <td>Build xanh giả do cấu hình <code>pom.xml</code> và suite rỗng</td>
+          <td><strong>25</strong></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td>Sửa ngay <code>pom.xml</code> chuyển <code>testFailureIgnore=false</code>. Kiểm tra và dọn dẹp các method
+            không tồn tại trong toàn bộ file suite XML để đảm bảo chạy đủ 33 test thực tế.</td>
+          <td>Automation Engineer</td>
+          <td>30/10/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#2</strong></td>
+          <td><strong>RSK-021</strong></td>
+          <td>Va chạm dữ liệu Excel và 9 test method phụ thuộc</td>
+          <td><strong>20</strong></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td>Tích hợp Java Faker để sinh dữ liệu động cho email/tên khách hàng. Tách độc lập 9 test phụ thuộc bằng cách
+            bổ sung tiền điều kiện (Preconditions) tự sinh dữ liệu mồi.</td>
+          <td>Automation Engineer</td>
+          <td>01/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#3</strong></td>
+          <td><strong>RSK-017</strong></td>
+          <td>Môi trường demo bị reset bất ngờ làm gãy test suite</td>
+          <td><strong>16</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Xây dựng class <code>DataSeedingHelper</code> tự động tạo lại tài khoản client/dự án chuẩn bị sẵn trước
+            khi bộ kiểm thử hồi quy bắt đầu chạy.</td>
+          <td>Automation Engineer</td>
+          <td>03/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#4</strong></td>
+          <td><strong>RSK-020</strong></td>
+          <td>Flaky test do locator động và timing bất đồng bộ</td>
+          <td><strong>16</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Rà soát toàn bộ 33 test hiện có, thay thế triệt để các lệnh chờ cứng bằng Explicit Wait (WebDriverWait)
+            với ExpectedConditions vững chắc.</td>
+          <td>Automation Engineer</td>
+          <td>04/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#5</strong></td>
+          <td><strong>RSK-025</strong></td>
+          <td>Mất phiên làm việc do tài khoản demo bị dùng chung</td>
+          <td><strong>16</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Tạo tài khoản quản trị riêng nếu có thể; cài đặt cơ chế retry tự động đăng nhập lại khi phát hiện trang bị
+            văng về <code>/login</code>.</td>
+          <td>QA Lead</td>
+          <td>05/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#6</strong></td>
+          <td><strong>RSK-001</strong></td>
+          <td>Truy cập chéo phân quyền trái phép Admin - Client</td>
+          <td><strong>15</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Thiết kế 03 kịch bản kiểm thử bảo mật tự động kiểm tra Client mở URL quản trị nhân sự/dự án và xác nhận mã
+            phản hồi bị chặn 403.</td>
+          <td>Test Author</td>
+          <td>06/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#7</strong></td>
+          <td><strong>RSK-013</strong></td>
+          <td>Tải lên tệp đính kèm mã độc thực thi từ xa</td>
+          <td><strong>15</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Bổ sung bộ test upload file với các phần mở rộng nguy hiểm (.exe, .php giả lập) để kiểm chứng cơ chế chặn
+            của ứng dụng.</td>
+          <td>Test Author</td>
+          <td>07/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#8</strong></td>
+          <td><strong>RSK-002</strong></td>
+          <td>Brute-force đăng nhập và lộ danh tính tài khoản</td>
+          <td><strong>12</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Xây dựng kịch bản kiểm thử tự động kiểm tra thông điệp lỗi đăng nhập đồng nhất, không phân biệt lỗi sai
+            username với sai password.</td>
+          <td>Test Author</td>
+          <td>08/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#9</strong></td>
+          <td><strong>RSK-005</strong></td>
+          <td>Trùng lặp dữ liệu khách hàng do thiếu ràng buộc duy nhất</td>
+          <td><strong>12</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Cập nhật test case tạo Client có bổ sung chuỗi timestamp động vào tên công ty; kiểm tra thông báo
+            validation khi cố tình tạo trùng email.</td>
+          <td>Automation Engineer</td>
+          <td>09/11/2026</td>
+        </tr>
+
+        <tr>
+          <td><strong>#10</strong></td>
+          <td><strong>RSK-009</strong></td>
+          <td>Lỗi mồ côi dữ liệu hoặc crash 500 khi xóa dự án có task con</td>
+          <td><strong>12</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Viết kịch bản kiểm thử tích hợp: Tạo dự án &rarr; tạo task &rarr; xóa dự án &rarr; kiểm tra trang Task
+            hiển thị bình thường không bị sập lỗi 500.</td>
+          <td>Automation Engineer</td>
+          <td>10/11/2026</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 8. GIẢ ĐỊNH VÀ CÂU HỎI MỞ -->
+    <h2>8. Giả Định, Câu Hỏi Mở & Điểm Cần Con Người Xác Nhận</h2>
+
+    <h3>8.1. Các câu hỏi làm rõ cần xác nhận từ người phụ trách (Tối đa 5 câu hỏi)</h3>
+    <ol>
+      <li><code>[CẦN XÁC NHẬN]</code> <strong>Hạn mức thời gian nộp portfolio / phỏng vấn:</strong> Thời hạn chót chính
+        xác để hoàn thiện toàn bộ báo cáo và framework automation là ngày nào?</li>
+      <li><code>[CẦN XÁC NHẬN]</code> <strong>Quyền tạo tài khoản độc lập trên AUT:</strong> Tester có quyền tự tạo và
+        duy trì một tài khoản Admin/Client riêng trên site demo hay bắt buộc phải dùng chung tài khoản mặc định của cộng
+        đồng?</li>
+      <li><code>[CẦN XÁC NHẬN]</code> <strong>Công cụ CI/CD dự kiến tích hợp:</strong> Bạn có kế hoạch đưa bộ test lên
+        GitHub Actions hoặc Jenkins để chạy tự động theo lịch không?</li>
+      <li><code>[CẦN XÁC NHẬN]</code> <strong>Mục tiêu số lượng test tự động:</strong> Ngoài 33 test hiện có, mục tiêu
+        mở rộng tối đa là bao nhiêu test method cho toàn bộ portfolio?</li>
+      <li><code>[CẦN XÁC NHẬN]</code> <strong>Thông tin tác giả chính thức:</strong> Tên đầy đủ và chức danh hiển thị
+        mong muốn trên hồ sơ portfolio của bạn là gì?</li>
+    </ol>
+
+    <h3>8.2. Danh mục các điểm giả định kỹ thuật [GIẢ ĐỊNH]</h3>
+    <ul>
+      <li><code>[GIẢ ĐỊNH]</code> Dự án được thực hiện bởi 01 nhân sự duy nhất với thời lượng cam kết xấp xỉ 20
+        giờ/tuần.</li>
+      <li><code>[GIẢ ĐỊNH]</code> Mốc thời gian mục tiêu hoàn thiện là tháng 11/2026 (trước kỳ phỏng vấn việc làm).</li>
+      <li><code>[GIẢ ĐỊNH]</code> Hệ thống HRM demo chạy trên nền tảng máy chủ PHP/MySQL tiêu chuẩn của nhà cung cấp
+        dịch vụ bên ngoài, không có hệ thống logging tập trung có thể truy cập từ xa.</li>
+      <li><code>[GIẢ ĐỊNH]</code> Hành vi của hệ thống trên giao diện web được coi là quy tắc chuẩn để kiểm tra tính
+        đúng đắn khi không có tài liệu đặc tả yêu cầu chính thức.</li>
+    </ul>
+
+    <!-- 9. CỔNG CHẤT LƯỢNG (QUALITY GATE CHECKLIST) -->
+    <h2>9. Tự Kiểm Tra Chất Lượng Tài Liệu (Quality Gate Checklist)</h2>
+    <ul class="checklist">
+      <li><strong>Số lượng và phân bổ rủi ro:</strong> Đạt 32 rủi ro (yêu cầu &ge; 28), bao gồm đầy đủ 5 danh mục
+        (Product: 16, Project: 3, Automation: 5, Environment/Data: 4, AI-Usage: 4), mỗi phân hệ trong 8 phân hệ AUT đều
+        có đúng 2 rủi ro sản phẩm.</li>
+      <li><strong>Cấu trúc mô tả rủi ro:</strong> 100% rủi ro tuân thủ nghiêm ngặt cú pháp chuẩn: <em>"Do &lt;nguyên
+          nhân&gt;, có thể xảy ra &lt;sự kiện&gt;, dẫn tới &lt;hậu quả&gt;"</em>; hoàn toàn không có mô tả chung chung.
+      </li>
+      <li><strong>Tính đúng đắn số học &amp; Căn cứ chấm điểm:</strong> 100% điểm Likelihood (L) và Impact (I) đều có 1
+        câu giải thích rõ ràng dựa trên bối cảnh thực tế; phép nhân <code>Score = L × I</code> chính xác tuyệt đối ở mọi
+        dòng.</li>
+      <li><strong>Tính nhất quán mức độ rủi ro:</strong> Cột Mức (Critical &ge; 20, High 10&ndash;16, Medium 5&ndash;9,
+        Low &le; 4) khớp chính xác 100% với Score; phân bổ điểm hợp lý (2 Critical, 12 High, 17 Medium, 1 Low).</li>
+      <li><strong>Kế hoạch đối phó &amp; Dấu hiệu hoàn thành:</strong> 100% rủi ro có hành động Mitigation đo lường được
+        kèm dấu hiệu hoàn thành cụ thể; toàn bộ rủi ro Critical và High đều có Contingency và Trigger cảnh báo sớm.</li>
+      <li><strong>Độ sâu kiểm thử (Test Depth):</strong> Nhất quán tuyệt đối với điểm rủi ro: Điểm Critical gán độ sâu
+        Extensive, điểm High gán Extensive/Balanced, điểm Medium gán Balanced, điểm Low gán Opportunity-based.</li>
+      <li><strong>Khớp nối Heat Map:</strong> Toàn bộ 32 ID rủi ro trong bảng Register được ánh xạ chính xác vào các ô
+        tương ứng trên Heat Map 5×5 không sai lệch.</li>
+      <li><strong>Trung thực và minh bạch:</strong> Không có số liệu bịa đặt; các thông tin suy đoán đều được đánh dấu
+        <code>[GIẢ ĐỊNH]</code> hoặc <code>[CẦN XÁC NHẬN]</code> rõ ràng.
+      </li>
+      <li><strong>Định dạng kỹ thuật:</strong> Đầu ra tài liệu là mã HTML hoàn chỉnh, cấu trúc trực quan, tự chứa CSS
+        đầy đủ.</li>
+    </ul>
+
+    <!-- 10. PHỤ LỤC CSV -->
+    <h2>10. Phụ Lục: Bảng Dữ Liệu Risk Register (CSV)</h2>
+
+    <div class="schema-container">
+      <p style="margin-top: 0; font-weight: 600; color: #1e3a8a;">
+        📌 Hướng dẫn sử dụng &amp; Thông số kỹ thuật của tệp CSV:
+      </p>
+      <ul style="margin-bottom: 8px; padding-left: 20px;">
+        <li><strong>Chuẩn định dạng:</strong> CSV mã hóa <strong>UTF-8</strong>, phân cách trường bằng <strong>dấu chấm
+            phẩy (<code>;</code>)</strong> để bảo toàn các câu mô tả tiếng Việt có dấu phẩy thông thường.</li>
+        <li><strong>Mục đích sử dụng:</strong> Import trực tiếp vào <strong>Microsoft Excel</strong>, <strong>Google
+            Sheets</strong>, hoặc các công cụ quản trị kiểm thử như <strong>Jira Xray / TestRail / Zephyr</strong>.</li>
+        <li><strong>Thao tác nhanh:</strong> Bấm nút <strong>"Sao chép toàn bộ CSV"</strong> ở thanh công cụ bên dưới
+          &rarr; Dán vào Excel (Data &gt; From Text/CSV &gt; Chọn Delimiter: Semicolon).</li>
+      </ul>
+      <div style="margin-top: 10px;">
+        <strong style="color: #374151; font-size: 12.5px;">Cấu trúc 17 trường dữ liệu chuẩn (Header
+          Schema):</strong><br>
+        <span class="schema-badge">1. ID</span>
+        <span class="schema-badge">2. Loai</span>
+        <span class="schema-badge">3. PhanHe</span>
+        <span class="schema-badge">4. MoTaRuiRo</span>
+        <span class="schema-badge">5. L</span>
+        <span class="schema-badge">6. LyDoL</span>
+        <span class="schema-badge">7. I</span>
+        <span class="schema-badge">8. LyDoI</span>
+        <span class="schema-badge">9. Score</span>
+        <span class="schema-badge">10. Muc</span>
+        <span class="schema-badge">11. Strategy</span>
+        <span class="schema-badge">12. Mitigation</span>
+        <span class="schema-badge">13. Contingency</span>
+        <span class="schema-badge">14. Trigger</span>
+        <span class="schema-badge">15. Owner</span>
+        <span class="schema-badge">16. Residual</span>
+        <span class="schema-badge">17. Status</span>
+      </div>
+    </div>
+
+    <div class="csv-container">
+      <div class="csv-toolbar">
+        <div class="csv-file-info">
+          <span>📄 01-risk-register-dataset.csv</span>
+          <span class="csv-tag">32 Bản ghi</span>
+          <span class="csv-tag-alt">Delimiter: Semicolon (;)</span>
+          <span class="csv-tag-alt">UTF-8</span>
+        </div>
+        <button type="button" class="csv-btn-copy" onclick="copyCsvData()" id="btnCopyCsv">
+          📋 Sao chép toàn bộ CSV
+        </button>
+      </div>
+      <pre
+        class="csv-pre"><code id="csvRawData">ID;Loai;PhanHe;MoTaRuiRo;L;LyDoL;I;LyDoI;Score;Muc;Strategy;Mitigation;Contingency;Trigger;Owner;Residual;Status
+RSK-001;PRODUCT;Auth;Do thieu kiem tra phan quyen truy cap cheo giua Admin va Client tren URL, co the xay ra viec Client truy cap URL quan tri, dan toi ro ri du lieu toan bo doanh nghiep.;3;Session demo quan ly phan quyen long leo o router.;5;Vi pham bao mat phan quyen nghiem trong.;15;High;Mitigate;Xay dung CRUD matrix va test RBAC URL.;Bao cao admin va chan test phu thuoc.;Client mo duoc URL quan tri khong bi chan.;QA Lead;2x4=8 (Med);Open
+RSK-002;PRODUCT;Auth;Do he thong khong gioi han so lan dang nhap sai va thong bao loi qua chi tiet, co the xay ra brute-force do mat khau, dan toi chiem quyen tai khoan Admin.;3;Web demo khong co rate limiting hay CAPTCHA.;4;Tai khoan Admin bi chiem doat mat quyen kiem soat.;12;High;Mitigate;Xay dung test negative auth thong diep loi dong nhat.;Doi mat khau ngay khi co dau hieu bat thuong.;Thong bao loi phan biet ro sai username hay pass.;Automation Engineer;2x3=6 (Med);Open
+RSK-003;PRODUCT;Dashboard;Do widget Dashboard tinh toan so lieu khong dong bo thoi gian thuc, co the xay ra sai lech so lieu tong quan so voi chi tiet, dan toi bao cao sai quyet dinh quan ly.;3;Moi truong demo nhieu nguoi dung de lech cache.;3;Gay hieu nham so lieu nhung khong mat du lieu goc.;9;Medium;Mitigate;So sanh so dem widget voi count tu danh sach chi tiet.;Refresh cung trang Ctrl+F5 truoc khi doc metric.;So lieu widget lech voi danh sach thuc te.;Test Author;2x2=4 (Low);Open
+RSK-004;PRODUCT;Dashboard;Do Dashboard tai dong thoi nhieu bieu do khong lazy-load, co the xay ra treo trinh duyet khi du lieu demo lon, dan toi khong thao tac duoc sau dang nhap.;2;Du lieu site demo o muc trung binh, it khi crash.;3;Gay cham tre trai nghiem ngay man hinh chinh.;6;Medium;Mitigate;Cau hinh Dynamic Wait thay vi cho toan trang.;Dieu huong truc tiep qua URL phan he con.;Thoi gian tai trang Dashboard vuot qua 15s.;Automation Engineer;1x2=2 (Low);Open
+RSK-005;PRODUCT;Clients;Do he thong khong kiem tra tinh duy nhat cua ten hoac email khach hang, co the xay ra tao trung lap ho so khach hang, dan toi du lieu phan tan sai lech.;4;He thong demo thuong long leo validate duplicate.;3;Lam phan manh du lieu gay kho tra cuu.;12;High;Mitigate;Viet test unique validation va dung timestamp tao ten.;Loc danh sach theo ngay tao moi nhat lay ID.;Tao thanh cong 2 client trung ten va email.;Test Author;2x2=4 (Low);Open
+RSK-006;PRODUCT;Clients;Do cac truong thong tin Client khong sanitize ma doc, co the xay ra Stored XSS khi xem chi tiet, dan toi ma doc chay tren trinh duyet nguoi khac.;2;Framework web thuong auto-escape mac dinh.;4;Nguy co bi danh cap cookie phien lam viec quan tri.;8;Medium;Mitigate;Test injection an toan bang payload html/js don gian.;Xoa ngay ban ghi client chua payload.;Trinh duyet hien hop thoai alert bat thuong.;QA Lead;1x3=3 (Low);Open
+RSK-007;PRODUCT;Employees;Do khong thu hoi phien lam viec khi nhan vien sang Inactive, co the xay ra viec nhan su da nghi van dang nhap thao tac, dan toi vi pham an toan thong tin.;2;Co che cap nhat trang thai thuong cap nhat ngay.;4;Ro ri thong tin noi bo tu nguoi dung khong hop le.;8;Medium;Mitigate;State transition test: doi Inactive va test login.;Doi mat khau cuong buc tai khoan nhan vien.;Tai khoan Inactive van dang nhap thanh cong.;Test Author;1x3=3 (Low);Open
+RSK-008;PRODUCT;Employees;Do form nhan vien khong validate dinh dang so dien thoai email, co the xay ra luu tru du lieu rac, dan toi loi xu ly ngam 500 o tinh nang phu thuoc.;4;Form demo thuong thieu regex validate backend.;2;Loi giao dien cuc bo khong lam sap toan he thong.;8;Medium;Mitigate;Ap dung EP va BVA viet bo test input validation.;Sua lai thong tin qua form edit voi data chuan.;Form chap nhan sdt chua chu hoac email khong @.;Test Author;2x1=2 (Low);Open
+RSK-009;PRODUCT;Projects;Do thieu rang buoc Cascade Delete khi xoa du an co task lien ket, co the xay ra mo coi du lieu, dan toi man hinh Task bi crash 500 khi truy cap.;3;He thong ma nguon mo hay bo quen foreign key cascade.;4;Pha vo toan ven du lieu va crash man hinh task.;12;High;Mitigate;Viet integration test tao project gan task roi xoa.;Bao bug nghiem trong va ngung test xoa project co task.;Man hinh Task bao loi HTTP 500 sau khi xoa project.;Automation Engineer;1x3=3 (Low);Open
+RSK-010;PRODUCT;Projects;Do dropdown thanh vien du an khong loc theo trang thai nhan su, co the xay ra gan nhan vien da nghi viec vao du an, dan toi tac nghen quy trinh giao viec.;3;Query thuong chi select all bo quen status active.;2;Gay bat tien thao tac co the sua bang cach gan lai.;6;Medium;Mitigate;Viet test case kiem tra dropdown chi chua user active.;Chon lai thanh vien khac dang active.;Nhan vien Inactive xuat hien trong dropdown chon.;Test Author;1x2=2 (Low);Open
+RSK-011;PRODUCT;Tasks;Do quy trinh chuyen trang thai Task khong kiem soat subtask, co the xay ra nhay coc sang Done khi chua xong viec con, dan toi sai lech quy trinh quan ly.;3;Giao dien kanban de keo tha tu do giua cac cot.;3;Gay sai lech tien do va chat luong du an thuc te.;9;Medium;Mitigate;Ap dung bang chuyen trang thai test workflow.;Chuyen trang thai task ve lai buoc truoc.;Task sang Done du con 100% checklist chua xong.;Test Author;2x2=4 (Low);Open
+RSK-012;PRODUCT;Tasks;Do thieu khoa lac quan khi nhieu nguoi cung sua 1 task, co the xay ra nguoi luu sau ghi de mat noi dung nguoi truoc, dan toi mat mat du lieu ghi chu quan trong.;3;Site demo dung chung khong co concurrency lock.;3;Mat noi dung cap nhat gan nhat cua nguoi dung.;9;Medium;Mitigate;Kiem tra thu cong 2 tab trinh duyet cung sua 1 task.;Kiem tra Activity log de phuc hoi noi dung bi de.;Du lieu luu truoc bi ghi de khong canh bao.;Automation Engineer;2x2=4 (Low);Open
+RSK-013;PRODUCT;Attachments;Do thieu kiem tra MIME thuc te va duoi file o server, co the xay ra tai len tep ma doc .php .exe, dan toi nguy co thuc thi ma doc tu xa RCE tren may chu.;3;Nhieu web php demo bo qua magic byte o backend.;5;May chu bi kiem soat hoan toan mat toan bo he thong.;15;High;Mitigate;Test upload an toan voi file duoi kep va file exe gia lap.;Xoa ngay tep la qua giao dien quan tri tep.;He thong chap nhan upload tep thuc thi nguy hiem.;QA Lead;1x4=4 (Low);Open
+RSK-014;PRODUCT;Attachments;Do khong gioi han dung luong tep tai len, co the xay ra upload file qua lon gay can kiet o dia may chu, dan toi tu choi dich vu DoS khong luu duoc file moi.;2;Server php thuong co upload_max_filesize mac dinh.;4;Gay sap tam thoi he thong demo do het dung luong.;8;Medium;Mitigate;Test BVA kich thuoc file upload 0MB, 2MB, 50MB.;Don dep cac tep dung luong lon da upload.;Server nhan file > 50MB khong bao loi vuot muc.;Test Author;1x2=2 (Low);Open
+RSK-015;PRODUCT;Status;Do cap nhat trang thai khong ghi log hoat dong day du, co the xay ra trang thai doi ma khong the truy vet nguoi doi va thoi gian, dan toi mat kha nang kiem toan.;4;Site demo thuong bo qua log voi hanh dong update nhanh.;2;Gay kho khan truy vet nhung khong hong du lieu hien tai.;8;Medium;Mitigate;Viet test case kiem tra Activity Log sau khi doi status.;Kiem tra email thong bao thay doi neu co.;Trang thai thay doi nhung Activity Log trong tron.;Test Author;2x1=2 (Low);Open
+RSK-016;PRODUCT;Status;Do bulk update trang thai khong chay trong 1 transaction, co the xay ra loi gian doan khien nua ban ghi doi nua giu nguyen, dan toi du lieu khong dong nhat.;2;Bulk update it khi ngat ket noi tru khi mang kem.;4;Gay bat nhat hang loat ton cong sua thu cong.;8;Medium;Mitigate;Kiem thu bulk update voi so ban ghi bien (10-20 items).;Loc va chay lai bulk update lan 2 cho ban ghi sot.;Sau bulk update chi mot phan ban ghi doi trang thai.;Automation Engineer;1x2=2 (Low);Open
+RSK-017;PROJECT;Environment;Do site demo cong khai ngoai tam kiem soat, co the xay ra reset du lieu bat ngo hoac doi giao dien, dan toi test automation gay hang loat tri tre tien do.;4;Site demo cong cong thuong xuyen bi reset dinh ky.;4;Hong ket qua test mat nhieu ngay sua locator va data.;16;High;Mitigate;Viet data seeding script khoi tao data moi truoc khi test.;Chay script tao lai data tu dong.;Suite smoke fail dong loat vi khong tim thay account.;QA Lead;2x3=6 (Med);Open
+RSK-018;PROJECT;Schedule;Do chi co 1 tester kiem nhiem toan bo quy trinh, co the xay ra qua tai va tre han ban giao portfolio truoc phong van, dan toi mat co hoi ung tuyen viec lam.;4;Nhan su don le rat de tre han khi gap bug phuc tap.;3;Tre han nop ho so hoac phai giam bot chat luong.;12;High;Mitigate;Phan ra WBS chi tiet tuan, tap trung tinh nang cot loi.;Cat giam tinh nang phu khoi pham vi automation.;Tien do tre hon 3 ngay so voi ke hoach milestone.;Tester;2x2=4 (Low);Open
+RSK-019;PROJECT;Requirements;Do AUT khong co tai lieu dac ta yeu cau chinh thuc, co the xay ra suy doan sai expected result, dan toi viet assertion sai hoac bao bug gia.;4;Du an portfolio khong co SRS di kem phai reverse-engineer.;3;Giam uy tin chuyen mon khi bi phat hien assert vo ly.;12;High;Mitigate;Lap tai lieu gia dinh nghiep vu doi chieu ERP chuan.;Dieu chinh lai expected result khi ro quy tac thuc te.;Test fail nhung thao tac tay tren web van binh thuong.;QA Lead;2x2=4 (Low);Open
+RSK-020;AUTOMATION;Flakiness;Do locator mong manh va timing bat dong bo, co the xay ra flaky test luc pass luc fail, dan toi xoi mon do tin cay cua bo kiem thu tu dong.;4;Web Ajax render async de click truot stale element.;4;Ton cong triage loi gia lam sai lech bao cao test.;16;High;Mitigate;Chuan hoa locator CSS/XPath tuong doi va dung Dynamic Wait.;Cach ly test flaky vao quarantine suite.;Test case doi ket qua pass/fail giua 2 lan chay cung commit.;Automation Engineer;2x2=4 (Low);Open
+RSK-021;AUTOMATION;Data;Do du lieu Excel gan cung theo so dong va 9 test phu thuoc, co the xay ra va cham data khi chay lap hoac song song, dan toi test fail do du lieu bi sua xoa.;5;Hien trang pom va code xac nhan 9 test dependent va row data.;4;Gay gay regression va khong the mo rong chay parallel.;20;Critical;Mitigate;Refactor DataProvider theo key, dung Faker sinh du lieu dong.;Chay tuan tu tung test don le va restore file Excel.;Test fail voi loi trung lap du lieu ngay lan chay thu 2.;Automation Engineer;2x2=4 (Low);Open
+RSK-022;AUTOMATION;Build;Do pom.xml cau hinh testFailureIgnore=true va suite XML sai method, co the xay ra build van Success du test fail hoac chay 0 test, dan toi ket qua xanh gia.;5;Da xac nhan thuc te pom co cờ va suite XML chua method rong.;5;Che giau toan bo bug nghiem trong, portfolio sai lech nang luc.;25;Critical;Mitigate;Sua pom.xml testFailureIgnore=false va don dep suite XML.;Kiem tra console log dem so test chay thuc te.;Maven build SUCCESS nhung Allure bao 0 test hoac co test fail.;QA Lead;1x3=3 (Low);Open
+RSK-023;AUTOMATION;Parallel;Do ThreadLocal DriverManager nhung Monte Recorder va file Excel chua thread-safe, co the xay ra race condition khi chay song song, dan toi hong video va crash JVM.;3;Monte Recorder va file I/O mac dinh khong thread-safe.;3;Mat video bang chung va gay crash tien trinh test.;9;Medium;Mitigate;Tach thu muc video theo Thread ID, tat ghi hinh khi parallel.;Chuyen TestNG suite ve parallel="none".;File video bi loi hong hoac size 0KB sau khi chay.;Automation Engineer;1x2=2 (Low);Open
+RSK-024;AUTOMATION;Maintainability;Do Page Object phinh to chua qua nhieu phuong thuc thieu Service Helper, co the xay ra trung lap code va kho sua khi UI doi, dan toi tang chi phi bao tri.;3;Test mo rong nhanh de lam code page object qua dai.;2;Ton cong refactor code khong anh huong ket qua test.;6;Medium;Mitigate;Tach nho Page Object theo Component va viet Common Helpers.;Tao lop Wrapper cuc bo truoc khi refactor lon.;Doi 1 menu header phai sua > 5 file Page Object.;Automation Engineer;1x2=2 (Low);Open
+RSK-025;ENVIRONMENT;Accounts;Do tai khoan test dung chung voi nhieu hoc vien ngoai du an, co the xay ra bi da phien dang nhap bat ngo, dan toi hang loat test bi fail ngau nhien.;4;Site co luong hoc vien lon dung chung user mac dinh.;4;Lam gay regression dai gay fail hang loat test.;16;High;Mitigate;Tao account rieng hoac chay gio thap diem, them auto-relogin.;Chay lai rieng cac test fail mat session luc vang nguoi.;Trinh duyet bi vang ve URL /login khi dang chay.;QA Lead;2x3=6 (Med);Open
+RSK-026;ENVIRONMENT;JunkData;Do test khong co teardown cleanup va khong co quyen DB truncate, co the xay ra rac du lieu lam tran bang cham query, dan toi timeout tim kiem locator.;4;Chay 33 test nhieu lan tao hang tram ban ghi rac.;3;Lam cham thoi gian chay test va lech phan trang.;12;High;Mitigate;Them cleanup o @AfterMethod hoac gan tien to AUTO_DEL_.;Loc tim kiem theo ten duy nhat thay vi duyet trang.;Thoi gian tim kiem trong bang vuot qua timeout 10s.;Automation Engineer;2x2=4 (Low);Open
+RSK-027;ENVIRONMENT;CrossBrowser;Do khac biet engine giua Chrome Firefox Edge (headless), co the xay ra pass Chrome nhung fail Firefox do timing va click, dan toi thieu nhat quan bao cao.;3;Do lech timing va action giua Chromium va Gecko luon co.;2;Chi anh huong khi chay cross browser de khac phuc.;6;Medium;Mitigate;Dong goi click voi fallback sang JavaScript click.;Chon Chrome lam trinh duyet tieu chuan chinh thuc.;Bao loi ElementClickIntercepted tren Firefox nhung Chrome pass.;Automation Engineer;1x2=2 (Low);Open
+RSK-028;ENVIRONMENT;Network;Do duong truyen mang toi site demo bi chap chon han che bang thong, co the xay ra tai CSS/JS cham tre, dan toi TimeoutException ngau nhien khi cho element.;3;Mang cong cong va hosting demo co do tre that thuong.;3;Gay fail gia mao do mang ton cong chay lai.;9;Medium;Mitigate;Nang Explicit Wait len 10-15s va tich hop RetryAnalyzer 1 lan.;Chuyen mang du phong hoac hoan chay gio cao diem.;Vong quay loading quay qua lau khong hien noi dung.;Automation Engineer;2x1=2 (Low);Open
+RSK-029;AI-USAGE;Hallucination;Do AI tu bia quy tac nghiep vu khi sinh test case hoac assertion, co the xay ra test assert sai hoac assert vo nghia luon pass, dan toi lot loi nghiem trong.;3;LLM thuong tu suy doan neu thieu context chi tiet.;4;Tao cam giac an toan gia mao giam uy tin tester.;12;High;Mitigate;Review thu cong 100% test va assertion AI sinh ra truoc khi commit.;Viet lai assertion thu cong theo quan sat giao dien.;Code AI sinh kiem tra locator khong ton tai tren web.;QA Lead;1x3=3 (Low);Open
+RSK-030;AI-USAGE;DataLeak;Do so suat dan token mat khau quan tri that vao prompt AI cong cong, co the xay ra ro ri credential ra ben ngoai, dan toi nguy co mat an toan he thong.;2;Tester co y thuc co ban nhung de so y paste file config.;4;Vi pham chinh sach bao mat va nguy co chiem tai khoan.;8;Medium;Mitigate;Bat buoc mask password token thanh MASKED truoc khi paste AI.;Doi ngay password va revoke token neu lo lot.;Mat khau hoac token xuat hien trong chat history AI.;QA Lead;1x3=3 (Low);Open
+RSK-031;AI-USAGE;CodeQuality;Do phu thuoc qua muc ma AI sinh khong review ky thuat, co the xay ra tich hop ma anti-pattern Thread.sleep va catch rong, dan toi framework cham va kho bao tri.;3;AI hay de xuat sleep cung nhu giai phap tam thoi.;3;Lam cham thoi gian chay test va bi tru diem portfolio.;9;Medium;Mitigate;Chay static analysis SonarLint cam Thread.sleep dung Explicit Wait.;Refactor ngay lap tuc cac ham sleep cung thanh wait.;Tim thay lenh Thread.sleep() trong ma nguon Page Object.;Automation Engineer;1x2=2 (Low);Open
+RSK-032;AI-USAGE;NonReproducible;Do AI sinh data random khong co seed hoac script doi qua moi prompt, co the xay ra ket qua test khong tai lap duoc, dan toi kho khan khi dieu tra lai bug.;2;Tester da dung bo data Excel co dinh cho test chinh.;2;Gay bat tien khi dieu tra loi nhung trace duoc qua log.;4;Low;Accept;Ghi ro gia tri data da sinh vao Allure Step report log.;Dung bo du lieu tinh de tai hien lai loi.;Khong tim thay ban ghi duoc sinh trong Allure report de test lai.;Test Author;1x1=1 (Low);Open</code></pre>
+    </div>
+
+    <script>
+      function copyCsvData() {
+        const codeElement = document.getElementById("csvRawData");
+        const textToCopy = codeElement.innerText || codeElement.textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const btn = document.getElementById("btnCopyCsv");
+          const originalText = btn.innerHTML;
+          btn.innerHTML = "✔ Đã sao chép vào Clipboard!";
+          btn.style.backgroundColor = "#16a34a";
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.backgroundColor = "#2563eb";
+          }, 2500);
+        }).catch(err => {
+          alert("Không thể tự động sao chép. Vui lòng quét chọn khối mã và nhấn Ctrl+C.");
+        });
+      }
+    </script>
+
+    <!-- FOOTER TRANSPARENCY NOTE -->
+    <div class="footer-note">
+      <p><strong>Ghi chú minh bạch (AI Transparency Note):</strong> Tài liệu này được biên soạn với sự hỗ trợ của mô
+        hình Trí tuệ nhân tạo theo quy chuẩn quản trị rủi ro kiểm thử phần mềm ISTQB Advanced Level Test Manager &amp;
+        ISO/IEC/IEEE 29119. Toàn bộ 32 rủi ro kỹ thuật, căn cứ tính điểm ma trận Likelihood/Impact, phân bổ Heat Map 5×5
+        và bảng ánh xạ kiểm thử đã được rà soát, đối chiếu và thẩm định kỹ thuật bởi Tester / QA Lead phụ trách dự án
+        vào ngày 29/10/2026.</p>
+    </div>
+
+  </div>
+</body>
+
+</html>
