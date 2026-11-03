@@ -33,3 +33,5 @@ replay_pid*
 .idea/
 .vscode/
 
+# AgensGraph
+.agents/

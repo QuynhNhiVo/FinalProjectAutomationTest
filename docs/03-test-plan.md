@@ -1,4 +1,4 @@
-# Test Plan – Kế hoạch kiểm thử chi tiết
+﻿# Test Plan – Kế hoạch kiểm thử chi tiết
 
 ## 1. Document Control
 
@@ -9,7 +9,7 @@
 - **Phiên bản**: v0.1
 - **Trạng thái**: Draft
 - **Tác giả**: Võ Quỳnh Nhi
-- **Chu kỳ kiểm thử**: Chu kỳ kiểm thử hoàn thiện đồ án tốt nghiệp (10 tuần: từ 2026-11-02 đến 2027-01-10)
+- **Chu kỳ kiểm thử**: Chu kỳ kiểm thử hoàn thiện dự án cá nhân (10 tuần: từ 2026-11-02 đến 2027-01-10)
 - **Ngày lập kế hoạch**: 2026-11-02
 - **Ngày phê duyệt**: [CẦN XÁC NHẬN: Ngày ký duyệt chính thức]
 
@@ -29,7 +29,7 @@
 ## 2. Giới thiệu (Introduction)
 
 ### 2.1 Mục đích kế hoạch
-Tài liệu Kế hoạch kiểm thử (Test Plan) này cụ thể hóa Chiến lược kiểm thử (`docs/02-test-strategy.md`) cho chu kỳ thực thi đồ án tốt nghiệp kéo dài **10 tuần (từ ngày 2026-11-02 đến ngày 2027-01-10)**. Kế hoạch xác định rõ ràng:
+Tài liệu Kế hoạch kiểm thử (Test Plan) này cụ thể hóa Chiến lược kiểm thử (`docs/02-test-strategy.md`) cho chu kỳ thực thi dự án cá nhân kéo dài **10 tuần (từ ngày 2026-11-02 đến ngày 2027-01-10)**. Kế hoạch xác định rõ ràng:
 - Các hạng mục phần mềm và tính năng cụ thể cần kiểm thử trong chu kỳ.
 - Phân rã công việc chi tiết (WBS) theo phương pháp ước lượng ba điểm (PERT O/M/P).
 - Lịch trình thực hiện theo tuần, đường găng dự án (Critical Path) và các mốc bàn giao then chốt (`MS-01` đến `MS-08`).
@@ -99,11 +99,11 @@ Bảng dưới đây liệt kê các tính năng nằm ngoài phạm vi thực t
 
 | Phân hệ / Tính năng ngoài phạm vi | Lý do không kiểm thử trong chu kỳ này | Rủi ro chấp nhận và giải pháp kiểm soát | Mã rủi ro liên quan |
 |---|---|---|:---:|
-| Phân hệ Tiền lương (Payroll) & Thưởng | Chưa nằm trong mục tiêu tự động hóa cốt lõi của đồ án; tập trung vào chuỗi nghiệp vụ Client - Project - Task | Chấp nhận không bao phủ tự động; kiểm tra thủ công nhanh nếu có yêu cầu đối soát | RSK-015 |
-| Phân hệ Điểm danh (Attendance) | Yêu cầu cấu hình ca làm việc và thiết bị chấm công phức tạp, tốn thời gian thiết lập ban đầu | Hoãn sang chu kỳ phát triển tiếp theo sau khi bảo vệ đồ án | RSK-015 |
+| Phân hệ Tiền lương (Payroll) & Thưởng | Chưa nằm trong mục tiêu tự động hóa cốt lõi của dự án; tập trung vào chuỗi nghiệp vụ Client - Project - Task | Chấp nhận không bao phủ tự động; kiểm tra thủ công nhanh nếu có yêu cầu đối soát | RSK-015 |
+| Phân hệ Điểm danh (Attendance) | Yêu cầu cấu hình ca làm việc và thiết bị chấm công phức tạp, tốn thời gian thiết lập ban đầu | Hoãn sang chu kỳ phát triển tiếp theo sau khi hoàn thiện dự án | RSK-015 |
 | Kiểm thử hiệu năng chịu tải cao (Load Testing) | AUT là hệ thống demo công khai dùng chung cho cộng đồng; nghiêm cấm gửi tải nặng làm nghẽn máy chủ | Chấp nhận không đo ngưỡng chịu tải tối đa; chỉ đo thời gian tải trang cơ bản qua Selenium | RSK-023 |
 | Kiểm thử xâm nhập bảo mật (Pentest sâu) | Tránh nguy cơ làm gián đoạn hạ tầng máy chủ demo công khai | Chỉ thực hiện kiểm tra an toàn form nhập liệu ở mức độ không phá hoại | RSK-010 |
-| Kiểm thử trên thiết bị di động thật | Giới hạn phần cứng và mục tiêu đồ án chỉ tập trung vào ứng dụng Web trên Desktop | Chấp nhận kiểm tra giao diện cơ bản trên các độ phân giải màn hình máy tính | RSK-004 |
+| Kiểm thử trên thiết bị di động thật | Giới hạn phần cứng và mục tiêu dự án chỉ tập trung vào ứng dụng Web trên Desktop | Chấp nhận kiểm tra giao diện cơ bản trên các độ phân giải màn hình máy tính | RSK-004 |
 
 ---
 
@@ -151,7 +151,7 @@ Kế hoạch thực thi chu kỳ tổ chức thành 3 suite kiểm thử chuyên
 
 ### 8.2 Hành động cụ thể khi đình chỉ
 - Lập tức dừng thực thi các suite kiểm thử hồi quy lớn để tránh ghi thêm log rác và tốn thời gian vô ích.
-- Gửi thông báo đến giảng viên hướng dẫn hoặc quản trị viên trang web hỗ trợ reset dữ liệu/mật khẩu tài khoản demo.
+- Gửi thông báo đến reviewer kỹ thuật hoặc quản trị viên trang web hỗ trợ reset dữ liệu/mật khẩu tài khoản demo.
 - Ghi nhận nhật ký sự cố đình chỉ kèm mốc thời gian và nguyên nhân chi tiết.
 
 ### 8.3 Điều kiện để tiếp tục kiểm thử (Resumption)
@@ -176,7 +176,7 @@ Bảng dưới đây quy định các tiêu chí định lượng bắt buộc �
 | **Tiêu chí ra (Exit)** | Độ bao phủ các tính năng có rủi ro Critical/High | Ma trận đối chiếu ca kiểm thử với Risk Register | [ĐỀ XUẤT: Đạt 100% rủi ro cao] | Kiểm soát toàn bộ 14 rủi ro Critical & High |
 | **Tiêu chí ra (Exit)** | Số lượng lỗi nghiêm trọng còn mở (Blocker/Critical) | Bảng theo dõi lỗi Defect Log | [ĐỀ XUẤT: 0 lỗi S1 và S2 còn mở] | Không bàn giao sản phẩm khi còn lỗi tê liệt hệ thống |
 | **Tiêu chí ra (Exit)** | Tỷ lệ ca kiểm thử không ổn định (Flaky Tests) | Thống kê từ Allure TestListener qua 3 lần chạy | [ĐỀ XUẤT: Tỷ lệ <= 2%] | Đảm bảo độ tin cậy tuyệt đối của bộ kiểm thử (RSK-018) |
-| **Tiêu chí ra (Exit)** | Hoàn thiện sản phẩm bàn giao đồ án | Kiểm tra danh mục tài liệu và artifact báo cáo | [ĐỀ XUẤT: Đủ 100% tài liệu theo DoD] | Đáp ứng trọn vẹn tiêu chuẩn nghiệm thu đồ án |
+| **Tiêu chí ra (Exit)** | Hoàn thiện sản phẩm bàn giao dự án | Kiểm tra danh mục tài liệu và artifact báo cáo | [ĐỀ XUẤT: Đủ 100% tài liệu theo DoD] | Đáp ứng trọn vẹn tiêu chuẩn đánh giá dự án |
 
 ---
 
@@ -192,7 +192,7 @@ Bảng tổng hợp các sản phẩm bàn giao của chu kỳ kiểm thử theo
 | Báo cáo kết quả kiểm thử tự động | HTML Report | `reports/` & `target/allure-results` | `MS-07` | Trích xuất biểu đồ xu hướng Allure và log chi tiết ExtentReports |
 | Video và hình ảnh bằng chứng lỗi | Video AVI, Ảnh PNG | `reports/record/` & `reports/screenshots/` | `MS-07` | Đính kèm tự động cho 100% các ca kiểm thử thất bại |
 | Sổ theo dõi và phân loại lỗi | Markdown | `docs/defect-log.md` [ĐỀ XUẤT] | `MS-07` | Ghi nhận chi tiết các bug phát hiện kèm bước tái hiện |
-| Báo cáo nghiệm thu tổng kết kiểm thử | Markdown, HTML | `docs/04-test-summary-report.md` | `MS-08` | Tổng kết toàn diện độ phủ, KPI, đánh giá chất lượng đồ án |
+| Báo cáo tổng kết kiểm thử | Markdown, HTML | `docs/04-test-summary-report.md` | `MS-08` | Tổng kết toàn diện độ phủ, KPI, đánh giá chất lượng dự án |
 
 ---
 
@@ -251,7 +251,7 @@ Lịch trình thực thi được phân bổ chi tiết trong **10 tuần (từ 
 | **7** | 2026-12-14 → 2026-12-20 | Tối ưu kịch bản tích hợp liên thông E2E Flow và cơ chế RetryAnalyzer | FN_E2EFLowTest ổn định | `MS-05` | `MS-04` | 16.00h | **Có (CP)** |
 | **8** | 2026-12-21 → 2026-12-27 | Kiểm thử tương thích Chrome/Edge, tinh chỉnh cấu hình Surefire | pom.xml chuẩn hóa, cross-browser report | `MS-06` | `MS-05` | 15.00h | Không |
 | **9** | 2026-12-28 → 2027-01-03 | Chạy kiểm thử hồi quy toàn diện, phân loại lỗi và đối soát Defect | Báo cáo Allure tổng thể, Defect Log | `MS-07` | `MS-05` | 16.00h | **Có (CP)** |
-| **10** | 2027-01-04 → 2027-01-10 | Kiểm thử xác nhận lần cuối, đóng gói báo cáo và nghiệm thu đồ án | Test Summary Report, hoàn tất đồ án | `MS-08` | `MS-07` | 15.00h | **Có (CP)** |
+| **10** | 2027-01-04 → 2027-01-10 | Kiểm thử xác nhận lần cuối, đóng gói báo cáo và hoàn thiện dự án | Test Summary Report, hoàn tất dự án | `MS-08` | `MS-07` | 15.00h | **Có (CP)** |
 
 ---
 
@@ -284,7 +284,7 @@ Bảng phân rã cấu trúc công việc (WBS) chi tiết cho 20 gói đầu vi
 | T17 | Chạy kiểm thử hồi quy toàn diện và đo lường thời gian thực thi các suite | 9 | 9 | 12 | 15 | 12.00 | T16 | Báo cáo Allure và ExtentReports đợt hồi quy tổng thể | MS-07 | RSK-018, RSK-025 |
 | T18 | Phân loại, ghi nhận và xử lý các lỗi phát sinh (Defect Triage) | 9 | 3 | 4 | 5 | 4.00 | T17 | Bảng Defect Log cập nhật trạng thái retest | | RSK-013 |
 | T19 | Chạy kiểm thử xác nhận lần cuối toàn bộ Smoke, Regression và E2E | 10 | 6 | 8 | 10 | 8.00 | T17, T18 | Bộ kết quả kiểm thử chính thức đạt tiêu chí Exit | | RSK-023 |
-| T20 | Đóng gói báo cáo kiểm thử, trích xuất số liệu KPI và hoàn thiện tài liệu nghiệm thu | 10 | 5 | 7 | 9 | 7.00 | T19 | Báo cáo nghiệm thu kiểm thử và tài liệu đồ án | MS-08 | RSK-030 |
+| T20 | Đóng gói báo cáo kiểm thử, trích xuất số liệu KPI và hoàn thiện tài liệu tổng kết dự án | 10 | 5 | 7 | 9 | 7.00 | T19 | Báo cáo tổng kết kiểm thử và tài liệu dự án | MS-08 | RSK-030 |
 
 ### 14.1 Tổng hợp công sức và đối soát năng lực
 - **Tổng công sức kỳ vọng ($E_{\text{total}}$)**: $152.00 \text{ giờ}$.
@@ -316,7 +316,7 @@ Bảng phân rã cấu trúc công việc (WBS) chi tiết cho 20 gói đầu vi
 ## 15. Nguồn lực và vai trò (Resources and Roles)
 
 ### 15.1 Phân bổ nhân sự thực hiện
-Do tính chất đồ án cá nhân, một nhân sự đảm nhận nhiều vai trò chuyên môn theo chuẩn công nghiệp:
+Do tính chất dự án cá nhân, một nhân sự đảm nhận nhiều vai trò chuyên môn theo chuẩn công nghiệp:
 - **Họ và tên**: Võ Quỳnh Nhi
 - **Vai trò chuyên trách**:
   - *Test Manager*: Lập kế hoạch, theo dõi tiến độ WBS, quản lý rủi ro và điều phối mốc bàn giao.
@@ -325,7 +325,6 @@ Do tính chất đồ án cá nhân, một nhân sự đảm nhận nhiều vai 
 - **Thời lượng làm việc cam kết**: 20 giờ/tuần (phân bổ linh hoạt các buổi tối và ngày cuối tuần).
 
 ### 15.2 Vai trò định hướng và phê duyệt
-- **Người hướng dẫn / Mentor**: [CẦN XÁC NHẬN: Giảng viên hướng dẫn đồ án]
 - **Trách nhiệm**: Đánh giá tính đúng đắn của phương pháp kiểm thử, định hướng xử lý rủi ro và phê duyệt các mốc nghiệm thu.
 
 ### 15.3 Nhu cầu đào tạo và nâng cao kỹ năng
@@ -358,9 +357,9 @@ Bảng phân định cơ chế báo cáo và thông tin liên lạc trong suốt
 | Loại báo cáo | Nội dung báo cáo | Nơi lưu trữ / Kênh gửi | Tần suất | Người nhận |
 |---|---|---|---|---|
 | **Báo cáo thực thi nhanh (Execution Log)** | Số lượng test pass/fail, lỗi phát sinh qua log | Terminal Maven, file `logs/app.log` | Sau mỗi lần chạy suite | Automation Tester |
-| **Báo cáo tiến độ tuần (Weekly Status)** | Tiến độ WBS, mốc bàn giao đạt được, rủi ro mới | `docs/progress/` [ĐỀ XUẤT] | Hàng tuần (Chủ nhật) | Mentor / Giảng viên |
+| **Báo cáo tiến độ tuần (Weekly Status)** | Tiến độ WBS, mốc bàn giao đạt được, rủi ro mới | `docs/progress/` [ĐỀ XUẤT] | Hàng tuần (Chủ nhật) | Đề xuất |
 | **Báo cáo trực quan tương tác (Allure / Extent)** | Biểu đồ xu hướng, thời gian chạy từng test, screenshot | `reports/` & `target/allure-results` | Sau mỗi đợt chạy hồi quy | Tester, Ban đánh giá |
-| **Báo cáo nghiệm thu tổng kết (Final Report)** | Đánh giá độ bao phủ, số liệu KPI, kết luận đồ án | `docs/04-test-summary-report.md` | Kết thúc chu kỳ (Tuần 10) | Hội đồng chấm đồ án |
+| **Báo cáo tổng kết dự án (Final Report)** | Đánh giá độ bao phủ, số liệu KPI, kết luận dự án | `docs/04-test-summary-report.md` | Kết thúc chu kỳ (Tuần 10) |   Đề xuất |
 
 ---
 
@@ -383,12 +382,12 @@ Bảng nhận diện các rủi ro phát sinh trong quá trình thực thi kế 
 ### 19.1 Giả định của kế hoạch
 - [GIẢ ĐỊNH: Môi trường web https://hrm.anhtester.com/ hoạt động liên tục và không có đợt nâng cấp cấu trúc DOM lớn trong 10 tuần].
 - [GIẢ ĐỊNH: Quỹ thời gian cá nhân 20 giờ/tuần được duy trì đều đặn không bị gián đoạn kéo dài quá 1 tuần].
-- [GIẢ ĐỊNH: Kết quả kiểm thử trên trình duyệt Google Chrome được hội đồng chấm điểm công nhận là môi trường chuẩn].
+- [GIẢ ĐỊNH: Kết quả kiểm thử trên trình duyệt Google Chrome được tự đánh giá chấp nhận là môi trường chuẩn].
 
 ### 19.2 Ràng buộc của kế hoạch
-- Toàn bộ chi phí thực hiện đồ án phải nằm trong nguồn lực cá nhân sẵn có; không sử dụng các dịch vụ Cloud Testing trả phí.
+- Toàn bộ chi phí thực hiện dự án phải nằm trong nguồn lực cá nhân sẵn có; không sử dụng các dịch vụ Cloud Testing trả phí.
 - Tuyệt đối không can thiệp sâu vào cơ sở dữ liệu hệ thống demo bằng các công cụ tấn công hoặc chèn mã độc.
-- Thời hạn kết thúc chu kỳ vào ngày 2027-01-10 là mốc cố định không thể lùi lịch nộp đồ án.
+- Thời hạn kết thúc chu kỳ vào ngày 2027-01-10 là mốc cố định không thể lùi lịch hoàn thiện dự án.
 
 ### 19.3 Mối quan hệ phụ thuộc
 - Phụ thuộc vào chất lượng mã nguồn framework và các lớp Page Object đã xây dựng trong repository.
@@ -403,22 +402,9 @@ Trong quá trình lập kế hoạch chi tiết cho chu kỳ 10 tuần, ghi nh�
 - **Đề xuất 2**: Bổ sung bộ kịch bản dọn dẹp dữ liệu chuyên biệt (`T08`, `T12`) vào bộ suite định kỳ nhằm chủ động kiểm soát rủi ro dữ liệu rác tích tụ trên môi trường demo (`RSK-026`).
 
 ---
+## 21. Phụ lục (Appendix)
 
-## 21. Phê duyệt (Sign-off and Approval)
-
-Bảng ghi nhận chữ ký và sự đồng thuận của các bên liên quan về Kế hoạch kiểm thử:
-
-| Vai trò dự án | Họ và tên | Ngày phê duyệt | Chữ ký xác nhận |
-|---|---|:---:|:---:|
-| **Tác giả / Test Manager** | Võ Quỳnh Nhi | 2026-11-02 | [CẦN XÁC NHẬN: Chữ ký tác giả] |
-| **Giảng viên hướng dẫn / Mentor** | [CẦN XÁC NHẬN: Tên giảng viên] | [CẦN XÁC NHẬN: Ngày duyệt] | [CẦN XÁC NHẬN: Chữ ký giảng viên] |
-| **Đại diện phản biện đồ án** | [CẦN XÁC NHẬN: Tên phản biện] | [CẦN XÁC NHẬN: Ngày duyệt] | [CẦN XÁC NHẬN: Chữ ký phản biện] |
-
----
-
-## 22. Phụ lục (Appendix)
-
-### 22.1 Ma trận Tính năng × Loại kiểm thử × Nhãn mức chạy
+### 21.1 Ma trận Tính năng × Loại kiểm thử × Nhãn mức chạy
 Bảng tổng hợp đối soát chéo phục vụ việc cấu hình các suite XML:
 
 | Phân hệ chức năng | Kiểm thử chức năng | Kiểm thử khói | Kiểm thử hồi quy | Kiểm thử luồng E2E | Kiểm thử bảo mật/biên | Nhãn áp dụng |
@@ -431,12 +417,12 @@ Bảng tổng hợp đối soát chéo phục vụ việc cấu hình các suite
 | `task` | Có | Không | Có | Có | Có | `regression`, `task` |
 | Luồng E2E Flow | Có | Không | Không | Có | Không | `e2e` |
 
-### 22.2 Danh sách câu hỏi mở cần giải quyết
+### 21.2 Danh sách câu hỏi mở cần giải quyết
 1. [CẦN ĐO: Thời gian chạy thực tế của toàn bộ Regression Suite sau khi đã loại bỏ hoàn toàn các lệnh sleep tĩnh].
 2. [CẦN ĐO: Tỷ lệ flaky test thực tế ghi nhận được sau 10 lần thực thi liên tiếp trên môi trường demo].
-3. [CẦN XÁC NHẬN: Quy định cụ thể của hội đồng về việc nộp video quay màn hình cho tất cả các ca kiểm thử hay chỉ các ca kiểm thử thất bại].
+3. [CẦN XÁC NHẬN: Quy định cụ thể của người review hoặc tác giả về việc nộp video quay màn hình cho tất cả các ca kiểm thử hay chỉ các ca kiểm thử thất bại].
 
-### 22.3 Danh mục tự kiểm tra chất lượng (Quality Gate Checklist)
+### 21.3 Danh mục tự kiểm tra chất lượng (Quality Gate Checklist)
 - [x] Đầy đủ 22/22 mục bắt buộc theo đúng thứ tự quy chuẩn từ Mục 1 đến Mục 22.
 - [x] Bảng WBS tại Mục 14 tuân thủ đầy đủ cấu trúc cột, ước lượng ba điểm O/M/P tính toán chính xác $E = (O + 4M + P) / 6$.
 - [x] Tổng công sức 152.00 giờ cộng 20% dự phòng thành 182.40 giờ, nằm hoàn toàn trong giới hạn năng lực 200.00 giờ (1 người × 20h/tuần × 10 tuần).

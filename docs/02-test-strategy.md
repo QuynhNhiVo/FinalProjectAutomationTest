@@ -33,9 +33,8 @@
 Tài liệu Chiến lược kiểm thử (Test Strategy) này định nghĩa phương pháp tiếp cận toàn diện, dài hạn và ổn định cho dự án kiểm thử tự động hệ thống Anh Tester HRM. Chiến lược trả lời câu hỏi cốt lõi: *"Kiểm thử theo cách nào, ở cấp độ nào, sử dụng kiến trúc gì và vì sao lại lựa chọn phương án đó"*. Tài liệu đóng vai trò kim chỉ nam cho việc lập Kế hoạch kiểm thử (Test Plan) và xây dựng Ma trận truy vết yêu cầu (RTM) ở các bước tiếp theo.
 
 ### 2.2 Đối tượng độc giả
-- **QA Lead / Automation Tester**: Nắm vững phương pháp thiết kế, kiến trúc framework, chính sách dữ liệu và quy chuẩn mã kiểm thử.
-- **Giảng viên hướng dẫn / Mentor**: Thẩm định tính đúng đắn về mặt học thuật, tính thực tiễn của giải pháp và mức độ bao phủ rủi ro.
-- **Hội đồng đánh giá đồ án**: Đối soát cơ sở kỹ thuật của các quyết định kiến trúc và tiêu chí đánh giá chất lượng sản phẩm.
+- **QA Lead / Automation Tester (Tác giả)**: Nắm vững phương pháp thiết kế, kiến trúc framework, chính sách dữ liệu và quy chuẩn mã kiểm thử.
+- **Người rà soát kỹ thuật / Độc giả quan tâm (Technical Reviewers / Peers / Recruiters)**: Đối soát cơ sở kỹ thuật của các quyết định kiến trúc, tiêu chí đo lường chất lượng và phương pháp tiếp cận trong một dự án kiểm thử tự động cá nhân.
 
 ### 2.3 Tổng quan sản phẩm được kiểm thử
 Hệ thống Anh Tester HRM (`https://hrm.anhtester.com/`) là ứng dụng web quản trị doanh nghiệp (ERP/HRM) đa người dùng, tích hợp các nghiệp vụ quản lý tài nguyên nhân lực, thông tin khách hàng, phân bổ dự án và giao việc tác vụ. Ứng dụng vận hành trên môi trường demo công khai với dữ liệu chia sẻ cộng đồng.
@@ -55,10 +54,10 @@ Hệ thống Anh Tester HRM (`https://hrm.anhtester.com/`) là ứng dụng web 
 - Kiểm thử độ tương thích giao diện trên trình duyệt chuẩn (Google Chrome) và hỗ trợ đa trình duyệt (Edge, Firefox).
 
 #### 2.4.2 Ngoài phạm vi (OUT-OF-SCOPE kèm lý do cụ thể)
-- **Phân hệ Tiền lương (Payroll) & Điểm danh (Attendance)**: Chưa đưa vào tự động hóa ở giai đoạn này nhằm tập trung nguồn lực chuyên sâu vào chuỗi nghiệp vụ cốt lõi Client - Project - Task của đồ án.
+- **Phân hệ Tiền lương (Payroll) & Điểm danh (Attendance)**: Chưa đưa vào tự động hóa ở giai đoạn này nhằm tập trung nguồn lực chuyên sâu vào chuỗi nghiệp vụ cốt lõi Client - Project - Task của dự án.
 - **Kiểm thử tải nặng và hiệu năng chịu tải (Load / Stress Testing)**: Nghiêm cấm thực hiện trên hệ thống demo công khai `hrm.anhtester.com` để bảo vệ tài nguyên máy chủ đào tạo dùng chung và tránh nguy cơ sập dịch vụ.
 - **Kiểm thử bảo mật thâm nhập sâu (Penetration Testing / Exploitation)**: Chỉ dừng lại ở mức validation dữ liệu đầu vào và phân quyền cơ bản; không quét lỗ hổng hạ tầng hay tấn công dịch vụ từ chối (DoS).
-- **Kiểm thử trên thiết bị di động thật (Real Mobile Device Testing)**: Tập trung tối ưu hóa cho môi trường web máy tính để bàn (Desktop Web) theo yêu cầu chuẩn của đồ án.
+- **Kiểm thử trên thiết bị di động thật (Real Mobile Device Testing)**: Tập trung tối ưu hóa cho môi trường web máy tính để bàn (Desktop Web) theo phạm vi ban đầu của dự án cá nhân.
 
 ### 2.5 Mục tiêu kiểm thử dạng SMART gắn với rủi ro
 - **Specific (Cụ thể)**: Bao phủ 100% Top 10 rủi ro nghiêm trọng nhất trong Sổ đăng ký rủi ro (đặc biệt là các rủi ro RSK-001, RSK-005, RSK-010, RSK-017, RSK-018, RSK-023).
@@ -85,10 +84,10 @@ Chiến lược kiểm thử được dẫn dắt trực tiếp từ kết quả
 4. **Độ ổn định cao hơn số lượng**: Ưu tiên 20 bài test chạy ổn định, tin cậy tuyệt đối thay vì 100 bài test chập chờn (flaky) gây nhiễu loạn kết quả báo cáo.
 
 ### 3.3 Cách tiếp cận khi hệ thống thiếu tài liệu đặc tả yêu cầu chính thức
-Do hệ thống AUT là trang web đào tạo demo không cung cấp tài liệu SRS/BRD chi tiết (RSK-014), chiến lược xử lý được quy chuẩn như sau:
+Do hệ thống AUT là trang web demo và không cung cấp tài liệu SRS/BRD chi tiết (RSK-014), chiến lược xử lý được quy chuẩn như sau:
 - **Kiểm thử thăm dò thiết lập đường chuẩn (Exploratory Baseline Testing)**: Tester thực hiện thao tác thủ công, ghi hình và chụp ảnh các luồng nghiệp vụ chuẩn để xác lập hành vi mặc định (Expected Behavior Baseline).
 - **Kỹ thuật Black-box suy luận nghiệp vụ**: Áp dụng chuẩn nghiệp vụ quản trị nhân sự ERP thông thường (ví dụ: ngày kết thúc không được nhỏ hơn ngày bắt đầu, email phải có định dạng hợp lệ, xóa cha phải xử lý ràng buộc khóa ngoại con).
-- **Quy trình quản lý thay đổi hành vi**: Khi hệ thống có sự thay đổi giao diện hoặc luồng xử lý, tester ghi nhận vào danh sách `[CẦN XÁC NHẬN]`, lập biên bản đối soát với giảng viên hướng dẫn trước khi cập nhật mã kiểm thử.
+- **Quy trình quản lý thay đổi hành vi**: Khi hệ thống có sự thay đổi giao diện hoặc luồng xử lý, tester ghi nhận vào danh sách `[CẦN XÁC NHẬN]`, lập biên bản đối soát nội bộ với reviewer kỹ thuật hoặc tự rà soát trước khi cập nhật mã kiểm thử.
 
 ---
 
@@ -311,7 +310,7 @@ Bảng dưới đây quy định các chỉ số định lượng bắt buộc n
 
 Bảng ma trận RACI phân định rõ vai trò và trách nhiệm trong dự án kiểm thử tự động (R = Responsible, A = Accountable, C = Consulted, I = Informed):
 
-| Hoạt động kiểm thử | Test Architect / QA Lead | Automation Tester | Mentor / Reviewer |
+| Hoạt động kiểm thử | Test Architect / QA Lead | Automation Tester | Reviewer / Technical Peer |
 |---|:---:|:---:|:---:|
 | Xây dựng và cập nhật Sổ đăng ký rủi ro (Risk Register) | **A / R** | **C** | **C / I** |
 | Xây dựng Chiến lược kiểm thử tự động (Test Strategy) | **A / R** | **C** | **C / I** |
@@ -322,9 +321,9 @@ Bảng ma trận RACI phân định rõ vai trò và trách nhiệm trong dự �
 | Thực thi suite kiểm thử, phân loại và ghi nhận lỗi | **A** | **R** | **I** |
 | Rà soát mã nguồn tự động hóa (Code Review) | **A** | **R** | **C** |
 | Khắc phục lỗi kịch bản chập chờn (Flaky Tests) | **A** | **R** | **I** |
-| Tổng hợp và trình bày báo cáo nghiệm thu kết quả đồ án | **A / R** | **R** | **A** |
+| Tổng hợp và trình bày báo cáo kết quả dự án | **A / R** | **R** | **A** |
 
-> *Ghi chú về phân bổ nguồn lực*: Trong phạm vi đồ án cá nhân, vai trò Test Architect, QA Lead và Automation Tester do thành viên Võ Quỳnh Nhi đảm nhiệm chính; vai trò Mentor / Reviewer do Giảng viên hướng dẫn đảm nhận để phê duyệt và định hướng chất lượng.
+> *Ghi chú về phân bổ nguồn lực*: Trong phạm vi dự án cá nhân, vai trò Test Architect, QA Lead và Automation Tester do thành viên Võ Quỳnh Nhi đảm nhiệm chính; vai trò Reviewer / Technical Peer có thể là người xem xét kỹ thuật hoặc tự rà soát nội bộ để xác nhận chất lượng và định hướng cải tiến.
 
 ---
 
@@ -336,7 +335,7 @@ Chính sách quy định chi tiết vai trò của công cụ trí tuệ nhân t
 | Giai đoạn kiểm thử | Công việc AI hỗ trợ thực hiện | Công việc con người bắt buộc thực hiện | Cổng kiểm soát con người |
 |---|---|---|---|
 | Phân tích bối cảnh & Rủi ro | Gợi ý các danh mục rủi ro tiềm ẩn, mẫu câu nguyên nhân - hậu quả chuẩn | Đối soát thực tế với giao diện hệ thống AUT, chấm điểm L và I dựa trên bối cảnh thật | Phê duyệt danh sách rủi ro chính thức trước khi đưa vào tài liệu |
-| Thiết kế ca kiểm thử | Gợi ý các trường hợp kiểm thử biên, phân vùng tương đương và dữ liệu mẫu | Chọn lọc kịch bản phù hợp với mục tiêu đồ án, loại bỏ các ca kiểm thử phi thực tế | Rà soát 100% logic ca kiểm thử trước khi chuyển sang bước code |
+| Thiết kế ca kiểm thử | Gợi ý các trường hợp kiểm thử biên, phân vùng tương đương và dữ liệu mẫu | Chọn lọc kịch bản phù hợp với mục tiêu dự án, loại bỏ các ca kiểm thử phi thực tế | Rà soát 100% logic ca kiểm thử trước khi chuyển sang bước code |
 | Chuẩn bị dữ liệu kiểm thử | Tạo danh sách dữ liệu mẫu ngẫu nhiên (tên, email, số điện thoại, mô tả) | Kiểm tra tính tương thích của dữ liệu với form nhập liệu trên hệ thống HRM | Xác thực dữ liệu không vi phạm chuẩn định dạng của ứng dụng |
 | Viết mã kịch bản kiểm thử | Gợi ý khung mã nguồn Page Object, cú pháp TestNG và phương thức wrapper | Kiểm tra trực tiếp tính chính xác của locator trên DevTools, điều chỉnh logic chờ | Bắt buộc chạy thử thành công trên máy cục bộ trước khi merge mã |
 | Thực thi & Xử lý Flaky | Gợi ý nguyên nhân tiềm ẩn khi bài test fail dựa trên thông báo ngoại lệ log | Điều tra môi trường mạng, kiểm tra trạng thái DOM thực tế và quyết định cách ly test | Không cho phép cơ chế tự sửa locator ngầm định mà không có sự đồng ý |
@@ -391,15 +390,15 @@ Bảng đối soát giữa các rủi ro chiến lược và các mã rủi ro t
 | RSK-001 | Lỗ hổng phân quyền Client truy cập trái phép vào các URL quản trị của Admin | High | Thiết kế bộ ca kiểm thử bảo mật chuyên sâu kiểm tra phản hồi HTTP 403 Forbidden | Gửi cảnh báo lỗi bảo mật cho bên phát triển và đề xuất gắn middleware xác thực vai trò |
 | RSK-010 | Chức năng tải tệp đính kèm dự án không kiểm tra mã độc và định dạng file | High | Kiểm thử tải lên các tệp tin giả định không hợp lệ (.exe, .bat, script) có kiểm soát | Chặn tải tệp lạ và cấu hình thư mục upload không có quyền thực thi mã nguồn |
 | RSK-022 | Cấu hình pom.xml ngầm định gây ra hiện tượng "xanh giả" khi kiểm thử thất bại | Medium | Cấu hình bắt buộc failIfNoTests=true và cấm sử dụng testFailureIgnore trong build | Kiểm tra đối soát số lượng bài test thực thi thực tế trong báo cáo Allure sau mỗi lần chạy |
-| RSK-014 | Thiếu tài liệu đặc tả yêu cầu chính thức dẫn tới hiểu sai hành vi phần mềm | High | Thực hiện kiểm thử thăm dò (Exploratory Testing) để xác lập hành vi chuẩn ban đầu | Thường xuyên đối soát và xin ý kiến giảng viên hướng dẫn về các điểm còn mơ hồ |
+| RSK-014 | Thiếu tài liệu đặc tả yêu cầu chính thức dẫn tới hiểu sai hành vi phần mềm | High | Thực hiện kiểm thử thăm dò (Exploratory Testing) để xác lập hành vi chuẩn ban đầu | Thường xuyên đối soát với reviewer kỹ thuật hoặc tự rà soát các điểm còn mơ hồ |
 
 ---
 
 ## 15. Giả định, ràng buộc và phụ thuộc (Assumptions, Constraints and Dependencies)
 
 ### 15.1 Giả định chiến lược
-- [GIẢ ĐỊNH: Hệ thống trang web demo https://hrm.anhtester.com/ duy trì tính khả dụng ổn định trong suốt quá trình hoàn thiện và đánh giá đồ án].
-- [GIẢ ĐỊNH: Trình duyệt Google Chrome phiên bản mới nhất là môi trường chuẩn mực được hội đồng đánh giá chấp nhận để kiểm chứng kết quả].
+- [GIẢ ĐỊNH: Hệ thống trang web demo https://hrm.anhtester.com/ duy trì tính khả dụng ổn định trong suốt quá trình hoàn thiện và đánh giá dự án].
+- [GIẢ ĐỊNH: Trình duyệt Google Chrome phiên bản mới nhất là môi trường chuẩn mực được tự đánh giá chấp nhận để kiểm chứng kết quả].
 - [GIẢ ĐỊNH: Môi trường máy chấm bài hỗ trợ cấu hình runtime Java 25 và Maven phiên bản 3.6 trở lên].
 
 ### 15.2 Ràng buộc chiến lược
@@ -432,7 +431,7 @@ Bảng dưới đây ghi nhận toàn bộ các quyết định kiến trúc the
 
 | ID | Quyết định | Lý do | Phương án đã loại | Đánh đổi | Trạng thái |
 |:---:|---|---|---|---|:---:|
-| STR-D01 | Duy trì nền tảng Selenium Java TestNG làm công nghệ kiểm thử tự động chính | Tận dụng mã nguồn hiện có, phù hợp kỹ năng của tác giả, đáp ứng trọn vẹn yêu cầu đồ án tốt nghiệp | Đã loại phương án chuyển đổi sang framework NodeJS hay ngôn ngữ khác vì đòi hỏi phải viết lại toàn bộ framework từ đầu | Tốc độ chạy có thể chậm hơn một số công cụ mới và cần quản lý driver chặt chẽ | Confirmed |
+| STR-D01 | Duy trì nền tảng Selenium Java TestNG làm công nghệ kiểm thử tự động chính | Tận dụng mã nguồn hiện có, phù hợp kỹ năng của tác giả, đáp ứng trọn vẹn yêu cầu của dự án cá nhân | Đã loại phương án chuyển đổi sang framework NodeJS hay ngôn ngữ khác vì đòi hỏi phải viết lại toàn bộ framework từ đầu | Tốc độ chạy có thể chậm hơn một số công cụ mới và cần quản lý driver chặt chẽ | Confirmed |
 | STR-D02 | Áp dụng mô hình Page Object Model kết hợp WebUI Keyword Wrapper | Tách biệt hoàn toàn giữa cấu trúc giao diện và kịch bản kiểm thử, tối ưu khả năng tái sử dụng mã | Viết mã kiểm thử dạng kịch bản tuyến tính trực tiếp trong lớp test case | Tốn thời gian khởi tạo cấu trúc lớp ban đầu cho từng trang màn hình | Confirmed |
 | STR-D03 | Loại bỏ triệt để lệnh sleep() tĩnh cứng và chuẩn hóa sang WebDriverWait | Giải quyết tận gốc nguyên nhân gây flaky test (RSK-018) và giảm thời gian chạy suite ít nhất 30% | Duy trì sleep tĩnh kết hợp tăng timeout chờ đợi của hệ thống | Phải rà soát và viết lại điều kiện chờ động cho từng phần tử giao diện | Confirmed |
 | STR-D04 | Áp dụng chính sách dữ liệu nguyên tử độc lập kèm chuỗi thời gian duy nhất | Triệt tiêu hoàn toàn rủi ro gãy dây chuyền do phụ thuộc vào dòng cố định trong file Excel (RSK-017) | Sử dụng chung một tập dữ liệu cố định có sẵn trên trang web demo | Mỗi bài test tốn thêm thời gian khởi tạo dữ liệu mới và dọn dẹp sau khi chạy | Confirmed |
@@ -469,8 +468,8 @@ Bảng dưới đây ghi nhận toàn bộ các quyết định kiến trúc the
 ## 19. Xác nhận và tự kiểm tra chất lượng (Sign-off and Quality Checklist)
 
 ### 19.1 Điểm cần con người xác nhận
-1. [CẦN XÁC NHẬN: Phê duyệt chính thức của Mentor hoặc Giảng viên hướng dẫn về 10 quyết định kiến trúc trong Decision Log (STR-D01 đến STR-D10)].
-2. [CẦN XÁC NHẬN: Mức độ ưu tiên của việc thiết lập luồng tự động hóa CI/CD GitHub Actions trong giai đoạn hoàn thiện đồ án].
+1. [CẦN XÁC NHẬN: Phê duyệt chính thức của reviewer kỹ thuật hoặc tự rà soát nội bộ về 10 quyết định kiến trúc trong Decision Log (STR-D01 đến STR-D10)].
+2. [CẦN XÁC NHẬN: Mức độ ưu tiên của việc thiết lập luồng tự động hóa CI/CD GitHub Actions trong giai đoạn hoàn thiện dự án].
 3. [CẦN XÁC NHẬN: Quyết định việc duy trì JDK 25 với chế độ chạy đơn luồng hay chuyển sang JDK 17/21 LTS để bật chạy song song đa luồng trên Maven Surefire].
 4. [CẦN XÁC NHẬN: Thống nhất chỉ số mục tiêu thời gian thực thi của bộ kiểm thử hồi quy (đề xuất tối đa 15 phút)].
 

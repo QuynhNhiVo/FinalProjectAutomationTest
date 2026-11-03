@@ -1,4 +1,4 @@
-# Requirements Traceability Matrix (RTM) – Ma trận truy vết yêu cầu
+﻿# Requirements Traceability Matrix (RTM) – Ma trận truy vết yêu cầu
 
 ## 1. Document Control
 

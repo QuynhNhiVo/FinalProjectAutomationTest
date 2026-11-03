@@ -475,8 +475,8 @@
                 <li><strong>PRODUCT</strong>: Rủi ro về tính năng nghiệp vụ, phân quyền, toàn vẹn dữ liệu, xác thực,
                     luồng tác vụ và upload tệp trên 6 phân hệ cốt lõi: <code>auth</code>, <code>dashboard</code>,
                     <code>client</code>, <code>employee</code>, <code>project</code>, <code>task</code>.</li>
-                <li><strong>PROJECT</strong>: Rủi ro về nguồn lực đơn lẻ, thiếu tài liệu đặc tả yêu cầu chính thức, thời
-                    hạn bàn giao đồ án và phụ thuộc vào hệ thống bên thứ ba.</li>
+                <li><strong>PROJECT</strong>: Rủi ro về nguồn lực cá nhân đơn lẻ, thiếu tài liệu đặc tả yêu cầu chính thức, tiến
+                    độ hoàn thành dự án cá nhân và phụ thuộc vào hệ thống bên thứ ba.</li>
                 <li><strong>AUTOMATION</strong>: Rủi ro về dữ liệu kiểm thử phụ thuộc dây chuyền, lạm dụng
                     <code>sleep()</code> cứng gây flaky, xung đột Java 25 với Maven Surefire, locator DOM mong manh và
                     bẫy "xanh giả".</li>
@@ -975,23 +975,23 @@
                             <td>RSK-013</td>
                             <td>PROJECT</td>
                             <td>general</td>
-                            <td>Do dự án chỉ có 1 nhân sự phụ trách toàn bộ kịch bản tự động hóa, có thể xảy ra đình trệ
-                                tiến độ khi nhân sự bị ốm hoặc gặp sự cố bất khả kháng, dẫn tới không đạt mốc hoàn thành
-                                đồ án theo kế hoạch.</td>
+                            <td>Do dự án cá nhân chỉ có 1 nhân sự phụ trách toàn bộ kịch bản tự động hóa, có thể xảy ra đình trệ
+                                tiến độ khi nhân sự bận công việc đột xuất, bị ốm hoặc gặp sự cố bất khả kháng, dẫn tới không đạt mốc hoàn thành
+                                dự án theo kế hoạch.</td>
                             <td style="text-align:center">3</td>
                             <td>Toàn bộ công việc thiết kế, code, bảo trì do duy nhất 1 tester Võ Quỳnh Nhi thực hiện
                             </td>
                             <td style="text-align:center">4</td>
-                            <td>Mọi hoạt động kiểm thử bị dừng hoàn toàn và nguy cơ trễ hạn nộp đồ án tốt nghiệp</td>
+                            <td>Mọi hoạt động kiểm thử bị dừng hoàn toàn và nguy cơ trễ mốc hoàn thành dự án cá nhân</td>
                             <td style="text-align:center">12</td>
                             <td style="text-align:center"><span class="badge badge-high">High</span></td>
                             <td>Mitigate</td>
-                            <td>Lập tài liệu hướng dẫn bàn giao chi tiết, viết script chuẩn hóa và lưu mã nguồn rõ ràng
+                            <td>Lập tài liệu kỹ thuật chi tiết, viết script chuẩn hóa và lưu trữ mã nguồn rõ ràng
                                 trên Git repo</td>
-                            <td>Ưu tiên hoàn thiện trước các luồng smoke test then chốt và xin gia hạn thời gian nộp bài
+                            <td>Ưu tiên hoàn thiện trước các luồng smoke test then chốt và chủ động điều chỉnh lại milestone kế hoạch
                                 nếu có sự cố</td>
                             <td>Tiến độ hoàn thành kịch bản trễ quá 3 ngày so với mốc kế hoạch tuần</td>
-                            <td>Project Manager / Mentor</td>
+                            <td>Author / QA Engineer</td>
                             <td style="text-align:center">2</td>
                             <td style="text-align:center">3</td>
                             <td style="text-align:center">6</td>
@@ -1013,7 +1013,7 @@
                             <td>Mitigate</td>
                             <td>Thực hiện kiểm thử thăm dò (Exploratory Testing) ghi chép lại hành vi chuẩn của hệ thống
                                 trước khi code</td>
-                            <td>Tổ chức đối soát định kỳ với giảng viên hướng dẫn hoặc tài liệu hướng dẫn khóa học</td>
+                            <td>Tự đối soát định kỳ với tài liệu chuẩn nghiệp vụ HRM và hành vi thực tế của hệ thống</td>
                             <td>Kịch bản kiểm thử liên tục fail vì kết quả thực tế khác với suy đoán chủ quan</td>
                             <td>QA Lead / Tester</td>
                             <td style="text-align:center">2</td>
@@ -1025,13 +1025,13 @@
                             <td>RSK-015</td>
                             <td>PROJECT</td>
                             <td>general</td>
-                            <td>Do thời gian thực hiện dự án bị giới hạn theo lịch bảo vệ đồ án, có thể xảy ra việc
+                            <td>Do thời gian thực hiện dự án bị giới hạn theo quỹ thời gian cá nhân ngoài giờ làm việc chính, có thể xảy ra việc
                                 không đủ thời gian bao phủ toàn bộ các luồng phụ và kiểm thử biên, dẫn tới độ bao phủ
                                 kiểm thử không đạt kỳ vọng ban đầu.</td>
                             <td style="text-align:center">3</td>
-                            <td>Quỹ thời gian làm việc chỉ khoảng 15-20h/tuần cùng với nhiều môn học/công việc khác</td>
+                            <td>Quỹ thời gian dành cho dự án cá nhân khoảng 15-20h/tuần ngoài công việc chuyên môn chính</td>
                             <td style="text-align:center">3</td>
-                            <td>Không kịp hoàn thành các bộ test nâng cao và giảm chất lượng tổng thể của đồ án</td>
+                            <td>Không kịp hoàn thành các bộ test nâng cao và giảm độ bao phủ kiểm thử tổng thể của dự án</td>
                             <td style="text-align:center">9</td>
                             <td style="text-align:center"><span class="badge badge-med">Medium</span></td>
                             <td>Mitigate</td>
@@ -1427,21 +1427,19 @@
                             <td>AI-USAGE</td>
                             <td>general</td>
                             <td>Do người kiểm thử quá phụ thuộc vào mã tự động và kịch bản do AI gợi ý mà bỏ qua việc
-                                hiểu sâu bản chất framework, có thể xảy ra tình trạng không thể giải thích hoặc bảo vệ
-                                giải pháp khi hội đồng phỏng vấn đặt câu hỏi sâu, dẫn tới giảm độ tin cậy đồ án.</td>
+                                hiểu sâu bản chất framework, có thể xảy ra tình trạng không thể giải thích hoặc làm rõ căn cứ kiến trúc khi cần review
+                                giải pháp kỹ thuật, dẫn tới giảm độ tin cậy và chất lượng kỹ thuật của dự án.</td>
                             <td style="text-align:center">3</td>
-                            <td>Áp lực tiến độ có thể khiến người học copy code AI mà không nghiên cứu kỹ cơ chế hoạt
+                            <td>Áp lực tiến độ có thể dẫn tới việc áp dụng mã do AI tạo ra mà chưa làm chủ toàn diện cơ chế hoạt
                                 động</td>
                             <td style="text-align:center">4</td>
-                            <td>Điểm số đồ án bị đánh giá thấp và không chứng minh được năng lực tự chủ trong phỏng vấn
-                                tuyển dụng</td>
+                            <td>Giải pháp tự động hóa bị đánh giá thiếu tính làm chủ và không thể hiện được năng lực kỹ thuật độc lập của tác giả</td>
                             <td style="text-align:center">12</td>
                             <td style="text-align:center"><span class="badge badge-high">High</span></td>
                             <td>Mitigate</td>
                             <td>Thực hiện nguyên tắc tự giải thích: ghi chú giải thích tại sao chọn giải pháp cho từng
                                 đoạn code AI gợi ý</td>
-                            <td>Dành thời gian rà soát, viết tài liệu kiến trúc kỹ thuật và luyện tập phản biện các câu
-                                hỏi xoay quanh framework</td>
+                            <td>Dành thời gian rà soát, viết tài liệu kiến trúc kỹ thuật và tự giải trình các quyết định thiết kế xoay quanh framework</td>
                             <td>Tester không giải thích được lý do sử dụng ThreadLocal DriverManager hoặc cơ chế của
                                 TestListener</td>
                             <td>Automation Tester</td>
@@ -1899,18 +1897,16 @@
                 <li><span class="chip chip-assume">[GIẢ ĐỊNH: Môi trường web <a
                             href="https://hrm.anhtester.com/">https://hrm.anhtester.com/</a> duy trì hoạt động ổn định
                         và dữ liệu demo được reset về trạng thái chuẩn định kỳ bởi ban quản trị]</span>.</li>
-                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Toàn bộ quá trình đánh giá và nghiệm thu đồ án được thực
+                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Môi trường thực thi kiểm thử tiêu chuẩn và đánh giá kết quả được thực
                         hiện trên trình duyệt Google Chrome phiên bản mới nhất]</span>.</li>
-                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Cấu hình Maven compiler và runtime Java 25 được hỗ trợ đầy
-                        đủ trên máy chấm đồ án mà không yêu cầu hạ cấp môi trường]</span>.</li>
+                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Môi trường máy trạm thực thi đáp ứng đầy
+                        đủ cấu hình Maven và runtime Java 25 để chạy bộ kiểm thử mà không yêu cầu hạ cấp môi trường]</span>.</li>
             </ul>
             <h3 id="8-2-diem-can-con-nguoi-xac-nhan">8.2 Điểm cần con người xác nhận</h3>
             <ol>
-                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày bắt đầu và ngày hạn chót nộp bài / bảo vệ đồ án
-                        chính thức]</span>.</li>
-                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Danh tính giảng viên hướng dẫn hoặc người chấm bài để
-                        điền vào phần Document Control]</span>.</li>
-                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Yêu cầu của đồ án có bắt buộc thiết lập pipeline CI/CD
+                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày bắt đầu và mốc kết thúc dự kiến cho giai đoạn hoàn thiện dự án cá nhân]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Bổ sung người phản biện kỹ thuật độc lập (Peer Reviewer, nếu có) hoặc áp dụng quy trình tự rà soát (Self-review) theo checklist tiêu chuẩn]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Mục tiêu của dự án cá nhân có bao gồm thiết lập pipeline CI/CD
                         (GitHub Actions) hay chỉ cần chạy thành công trên máy local]</span>.</li>
                 <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Có cần bổ sung tài khoản demo thứ hai để kiểm thử phân
                         quyền đồng thời nhiều người dùng hay không]</span>.</li>
