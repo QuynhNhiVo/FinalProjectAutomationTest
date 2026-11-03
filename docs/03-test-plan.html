@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Test Plan – Kế hoạch kiểm thử chi tiết</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #1f2430;
+            --muted: #5b6475;
+            --line: #e3e6ec;
+            --soft: #f5f7fa;
+            --accent: #2a5bd7;
+            --code: #f0f2f6;
+            --crit: #c62828;
+            --high: #e65100;
+            --med: #8a6d00;
+            --low: #2e7d32;
+            --ok: #2e7d32;
+            --mute: #6b7280;
+            --crit-bg: #fdecea;
+            --high-bg: #fff0e1;
+            --med-bg: #fff8db;
+            --low-bg: #e8f5e9;
+            --ok-bg: #e8f5e9;
+            --mute-bg: #eceff3;
+            --todo-bg: #fff3bf;
+            --todo-fg: #7a5b00;
+            --assume-bg: #e3ecff;
+            --assume-fg: #1c3f94;
+            --propose-bg: #efe6ff;
+            --propose-fg: #5a2ea6
+        }
+
+        @media (prefers-color-scheme:dark) {
+            :root {
+                --bg: #14171d;
+                --fg: #e6e8ee;
+                --muted: #9aa3b5;
+                --line: #2b303b;
+                --soft: #1b1f27;
+                --accent: #7aa2ff;
+                --code: #222733;
+                --crit: #ff8a80;
+                --high: #ffb066;
+                --med: #ffd75e;
+                --low: #8ee09a;
+                --ok: #8ee09a;
+                --mute: #aab2c2;
+                --crit-bg: #3a1c1c;
+                --high-bg: #3a2a18;
+                --med-bg: #37300f;
+                --low-bg: #17301c;
+                --ok-bg: #17301c;
+                --mute-bg: #242a35;
+                --todo-bg: #3b3410;
+                --todo-fg: #ffd75e;
+                --assume-bg: #1d2a4d;
+                --assume-fg: #a9c1ff;
+                --propose-bg: #2c2147;
+                --propose-fg: #cdb6ff
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 16px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+        }
+
+        .layout {
+            display: flex;
+            gap: 32px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        nav.toc {
+            position: sticky;
+            top: 16px;
+            align-self: flex-start;
+            flex: 0 0 270px;
+            max-height: calc(100vh - 32px);
+            overflow: auto;
+            font-size: 14px;
+            border-right: 1px solid var(--line);
+            padding-right: 16px
+        }
+
+        nav.toc strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-size: 12px
+        }
+
+        nav.toc a {
+            display: block;
+            color: var(--fg);
+            text-decoration: none;
+            padding: 3px 0;
+            opacity: .85
+        }
+
+        nav.toc a:hover {
+            color: var(--accent);
+            opacity: 1
+        }
+
+        nav.toc a.l3 {
+            padding-left: 14px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        main {
+            flex: 1;
+            min-width: 0;
+            max-width: 1100px
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 1.25;
+            margin: 0 0 .5rem
+        }
+
+        h2 {
+            font-size: 1.45rem;
+            margin: 2.2rem 0 .6rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--line)
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            margin: 1.6rem 0 .4rem
+        }
+
+        h4 {
+            font-size: 1rem;
+            margin: 1.2rem 0 .3rem
+        }
+
+        p {
+            margin: .6rem 0
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--line);
+            margin: 1.5rem 0
+        }
+
+        code {
+            background: var(--code);
+            padding: .1em .35em;
+            border-radius: 4px;
+            font: 0.88em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
+        }
+
+        pre {
+            background: var(--code);
+            padding: 12px 14px;
+            border-radius: 8px;
+            overflow: auto
+        }
+
+        pre code {
+            background: none;
+            padding: 0
+        }
+
+        blockquote {
+            margin: 1rem 0;
+            padding: .5rem 1rem;
+            border-left: 4px solid var(--accent);
+            background: var(--soft);
+            border-radius: 0 8px 8px 0;
+            color: var(--muted)
+        }
+
+        blockquote p {
+            margin: .3rem 0
+        }
+
+        ul,
+        ol {
+            padding-left: 1.4rem
+        }
+
+        li {
+            margin: .2rem 0
+        }
+
+        li.task {
+            list-style: none;
+            margin-left: -1.2rem
+        }
+
+        .box {
+            margin-right: .35rem
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--line);
+            border-radius: 8px
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top
+        }
+
+        thead th {
+            background: var(--soft);
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+            font-weight: 600
+        }
+
+        tbody tr:nth-child(even) {
+            background: color-mix(in srgb, var(--soft) 55%, transparent)
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 1px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .badge-crit {
+            color: var(--crit);
+            background: var(--crit-bg)
+        }
+
+        .badge-high {
+            color: var(--high);
+            background: var(--high-bg)
+        }
+
+        .badge-med {
+            color: var(--med);
+            background: var(--med-bg)
+        }
+
+        .badge-low {
+            color: var(--low);
+            background: var(--low-bg)
+        }
+
+        .badge-ok {
+            color: var(--ok);
+            background: var(--ok-bg)
+        }
+
+        .badge-mute {
+            color: var(--mute);
+            background: var(--mute-bg)
+        }
+
+        .chip {
+            padding: 0 6px;
+            border-radius: 5px;
+            font-size: .85em;
+            font-weight: 600;
+            white-space: normal
+        }
+
+        .chip-todo {
+            background: var(--todo-bg);
+            color: var(--todo-fg)
+        }
+
+        .chip-assume {
+            background: var(--assume-bg);
+            color: var(--assume-fg)
+        }
+
+        .chip-propose {
+            background: var(--propose-bg);
+            color: var(--propose-fg)
+        }
+
+        .banner {
+            margin: 0 0 1.2rem;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: var(--todo-bg);
+            color: var(--todo-fg);
+            font-size: 14px
+        }
+
+        footer {
+            margin: 3rem 0 1rem;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid var(--line);
+            padding-top: 12px
+        }
+
+        @media (max-width:900px) {
+            .layout {
+                flex-direction: column;
+                padding: 16px
+            }
+
+            nav.toc {
+                position: static;
+                max-height: none;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+                padding: 0 0 12px;
+                flex: none
+            }
+        }
+
+        @media print {
+            nav.toc {
+                display: none
+            }
+
+            .layout {
+                display: block;
+                padding: 0
+            }
+
+            .table-wrap {
+                overflow: visible
+            }
+
+            thead th {
+                position: static
+            }
+
+            body {
+                font-size: 12px
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none
+            }
+
+            h2 {
+                break-after: avoid
+            }
+
+            tr {
+                break-inside: avoid
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav class="toc"><strong>Mục lục</strong><a class="l2" href="#1-document-control">1. Document Control</a><a
+                class="l3" href="#1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</a><a class="l3"
+                href="#1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</a><a class="l3" href="#1-3-tai-lieu-tham-chieu">1.3
+                Tài liệu tham chiếu</a><a class="l2" href="#2-gioi-thieu-introduction">2. Giới thiệu
+                (Introduction)</a><a class="l3" href="#2-1-muc-dich-ke-hoach">2.1 Mục đích kế hoạch</a><a class="l3"
+                href="#2-2-pham-vi-chu-ky-va-quan-he-voi-test-strategy">2.2 Phạm vi chu kỳ và quan hệ với Test
+                Strategy</a><a class="l2" href="#3-hang-muc-kiem-thu-test-items">3. Hạng mục kiểm thử (Test Items)</a><a
+                class="l3" href="#3-1-he-thong-phan-mem-muc-tieu-aut">3.1 Hệ thống phần mềm mục tiêu (AUT)</a><a
+                class="l3" href="#3-2-bo-kich-ban-kiem-thu-tu-dong-automation-test-suite">3.2 Bộ kịch bản kiểm thử tự
+                động (Automation Test Suite)</a><a class="l3" href="#3-3-tai-lieu-lien-quan">3.3 Tài liệu liên
+                quan</a><a class="l2" href="#4-tinh-nang-can-kiem-thu-features-to-be-tested">4. Tính năng cần kiểm thử
+                (Features to be Tested)</a><a class="l2" href="#5-tinh-nang-khong-kiem-thu-features-not-to-be-tested">5.
+                Tính năng không kiểm thử (Features Not to be Tested)</a><a class="l2"
+                href="#6-cach-tiep-can-cua-chu-ky-cycle-approach">6. Cách tiếp cận của chu kỳ (Cycle Approach)</a><a
+                class="l3" href="#6-1-chien-luoc-thuc-thi-theo-suite-kiem-thu">6.1 Chiến lược thực thi theo Suite kiểm
+                thử</a><a class="l3" href="#6-2-bien-phap-bo-sung-va-dieu-chinh-trong-chu-ky">6.2 Biện pháp bổ sung và
+                điều chỉnh trong chu kỳ</a><a class="l2" href="#7-tieu-chi-dat-khong-dat-pass-fail-criteria">7. Tiêu chí
+                đạt/không đạt (Pass/Fail Criteria)</a><a class="l3"
+                href="#7-1-tieu-chi-dat-pass-criteria-cho-tung-ca-kiem-thu-don-le">7.1 Tiêu chí Đạt (Pass Criteria) cho
+                từng ca kiểm thử đơn lẻ</a><a class="l3" href="#7-2-tieu-chi-khong-dat-fail-criteria">7.2 Tiêu chí Không
+                đạt (Fail Criteria)</a><a class="l2"
+                href="#8-tieu-chi-dinh-chi-va-tiep-tuc-suspension-and-resumption-criteria">8. Tiêu chí đình chỉ và tiếp
+                tục (Suspension and Resumption Criteria)</a><a class="l3"
+                href="#8-1-dieu-kien-dinh-chi-thuc-thi-kiem-thu">8.1 Điều kiện đình chỉ thực thi kiểm thử</a><a
+                class="l3" href="#8-2-hanh-dong-cu-the-khi-dinh-chi">8.2 Hành động cụ thể khi đình chỉ</a><a class="l3"
+                href="#8-3-dieu-kien-de-tiep-tuc-kiem-thu-resumption">8.3 Điều kiện để tiếp tục kiểm thử
+                (Resumption)</a><a class="l2" href="#9-tieu-chi-vao-va-ra-entry-and-exit-criteria">9. Tiêu chí vào và ra
+                (Entry and Exit Criteria)</a><a class="l2" href="#10-san-pham-ban-giao-test-deliverables">10. Sản phẩm
+                bàn giao (Test Deliverables)</a><a class="l2" href="#11-moi-truong-kiem-thu-test-environment">11. Môi
+                trường kiểm thử (Test Environment)</a><a class="l3"
+                href="#11-1-cau-hinh-phan-cung-va-ha-tang-thuc-thi">11.1 Cấu hình phần cứng và hạ tầng thực thi</a><a
+                class="l3" href="#11-2-ma-tran-trinh-duyet-va-webdriver">11.2 Ma trận trình duyệt và WebDriver</a><a
+                class="l3" href="#11-3-quan-ly-tai-khoan-kiem-thu">11.3 Quản lý tài khoản kiểm thử</a><a class="l3"
+                href="#11-4-quy-trinh-xac-minh-tinh-san-sang-cua-moi-truong">11.4 Quy trình xác minh tính sẵn sàng của
+                môi trường</a><a class="l2" href="#12-ke-hoach-du-lieu-test-test-data-plan">12. Kế hoạch dữ liệu test
+                (Test Data Plan)</a><a class="l3" href="#12-1-nguon-du-lieu-kiem-thu">12.1 Nguồn dữ liệu kiểm thử</a><a
+                class="l3" href="#12-2-chinh-sach-du-lieu-nguyen-tu-doc-lap-atomic-data-policy">12.2 Chính sách dữ liệu
+                nguyên tử độc lập (Atomic Data Policy)</a><a class="l3"
+                href="#12-3-xu-ly-cac-bai-test-co-tinh-chat-phu-thuoc-dependent-tests">12.3 Xử lý các bài test có tính
+                chất phụ thuộc (Dependent Tests)</a><a class="l2"
+                href="#13-lich-trinh-va-moc-schedule-and-milestones">13. Lịch trình và mốc (Schedule and
+                Milestones)</a><a class="l2" href="#14-uoc-luong-cong-suc-effort-estimation-wbs">14. Ước lượng công sức
+                (Effort Estimation &amp; WBS)</a><a class="l3" href="#14-1-tong-hop-cong-suc-va-doi-soat-nang-luc">14.1
+                Tổng hợp công sức và đối soát năng lực</a><a class="l3"
+                href="#14-2-ket-luan-tinh-kha-thi-va-phuong-an-cat-giam-du-phong">14.2 Kết luận tính khả thi và phương
+                án cắt giảm dự phòng</a><a class="l2" href="#15-nguon-luc-va-vai-tro-resources-and-roles">15. Nguồn lực
+                và vai trò (Resources and Roles)</a><a class="l3" href="#15-1-phan-bo-nhan-su-thuc-hien">15.1 Phân bổ
+                nhân sự thực hiện</a><a class="l3" href="#15-2-vai-tro-dinh-huong-va-phe-duyet">15.2 Vai trò định hướng
+                và phê duyệt</a><a class="l3" href="#15-3-nhu-cau-dao-tao-va-nang-cao-ky-nang">15.3 Nhu cầu đào tạo và
+                nâng cao kỹ năng</a><a class="l2" href="#16-quan-ly-loi-trong-chu-ky-defect-management">16. Quản lý lỗi
+                trong chu kỳ (Defect Management)</a><a class="l3" href="#16-1-quy-trinh-xu-ly-loi">16.1 Quy trình xử lý
+                lỗi</a><a class="l3" href="#16-2-nhip-doi-soat-loi-triage-rhythm">16.2 Nhịp đối soát lỗi (Triage
+                Rhythm)</a><a class="l3" href="#16-3-thoa-thuan-muc-dich-vu-xu-ly-loi-sla-de-xuat">16.3 Thỏa thuận mức
+                dịch vụ xử lý lỗi (SLA) [ĐỀ XUẤT]</a><a class="l2"
+                href="#17-bao-cao-va-giao-tiep-reporting-and-communication">17. Báo cáo và giao tiếp (Reporting and
+                Communication)</a><a class="l2"
+                href="#18-rui-ro-cua-ke-hoach-va-du-phong-plan-risks-and-contingencies">18. Rủi ro của kế hoạch và dự
+                phòng (Plan Risks and Contingencies)</a><a class="l2"
+                href="#19-gia-dinh-rang-buoc-va-phu-thuoc-assumptions-constraints-and-dependencies">19. Giả định, ràng
+                buộc và phụ thuộc (Assumptions, Constraints and Dependencies)</a><a class="l3"
+                href="#19-1-gia-dinh-cua-ke-hoach">19.1 Giả định của kế hoạch</a><a class="l3"
+                href="#19-2-rang-buoc-cua-ke-hoach">19.2 Ràng buộc của kế hoạch</a><a class="l3"
+                href="#19-3-moi-quan-he-phu-thuoc">19.3 Mối quan hệ phụ thuộc</a><a class="l2"
+                href="#20-de-xuat-dieu-chinh-strategy-proposed-strategy-adjustments">20. Đề xuất điều chỉnh Strategy
+                (Proposed Strategy Adjustments)</a><a class="l2" href="#21-phe-duyet-sign-off-and-approval">21. Phê
+                duyệt (Sign-off and Approval)</a><a class="l2" href="#22-phu-luc-appendix">22. Phụ lục (Appendix)</a><a
+                class="l3" href="#22-1-ma-tran-tinh-nang-loai-kiem-thu-nhan-muc-chay">22.1 Ma trận Tính năng × Loại kiểm
+                thử × Nhãn mức chạy</a><a class="l3" href="#22-2-danh-sach-cau-hoi-mo-can-giai-quyet">22.2 Danh sách câu
+                hỏi mở cần giải quyết</a><a class="l3"
+                href="#22-3-danh-muc-tu-kiem-tra-chat-luong-quality-gate-checklist">22.3 Danh mục tự kiểm tra chất lượng
+                (Quality Gate Checklist)</a><a class="l2" href="#ghi-chu-ai">Ghi chú AI</a></nav>
+        <main>
+            <div class="banner">Tài liệu còn <strong>18</strong> mục đánh dấu cần xác nhận/đo trước khi chốt (các mục
+                màu vàng).</div>
+            <h1 id="test-plan-ke-hoach-kiem-thu-chi-tiet">Test Plan – Kế hoạch kiểm thử chi tiết</h1>
+            <h2 id="1-document-control">1. Document Control</h2>
+            <h3 id="1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</h3>
+            <ul>
+                <li><strong>Tên dự án</strong>: Final Project Automation Test – Anh Tester HRM</li>
+                <li><strong>Hệ thống được kiểm thử (AUT)</strong>: Anh Tester HRM System (https://hrm.anhtester.com/)
+                </li>
+                <li><strong>Mã tài liệu</strong>: PLN-HRM-03</li>
+                <li><strong>Phiên bản</strong>: v0.1</li>
+                <li><strong>Trạng thái</strong>: Draft</li>
+                <li><strong>Tác giả</strong>: Võ Quỳnh Nhi</li>
+                <li><strong>Chu kỳ kiểm thử</strong>: Chu kỳ kiểm thử hoàn thiện đồ án tốt nghiệp (10 tuần: từ
+                    2026-11-02 đến 2027-01-10)</li>
+                <li><strong>Ngày lập kế hoạch</strong>: 2026-11-02</li>
+                <li><strong>Ngày phê duyệt</strong>: <span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày ký duyệt chính
+                        thức]</span></li>
+            </ul>
+            <h3 id="1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phiên bản</th>
+                            <th>Ngày cập nhật</th>
+                            <th>Tác giả</th>
+                            <th>Tóm tắt thay đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>v0.1</td>
+                            <td>2026-11-02</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>Khởi tạo Kế hoạch kiểm thử chi tiết (Test Plan) cho chu kỳ 10 tuần, tích hợp bảng ước
+                                lượng WBS ba điểm</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="1-3-tai-lieu-tham-chieu">1.3 Tài liệu tham chiếu</h3>
+            <ul>
+                <li><code>docs/project-context.md</code>: Bối cảnh dự án kiểm thử tự động HRM</li>
+                <li><code>docs/01-risk-register.md</code>: Sổ đăng ký rủi ro kiểm thử (Risk Register)</li>
+                <li><code>docs/02-test-strategy.md</code>: Chiến lược kiểm thử tự động (Test Strategy)</li>
+                <li>Tiêu chuẩn ISO/IEC/IEEE 29119-3 (Level Test Plan) &amp; ISTQB Advanced Test Manager</li>
+            </ul>
+            <hr>
+            <h2 id="2-gioi-thieu-introduction">2. Giới thiệu (Introduction)</h2>
+            <h3 id="2-1-muc-dich-ke-hoach">2.1 Mục đích kế hoạch</h3>
+            <p>Tài liệu Kế hoạch kiểm thử (Test Plan) này cụ thể hóa Chiến lược kiểm thử
+                (<code>docs/02-test-strategy.md</code>) cho chu kỳ thực thi đồ án tốt nghiệp kéo dài <strong>10 tuần (từ
+                    ngày 2026-11-02 đến ngày 2027-01-10)</strong>. Kế hoạch xác định rõ ràng:</p>
+            <ul>
+                <li>Các hạng mục phần mềm và tính năng cụ thể cần kiểm thử trong chu kỳ.</li>
+                <li>Phân rã công việc chi tiết (WBS) theo phương pháp ước lượng ba điểm (PERT O/M/P).</li>
+                <li>Lịch trình thực hiện theo tuần, đường găng dự án (Critical Path) và các mốc bàn giao then chốt
+                    (<code>MS-01</code> đến <code>MS-08</code>).</li>
+                <li>Tiêu chí bắt đầu, tiêu chí hoàn thành, cơ chế quản lý lỗi và biện pháp dự phòng rủi ro kế hoạch
+                    (<code>TP-R01</code> đến <code>TP-R05</code>).</li>
+            </ul>
+            <h3 id="2-2-pham-vi-chu-ky-va-quan-he-voi-test-strategy">2.2 Phạm vi chu kỳ và quan hệ với Test Strategy
+            </h3>
+            <ul>
+                <li><strong>Kế thừa từ Chiến lược kiểm thử</strong>:<ul>
+                        <li>Kế thừa toàn bộ 10 quyết định kiến trúc (<code>STR-D01</code> đến <code>STR-D10</code>), đặc
+                            biệt là việc duy trì nền tảng Selenium Java TestNG (<code>STR-D01</code>), áp dụng Page
+                            Object Model kết hợp WebUI Keyword Wrapper (<code>STR-D02</code>), loại bỏ hoàn toàn sleep
+                            tĩnh sang WebDriverWait (<code>STR-D03</code>) và áp dụng chính sách dữ liệu nguyên tử
+                            (<code>STR-D04</code>).</li>
+                        <li>Kế thừa hệ thống phân loại nhãn mức chạy: <code>smoke</code>, <code>regression</code>,
+                            <code>e2e</code> và các cờ hành vi <code>negative</code>, <code>dependent</code>.</li>
+                        <li>Kế thừa các chỉ số đo lường KPI và ma trận phân loại lỗi Severity × Priority.</li>
+                    </ul>
+                </li>
+                <li><strong>Phần điều chỉnh / Cụ thể hóa trong chu kỳ này</strong>:<ul>
+                        <li>Phân bổ nguồn lực cụ thể: 1 nhân sự (Võ Quỳnh Nhi) với định mức <strong>20
+                                giờ/tuần</strong>, tổng quỹ năng lực đạt <strong>200.00 giờ</strong> trong 10 tuần.</li>
+                        <li>Phân bổ công việc thành 20 gói đầu việc (<code>T01</code> đến <code>T20</code>) với tổng
+                            công sức ước tính <strong>152.00 giờ</strong> cộng <strong>20% dự phòng (30.40 giờ)</strong>
+                            thành <strong>182.40 giờ</strong> (hoàn toàn khả thi trong ngân sách 200 giờ).</li>
+                        <li>Không áp dụng ngày nghỉ cố định; thời gian làm việc được phân bổ linh hoạt theo tiến độ các
+                            mốc bàn giao.</li>
+                    </ul>
+                </li>
+            </ul>
+            <hr>
+            <h2 id="3-hang-muc-kiem-thu-test-items">3. Hạng mục kiểm thử (Test Items)</h2>
+            <h3 id="3-1-he-thong-phan-mem-muc-tieu-aut">3.1 Hệ thống phần mềm mục tiêu (AUT)</h3>
+            <ul>
+                <li><strong>Tên hệ thống</strong>: Anh Tester HRM System</li>
+                <li><strong>Địa chỉ truy cập</strong>: <code>https://hrm.anhtester.com/</code></li>
+                <li><strong>Phiên bản hệ thống</strong>: Bản phát hành Demo Web ERP v1.0</li>
+                <li><strong>Ngày chốt phiên bản kiểm thử</strong>: 2026-11-02</li>
+            </ul>
+            <h3 id="3-2-bo-kich-ban-kiem-thu-tu-dong-automation-test-suite">3.2 Bộ kịch bản kiểm thử tự động (Automation
+                Test Suite)</h3>
+            <ul>
+                <li><strong>Kho lưu trữ mã nguồn</strong>: <code>d:\Dev\4_Projects\FinalProjectAutomationTest</code>
+                </li>
+                <li><strong>Nhánh thực thi</strong>: <code>main</code></li>
+                <li><strong>Commit chốt đầu chu kỳ</strong>: Commit khởi tạo chu kỳ ngày 2026-11-02</li>
+                <li><strong>Thư mục kịch bản</strong>: <code>src/test/java/projectHRM/testcases/</code></li>
+                <li><strong>Thư mục mô hình trang</strong>: <code>src/test/java/projectHRM/pages/</code></li>
+                <li><strong>Thư mục cấu hình &amp; suite XML</strong>: <code>src/test/resources/suites/</code></li>
+            </ul>
+            <h3 id="3-3-tai-lieu-lien-quan">3.3 Tài liệu liên quan</h3>
+            <ul>
+                <li>Bảng dữ liệu kiểm thử Excel: <code>src/test/resources/testdata/LoginHRM.xlsx</code></li>
+                <li>File cấu hình tham số: <code>src/test/resources/configs/Configs.properties</code></li>
+            </ul>
+            <hr>
+            <h2 id="4-tinh-nang-can-kiem-thu-features-to-be-tested">4. Tính năng cần kiểm thử (Features to be Tested)
+            </h2>
+            <p>Bảng dưới đây quy định toàn bộ các tính năng thuộc phạm vi kiểm thử của chu kỳ 10 tuần, gắn liền với mức
+                độ ưu tiên rủi ro trong Sổ đăng ký rủi ro (<code>docs/01-risk-register.md</code>):</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phân hệ / Tính năng</th>
+                            <th>Mức ưu tiên</th>
+                            <th>Rủi ro liên quan</th>
+                            <th>Loại kiểm thử</th>
+                            <th>Nhãn mức chạy</th>
+                            <th>Kỹ thuật thiết kế áp dụng</th>
+                            <th>Ghi chú vận hành</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>auth</code> - Đăng nhập Quản trị viên (Admin)</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-002, RSK-023</td>
+                            <td>Smoke, Functional</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code></td>
+                            <td>Phân vùng tương đương, BVA</td>
+                            <td>Luồng then chốt kiểm tra sức khỏe đầu chu kỳ</td>
+                        </tr>
+                        <tr>
+                            <td><code>auth</code> - Xác thực phân quyền chéo Client/Admin</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-001</td>
+                            <td>Security, Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Kiểm thử biên an toàn, Exploratory</td>
+                            <td>Chặn tài khoản Client gọi URL quản trị /erp/*</td>
+                        </tr>
+                        <tr>
+                            <td><code>auth</code> - Đăng nhập Client và Validation lỗi</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-002</td>
+                            <td>Functional, Negative</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code></td>
+                            <td>Error Guessing, Phân vùng tương đương</td>
+                            <td>Kiểm tra thông báo khi sai user/password</td>
+                        </tr>
+                        <tr>
+                            <td><code>dashboard</code> - Hiển thị widget và thanh điều hướng</td>
+                            <td style="text-align:center">P3 - Thấp</td>
+                            <td style="text-align:center">RSK-003, RSK-004</td>
+                            <td>GUI, Usability</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Kiểm thử thăm dò (Exploratory)</td>
+                            <td>Loại bỏ lệnh sleep(9), kiểm tra hiển thị navbar</td>
+                        </tr>
+                        <tr>
+                            <td><code>client</code> - Thêm mới khách hàng (Add Client)</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-005, RSK-017</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Phân tích giá trị biên, EP</td>
+                            <td>Chuyển sang sinh dữ liệu timestamp duy nhất</td>
+                        </tr>
+                        <tr>
+                            <td><code>client</code> - Cập nhật và Xác minh thông tin Client</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-005</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Bảng quyết định, Data-Driven</td>
+                            <td>Kiểm tra chỉnh sửa thông tin liên lạc</td>
+                        </tr>
+                        <tr>
+                            <td><code>client</code> - Xoá khách hàng và Ràng buộc toàn vẹn</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-006</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code></td>
+                            <td>State Transition, Error Guessing</td>
+                            <td>Xoá bản ghi test và dọn dẹp dữ liệu rác</td>
+                        </tr>
+                        <tr>
+                            <td><code>employee</code> - Thêm mới nhân sự (Staff)</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-007</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Phân vùng tương đương, BVA</td>
+                            <td>Kiểm tra định dạng số điện thoại và email</td>
+                        </tr>
+                        <tr>
+                            <td><code>employee</code> - Phân công nhân sự vào dự án</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-008</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Bảng quyết định (Decision Table)</td>
+                            <td>Chỉ nhân sự Active mới hiển thị trong dropdown</td>
+                        </tr>
+                        <tr>
+                            <td><code>project</code> - Thêm mới dự án (Add Project)</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-009, RSK-017</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Phân tích giá trị biên, EP</td>
+                            <td>Kiểm tra logic Start Date và End Date hợp lệ</td>
+                        </tr>
+                        <tr>
+                            <td><code>project</code> - Đính kèm tệp tin tài liệu (Upload)</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-010, RSK-021</td>
+                            <td>Security, Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Error Guessing, Portability</td>
+                            <td>Chuyển sang đường dẫn tương đối SystemHelpers</td>
+                        </tr>
+                        <tr>
+                            <td><code>project</code> - Cập nhật trạng thái và Xoá dự án</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-017, RSK-026</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>State Transition</td>
+                            <td>Cập nhật tiến độ dự án và dọn dẹp sau test</td>
+                        </tr>
+                        <tr>
+                            <td><code>task</code> - Thêm công việc trực thuộc dự án</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-011, RSK-012</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>BVA, Equivalence Partitioning</td>
+                            <td>Kiểm tra số giờ ngân sách không được là số âm</td>
+                        </tr>
+                        <tr>
+                            <td><code>task</code> - Chuyển trạng thái và Xoá tác vụ</td>
+                            <td style="text-align:center">P2 - Vừa</td>
+                            <td style="text-align:center">RSK-011, RSK-026</td>
+                            <td>Functional</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Bảng chuyển trạng thái</td>
+                            <td>Kiểm tra task Closed không cho phép sửa giờ</td>
+                        </tr>
+                        <tr>
+                            <td><code>e2e</code> - Luồng tích hợp liên thông khép kín</td>
+                            <td style="text-align:center">P1 - Cao</td>
+                            <td style="text-align:center">RSK-017, RSK-018</td>
+                            <td>Integration Flow</td>
+                            <td style="text-align:center"><code>e2e</code></td>
+                            <td>Use Case Testing, End-to-End</td>
+                            <td>Tạo Client -&gt; Employee -&gt; Project -&gt; Task -&gt; Xoá</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="5-tinh-nang-khong-kiem-thu-features-not-to-be-tested">5. Tính năng không kiểm thử (Features Not to
+                be Tested)</h2>
+            <p>Bảng dưới đây liệt kê các tính năng nằm ngoài phạm vi thực thi của chu kỳ 10 tuần, kèm lý do kỹ thuật và
+                rủi ro chấp nhận:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phân hệ / Tính năng ngoài phạm vi</th>
+                            <th>Lý do không kiểm thử trong chu kỳ này</th>
+                            <th>Rủi ro chấp nhận và giải pháp kiểm soát</th>
+                            <th>Mã rủi ro liên quan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phân hệ Tiền lương (Payroll) &amp; Thưởng</td>
+                            <td>Chưa nằm trong mục tiêu tự động hóa cốt lõi của đồ án; tập trung vào chuỗi nghiệp vụ
+                                Client - Project - Task</td>
+                            <td>Chấp nhận không bao phủ tự động; kiểm tra thủ công nhanh nếu có yêu cầu đối soát</td>
+                            <td style="text-align:center">RSK-015</td>
+                        </tr>
+                        <tr>
+                            <td>Phân hệ Điểm danh (Attendance)</td>
+                            <td>Yêu cầu cấu hình ca làm việc và thiết bị chấm công phức tạp, tốn thời gian thiết lập ban
+                                đầu</td>
+                            <td>Hoãn sang chu kỳ phát triển tiếp theo sau khi bảo vệ đồ án</td>
+                            <td style="text-align:center">RSK-015</td>
+                        </tr>
+                        <tr>
+                            <td>Kiểm thử hiệu năng chịu tải cao (Load Testing)</td>
+                            <td>AUT là hệ thống demo công khai dùng chung cho cộng đồng; nghiêm cấm gửi tải nặng làm
+                                nghẽn máy chủ</td>
+                            <td>Chấp nhận không đo ngưỡng chịu tải tối đa; chỉ đo thời gian tải trang cơ bản qua
+                                Selenium</td>
+                            <td style="text-align:center">RSK-023</td>
+                        </tr>
+                        <tr>
+                            <td>Kiểm thử xâm nhập bảo mật (Pentest sâu)</td>
+                            <td>Tránh nguy cơ làm gián đoạn hạ tầng máy chủ demo công khai</td>
+                            <td>Chỉ thực hiện kiểm tra an toàn form nhập liệu ở mức độ không phá hoại</td>
+                            <td style="text-align:center">RSK-010</td>
+                        </tr>
+                        <tr>
+                            <td>Kiểm thử trên thiết bị di động thật</td>
+                            <td>Giới hạn phần cứng và mục tiêu đồ án chỉ tập trung vào ứng dụng Web trên Desktop</td>
+                            <td>Chấp nhận kiểm tra giao diện cơ bản trên các độ phân giải màn hình máy tính</td>
+                            <td style="text-align:center">RSK-004</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="6-cach-tiep-can-cua-chu-ky-cycle-approach">6. Cách tiếp cận của chu kỳ (Cycle Approach)</h2>
+            <h3 id="6-1-chien-luoc-thuc-thi-theo-suite-kiem-thu">6.1 Chiến lược thực thi theo Suite kiểm thử</h3>
+            <p>Kế hoạch thực thi chu kỳ tổ chức thành 3 suite kiểm thử chuyên biệt, chạy theo tần suất và điều kiện kích
+                hoạt rõ ràng:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên Suite</th>
+                            <th>Nhãn mức chạy</th>
+                            <th>Thời điểm kích hoạt</th>
+                            <th>Số lượng ca kiểm thử</th>
+                            <th>Thời lượng ước tính <span class="chip chip-todo">[CẦN ĐO]</span></th>
+                            <th>Hệ thống / Người thực thi</th>
+                            <th>Điều kiện tiên quyết để chạy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Smoke Suite</strong> (<code>smoke.xml</code>)</td>
+                            <td style="text-align:center"><code>smoke</code></td>
+                            <td>Đầu mỗi ngày làm việc hoặc trước mỗi đợt chạy hồi quy</td>
+                            <td style="text-align:center">6 kịch bản cốt lõi</td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN ĐO: Dự kiến &lt;= 3
+                                    phút]</span></td>
+                            <td>Automation Tester (chạy qua CLI/IDE)</td>
+                            <td>Môi trường web online, Pre-flight Healthcheck pass</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Regression Suite</strong> (<code>regression.xml</code>)</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td>Định kỳ 2 lần/tuần (thứ Tư và thứ Bảy)</td>
+                            <td style="text-align:center">22 kịch bản toàn diện</td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN ĐO: Dự kiến &lt;= 15
+                                    phút]</span></td>
+                            <td>Automation Tester (chạy Maven CLI)</td>
+                            <td>Smoke Suite đã pass 100%, file Excel dữ liệu sẵn sàng</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E2E Integration Suite</strong> (<code>e2e.xml</code>)</td>
+                            <td style="text-align:center"><code>e2e</code></td>
+                            <td>Cuối mỗi tuần (Chủ nhật) hoặc sau các mốc hoàn thiện</td>
+                            <td style="text-align:center">2 kịch bản luồng dài</td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN ĐO: Dự kiến &lt;= 8
+                                    phút]</span></td>
+                            <td>Automation Tester (chạy Maven CLI)</td>
+                            <td>Toàn bộ các phân hệ đơn lẻ đã vượt qua Regression</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="6-2-bien-phap-bo-sung-va-dieu-chinh-trong-chu-ky">6.2 Biện pháp bổ sung và điều chỉnh trong chu kỳ
+            </h3>
+            <ul>
+                <li>Triển khai kịch bản kiểm tra sức khỏe đầu chu kỳ (Pre-flight Healthcheck) để xác thực trạng thái
+                    hoạt động của website và quyền tài khoản <code>admin_example</code> trước khi kích hoạt suite chính
+                    (<code>STR-D07</code>).</li>
+                <li>Chuẩn hóa toàn bộ cơ chế chờ: thay thế triệt để các lệnh <code>sleep()</code> tĩnh bằng
+                    <code>WebDriverWait</code> trong các lớp <code>DashboardPage</code>, <code>ManageClientsPage</code>,
+                    <code>ProjectsPage</code> (<code>STR-D03</code>).</li>
+                <li>Áp dụng kỹ thuật tiền tố <code>AUTOTEST_</code> kết hợp timestamp để đảm bảo tính độc lập dữ liệu
+                    tuyệt đối (<code>STR-D04</code>).</li>
+            </ul>
+            <hr>
+            <h2 id="7-tieu-chi-dat-khong-dat-pass-fail-criteria">7. Tiêu chí đạt/không đạt (Pass/Fail Criteria)</h2>
+            <h3 id="7-1-tieu-chi-dat-pass-criteria-cho-tung-ca-kiem-thu-don-le">7.1 Tiêu chí Đạt (Pass Criteria) cho
+                từng ca kiểm thử đơn lẻ</h3>
+            <ul>
+                <li>100% các bước thao tác giao diện thực hiện thành công không phát sinh ngoại lệ không mong muốn
+                    (<code>NoSuchElementException</code>, <code>TimeoutException</code>,
+                    <code>StaleElementReferenceException</code>).</li>
+                <li>Toàn bộ các điểm xác minh kết quả (<code>Assert.assertEquals</code>, <code>softAssert</code>) thỏa
+                    mãn điều kiện mong đợi.</li>
+                <li>Dữ liệu tạo mới hiển thị chính xác trên giao diện và tìm kiếm thành công trong bảng dữ liệu.</li>
+                <li>Kịch bản hoàn thành bước dọn dẹp dữ liệu (xóa bản ghi vừa tạo) mà không làm ảnh hưởng bản ghi khác.
+                </li>
+            </ul>
+            <h3 id="7-2-tieu-chi-khong-dat-fail-criteria">7.2 Tiêu chí Không đạt (Fail Criteria)</h3>
+            <ul>
+                <li>Phát sinh lỗi chức năng phần mềm: giao diện hiển thị thông báo lỗi hệ thống (HTTP 500), không lưu
+                    được bản ghi hợp lệ hoặc lưu sai thông tin.</li>
+                <li>Phát sinh lỗi vi phạm phân quyền: tài khoản Client truy cập thành công vào trang quản trị Admin
+                    (<code>RSK-001</code>).</li>
+                <li>Kịch bản kiểm thử bị dừng đột ngột (Crash) do lỗi framework hoặc lỗi locator bị gãy.</li>
+                <li>Thời gian tải trang vượt quá mức trần <code>PAGE_LOAD_TIMEOUT = 25s</code> dẫn tới TimeoutException.
+                </li>
+            </ul>
+            <hr>
+            <h2 id="8-tieu-chi-dinh-chi-va-tiep-tuc-suspension-and-resumption-criteria">8. Tiêu chí đình chỉ và tiếp tục
+                (Suspension and Resumption Criteria)</h2>
+            <h3 id="8-1-dieu-kien-dinh-chi-thuc-thi-kiem-thu">8.1 Điều kiện đình chỉ thực thi kiểm thử</h3>
+            <ol>
+                <li>Trang web <code>https://hrm.anhtester.com/</code> bị mất kết nối hoặc trả về lỗi máy chủ (HTTP 502,
+                    503) kéo dài quá 1 giờ liên tục.</li>
+                <li>Tài khoản quản trị mặc định <code>admin_example</code> bị người ngoài đổi mật khẩu khiến kịch bản
+                    Pre-flight Healthcheck thất bại (<code>RSK-023</code>).</li>
+                <li>Tỷ lệ thất bại của Smoke Suite vượt quá 50%, cho thấy môi trường demo đang bị can thiệp dữ liệu
+                    nghiêm trọng.</li>
+                <li>Phát sinh lỗi biên dịch mã nguồn nghiêm trọng trên Maven sau khi cập nhật thư viện.</li>
+            </ol>
+            <h3 id="8-2-hanh-dong-cu-the-khi-dinh-chi">8.2 Hành động cụ thể khi đình chỉ</h3>
+            <ul>
+                <li>Lập tức dừng thực thi các suite kiểm thử hồi quy lớn để tránh ghi thêm log rác và tốn thời gian vô
+                    ích.</li>
+                <li>Gửi thông báo đến giảng viên hướng dẫn hoặc quản trị viên trang web hỗ trợ reset dữ liệu/mật khẩu
+                    tài khoản demo.</li>
+                <li>Ghi nhận nhật ký sự cố đình chỉ kèm mốc thời gian và nguyên nhân chi tiết.</li>
+            </ul>
+            <h3 id="8-3-dieu-kien-de-tiep-tuc-kiem-thu-resumption">8.3 Điều kiện để tiếp tục kiểm thử (Resumption)</h3>
+            <ol>
+                <li>Quản trị viên trang web xác nhận dịch vụ đã được khôi phục trạng thái vận hành ổn định.</li>
+                <li>Tài khoản quản trị <code>admin_example</code> đăng nhập thành công trở lại qua kịch bản Healthcheck.
+                </li>
+                <li>Chạy thử nghiệm thành công 1 kịch bản khói độc lập trước khi kích hoạt lại toàn bộ suite kiểm thử bị
+                    tạm dừng.</li>
+            </ol>
+            <hr>
+            <h2 id="9-tieu-chi-vao-va-ra-entry-and-exit-criteria">9. Tiêu chí vào và ra (Entry and Exit Criteria)</h2>
+            <p>Bảng dưới đây quy định các tiêu chí định lượng bắt buộc để chuyển giai đoạn trong chu kỳ kiểm thử. Mọi
+                ngưỡng đều có căn cứ kỹ thuật và gắn liền với rủi ro:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nhóm tiêu chí</th>
+                            <th>Nội dung tiêu chí kiểm tra</th>
+                            <th>Phương pháp kiểm tra xác nhận</th>
+                            <th>Ngưỡng mục tiêu <span class="chip chip-propose">[ĐỀ XUẤT]</span></th>
+                            <th>Cơ sở kỹ thuật gắn với rủi ro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tiêu chí vào (Entry)</strong></td>
+                            <td>Môi trường web AUT hoạt động bình thường</td>
+                            <td>Thực thi kịch bản Pre-flight Healthcheck</td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: 100% Pass]</span></td>
+                            <td>Đảm bảo server sẵn sàng trước khi chạy suite (RSK-023)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí vào (Entry)</strong></td>
+                            <td>Mã nguồn framework biên dịch thành công</td>
+                            <td>Chạy lệnh <code>mvn clean compile</code></td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: 0 lỗi biên dịch]</span></td>
+                            <td>Tránh crash khi thực thi kịch bản tự động</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí vào (Entry)</strong></td>
+                            <td>Dữ liệu kiểm thử mẫu đã sẵn sàng</td>
+                            <td>Kiểm tra file Excel <code>LoginHRM.xlsx</code></td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đủ 5 sheet dữ liệu]</span></td>
+                            <td>Phục vụ Data-Driven Testing các phân hệ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí vào (Entry)</strong></td>
+                            <td>Tài liệu Strategy và Risk Register được duyệt</td>
+                            <td>Đối soát phiên bản chính thức trong thư mục <code>docs/</code></td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đã phê duyệt v0.1]</span></td>
+                            <td>Định hướng chuẩn mực cho việc viết kịch bản</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Tỷ lệ ca kiểm thử đạt trong Smoke Suite</td>
+                            <td>Báo cáo Allure / TestNG của <code>smoke.xml</code></td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đạt 100% Pass]</span></td>
+                            <td>Đảm bảo toàn bộ luồng then chốt hoạt động hoàn hảo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Tỷ lệ ca kiểm thử đạt trong Regression Suite</td>
+                            <td>Báo cáo Allure / TestNG của <code>regression.xml</code></td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đạt &gt;= 95% Pass]</span></td>
+                            <td>Cho phép tối đa 5% lỗi thứ yếu không nghiêm trọng</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Độ bao phủ các tính năng có rủi ro Critical/High</td>
+                            <td>Ma trận đối chiếu ca kiểm thử với Risk Register</td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đạt 100% rủi ro cao]</span></td>
+                            <td>Kiểm soát toàn bộ 14 rủi ro Critical &amp; High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Số lượng lỗi nghiêm trọng còn mở (Blocker/Critical)</td>
+                            <td>Bảng theo dõi lỗi Defect Log</td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: 0 lỗi S1 và S2 còn mở]</span></td>
+                            <td>Không bàn giao sản phẩm khi còn lỗi tê liệt hệ thống</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Tỷ lệ ca kiểm thử không ổn định (Flaky Tests)</td>
+                            <td>Thống kê từ Allure TestListener qua 3 lần chạy</td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Tỷ lệ &lt;= 2%]</span></td>
+                            <td>Đảm bảo độ tin cậy tuyệt đối của bộ kiểm thử (RSK-018)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiêu chí ra (Exit)</strong></td>
+                            <td>Hoàn thiện sản phẩm bàn giao đồ án</td>
+                            <td>Kiểm tra danh mục tài liệu và artifact báo cáo</td>
+                            <td><span class="chip chip-propose">[ĐỀ XUẤT: Đủ 100% tài liệu theo DoD]</span></td>
+                            <td>Đáp ứng trọn vẹn tiêu chuẩn nghiệm thu đồ án</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="10-san-pham-ban-giao-test-deliverables">10. Sản phẩm bàn giao (Test Deliverables)</h2>
+            <p>Bảng tổng hợp các sản phẩm bàn giao của chu kỳ kiểm thử theo từng mốc thời gian và định nghĩa hoàn thành
+                (DoD):</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm bàn giao</th>
+                            <th>Định dạng</th>
+                            <th>Vị trí lưu trữ trong repository</th>
+                            <th>Mốc bàn giao</th>
+                            <th>Định nghĩa hoàn thành (DoD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kế hoạch kiểm thử chi tiết</td>
+                            <td>Markdown, HTML</td>
+                            <td><code>docs/03-test-plan.md</code> &amp; <code>.html</code></td>
+                            <td style="text-align:center"><code>MS-01</code></td>
+                            <td>Đủ 22 mục quy chuẩn, WBS khả thi, script verify PASS 100%</td>
+                        </tr>
+                        <tr>
+                            <td>Mã nguồn kịch bản kiểm thử tự động</td>
+                            <td>Java Code</td>
+                            <td><code>src/test/java/projectHRM/</code></td>
+                            <td style="text-align:center"><code>MS-05</code></td>
+                            <td>Tuân thủ POM, loại bỏ sleep tĩnh, 100% test độc lập dữ liệu</td>
+                        </tr>
+                        <tr>
+                            <td>Bộ cấu hình Suite XML</td>
+                            <td>TestNG XML</td>
+                            <td><code>src/test/resources/suites/</code></td>
+                            <td style="text-align:center"><code>MS-06</code></td>
+                            <td>Phân tách rõ ràng smoke.xml, regression.xml, e2e.xml</td>
+                        </tr>
+                        <tr>
+                            <td>Báo cáo kết quả kiểm thử tự động</td>
+                            <td>HTML Report</td>
+                            <td><code>reports/</code> &amp; <code>target/allure-results</code></td>
+                            <td style="text-align:center"><code>MS-07</code></td>
+                            <td>Trích xuất biểu đồ xu hướng Allure và log chi tiết ExtentReports</td>
+                        </tr>
+                        <tr>
+                            <td>Video và hình ảnh bằng chứng lỗi</td>
+                            <td>Video AVI, Ảnh PNG</td>
+                            <td><code>reports/record/</code> &amp; <code>reports/screenshots/</code></td>
+                            <td style="text-align:center"><code>MS-07</code></td>
+                            <td>Đính kèm tự động cho 100% các ca kiểm thử thất bại</td>
+                        </tr>
+                        <tr>
+                            <td>Sổ theo dõi và phân loại lỗi</td>
+                            <td>Markdown</td>
+                            <td><code>docs/defect-log.md</code> <span class="chip chip-propose">[ĐỀ XUẤT]</span></td>
+                            <td style="text-align:center"><code>MS-07</code></td>
+                            <td>Ghi nhận chi tiết các bug phát hiện kèm bước tái hiện</td>
+                        </tr>
+                        <tr>
+                            <td>Báo cáo nghiệm thu tổng kết kiểm thử</td>
+                            <td>Markdown, HTML</td>
+                            <td><code>docs/04-test-summary-report.md</code></td>
+                            <td style="text-align:center"><code>MS-08</code></td>
+                            <td>Tổng kết toàn diện độ phủ, KPI, đánh giá chất lượng đồ án</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="11-moi-truong-kiem-thu-test-environment">11. Môi trường kiểm thử (Test Environment)</h2>
+            <h3 id="11-1-cau-hinh-phan-cung-va-ha-tang-thuc-thi">11.1 Cấu hình phần cứng và hạ tầng thực thi</h3>
+            <ul>
+                <li><strong>Máy trạm kiểm thử</strong>: Laptop cá nhân của tác giả (CPU Intel Core i7 / AMD Ryzen 7, RAM
+                    16GB, ổ cứng SSD NVMe).</li>
+                <li><strong>Hệ điều hành</strong>: Microsoft Windows 11 64-bit.</li>
+                <li><strong>Môi trường phần mềm &amp; runtime</strong>: Java Development Kit 25 (JDK 25), Apache Maven
+                    3.10.0.</li>
+            </ul>
+            <h3 id="11-2-ma-tran-trinh-duyet-va-webdriver">11.2 Ma trận trình duyệt và WebDriver</h3>
+            <ul>
+                <li><strong>Trình duyệt mục tiêu chính</strong>: Google Chrome phiên bản mới nhất (chế độ tiêu chuẩn và
+                    chế độ Headless trên CI).</li>
+                <li><strong>Trình duyệt phụ</strong>: Microsoft Edge Chromium (chạy kiểm tra tương thích).</li>
+                <li><strong>Cơ chế quản lý Driver</strong>: Sử dụng Selenium Manager tự động tải và đồng bộ phiên bản
+                    ChromeDriver phù hợp với trình duyệt, ngăn chặn lỗi lệch phiên bản (<code>RSK-024</code>).</li>
+            </ul>
+            <h3 id="11-3-quan-ly-tai-khoan-kiem-thu">11.3 Quản lý tài khoản kiểm thử</h3>
+            <ul>
+                <li><strong>Tài khoản quản trị viên (Admin)</strong>: Vai trò Quản trị toàn quyền hệ thống HRM, sử dụng
+                    thông tin định danh mẫu đã cấp phép, cấu hình trong file <code>Configs.properties</code>. Tuyệt đối
+                    không lưu trữ thông tin thẻ hay mật khẩu cá nhân thật trong mã nguồn.</li>
+                <li><strong>Tài khoản khách hàng (Client)</strong>: Được tạo tự động theo từng kịch bản kiểm thử với tên
+                    người dùng ngẫu nhiên dạng <code>client_&lt;timestamp&gt;</code>.</li>
+            </ul>
+            <h3 id="11-4-quy-trinh-xac-minh-tinh-san-sang-cua-moi-truong">11.4 Quy trình xác minh tính sẵn sàng của môi
+                trường</h3>
+            <p>Trước mỗi đợt chạy kiểm thử chính, tester thực thi kịch bản <code>PreFlightCheck</code>:</p>
+            <ol>
+                <li>Gửi yêu cầu HTTP GET đến <code>https://hrm.anhtester.com/</code> kiểm tra mã phản hồi HTTP 200 trong
+                    vòng dưới 5 giây.</li>
+                <li>Thực hiện đăng nhập thử tài khoản admin, kiểm tra điều hướng thành công vào màn hình Dashboard.</li>
+                <li>Nếu hai bước trên đạt yêu cầu, môi trường được gắn nhãn "Sẵn sàng (READY)" để kích hoạt suite tiếp
+                    theo.</li>
+            </ol>
+            <hr>
+            <h2 id="12-ke-hoach-du-lieu-test-test-data-plan">12. Kế hoạch dữ liệu test (Test Data Plan)</h2>
+            <h3 id="12-1-nguon-du-lieu-kiem-thu">12.1 Nguồn dữ liệu kiểm thử</h3>
+            <ul>
+                <li><strong>Tệp bảng tính Excel tĩnh</strong>: Sử dụng file
+                    <code>src/test/resources/testdata/LoginHRM.xlsx</code> chứa các tập dữ liệu mẫu phân chia theo
+                    sheet: <code>Login</code>, <code>Clients</code>, <code>Employees</code>, <code>Projects</code>,
+                    <code>Tasks</code>.</li>
+                <li><strong>Dữ liệu động (Dynamic Data)</strong>: Các trường thông tin định danh duy nhất (Username,
+                    Email, Tên dự án, Tên tác vụ) được sinh tự động bằng mã Java kết hợp tiền tố <code>AUTOTEST_</code>
+                    và <code>System.currentTimeMillis()</code>.</li>
+            </ul>
+            <h3 id="12-2-chinh-sach-du-lieu-nguyen-tu-doc-lap-atomic-data-policy">12.2 Chính sách dữ liệu nguyên tử độc
+                lập (Atomic Data Policy)</h3>
+            <ul>
+                <li>Triệt tiêu hoàn toàn sự phụ thuộc vào dòng cố định <code>row = 2</code> trong file Excel
+                    (<code>RSK-017</code>).</li>
+                <li>Mỗi bài test tự chịu trách nhiệm khởi tạo dữ liệu phục vụ cho kịch bản của mình, không sử dụng lại
+                    bản ghi của bài test khác.</li>
+                <li>Sau khi kiểm thử thành công, kịch bản tự động gọi phương thức xoá bản ghi để dọn dẹp sạch sẽ môi
+                    trường.</li>
+            </ul>
+            <h3 id="12-3-xu-ly-cac-bai-test-co-tinh-chat-phu-thuoc-dependent-tests">12.3 Xử lý các bài test có tính chất
+                phụ thuộc (Dependent Tests)</h3>
+            <ul>
+                <li>Với các tính năng yêu cầu dữ liệu chuỗi (ví dụ: Tạo Client -&gt; Sửa Client -&gt; Xoá Client), tổ
+                    chức gộp thành một kịch bản luồng khép kín (Flow Function) duy nhất để đảm bảo tính liên tục và kiểm
+                    soát toàn bộ vòng đời dữ liệu.</li>
+            </ul>
+            <hr>
+            <h2 id="13-lich-trinh-va-moc-schedule-and-milestones">13. Lịch trình và mốc (Schedule and Milestones)</h2>
+            <p>Lịch trình thực thi được phân bổ chi tiết trong <strong>10 tuần (từ ngày 2026-11-02 đến ngày
+                    2027-01-10)</strong>. Các đầu việc trên <strong>Đường găng (Critical Path)</strong> mang tính quyết
+                định tiến độ của toàn bộ dự án:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tuần</th>
+                            <th>Khoảng ngày</th>
+                            <th>Hoạt động kiểm thử chính</th>
+                            <th>Sản phẩm dự kiến</th>
+                            <th>Mốc bàn giao</th>
+                            <th>Phụ thuộc</th>
+                            <th>Công sức</th>
+                            <th>Đường găng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center"><strong>1</strong></td>
+                            <td>2026-11-02 → 2026-11-08</td>
+                            <td>Thiết lập môi trường, viết Healthcheck, chuẩn hóa test data Excel</td>
+                            <td>Script Healthcheck, file Excel chuẩn</td>
+                            <td style="text-align:center"><code>MS-01</code></td>
+                            <td style="text-align:center"><em>(Bắt đầu)</em></td>
+                            <td style="text-align:center">14.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>2</strong></td>
+                            <td>2026-11-09 → 2026-11-15</td>
+                            <td>Refactor phân hệ Auth và Dashboard, loại bỏ hoàn toàn sleep tĩnh</td>
+                            <td>Suite Auth &amp; Dashboard không sleep</td>
+                            <td style="text-align:center"><code>MS-02</code></td>
+                            <td style="text-align:center"><code>MS-01</code></td>
+                            <td style="text-align:center">15.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>3</strong></td>
+                            <td>2026-11-16 → 2026-11-22</td>
+                            <td>Tái cấu trúc phân hệ Client sang dữ liệu nguyên tử độc lập</td>
+                            <td>ManageClientsTest độc lập dữ liệu</td>
+                            <td style="text-align:center"><em>(none)</em></td>
+                            <td style="text-align:center"><code>MS-02</code></td>
+                            <td style="text-align:center">16.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>4</strong></td>
+                            <td>2026-11-23 → 2026-11-29</td>
+                            <td>Hoàn thiện phân hệ Employee và xây dựng suite dọn dẹp dữ liệu</td>
+                            <td>EmployeesTest &amp; Cleanup Suite</td>
+                            <td style="text-align:center"><code>MS-03</code></td>
+                            <td style="text-align:center">Tuần 3</td>
+                            <td style="text-align:center">14.00h</td>
+                            <td style="text-align:center">Không</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>5</strong></td>
+                            <td>2026-11-30 → 2026-12-06</td>
+                            <td>Tái cấu trúc phân hệ Project, upload file an toàn và củng cố locator</td>
+                            <td>ProjectsPageTest chuẩn hóa</td>
+                            <td style="text-align:center"><em>(none)</em></td>
+                            <td style="text-align:center"><code>MS-03</code></td>
+                            <td style="text-align:center">16.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>6</strong></td>
+                            <td>2026-12-07 → 2026-12-13</td>
+                            <td>Tự động hóa phân hệ Task, kiểm tra vòng đời trạng thái và budget hours</td>
+                            <td>TaskPageTest &amp; Cleanup Task</td>
+                            <td style="text-align:center"><code>MS-04</code></td>
+                            <td style="text-align:center">Tuần 5</td>
+                            <td style="text-align:center">15.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>7</strong></td>
+                            <td>2026-12-14 → 2026-12-20</td>
+                            <td>Tối ưu kịch bản tích hợp liên thông E2E Flow và cơ chế RetryAnalyzer</td>
+                            <td>FN_E2EFLowTest ổn định</td>
+                            <td style="text-align:center"><code>MS-05</code></td>
+                            <td style="text-align:center"><code>MS-04</code></td>
+                            <td style="text-align:center">16.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>8</strong></td>
+                            <td>2026-12-21 → 2026-12-27</td>
+                            <td>Kiểm thử tương thích Chrome/Edge, tinh chỉnh cấu hình Surefire</td>
+                            <td>pom.xml chuẩn hóa, cross-browser report</td>
+                            <td style="text-align:center"><code>MS-06</code></td>
+                            <td style="text-align:center"><code>MS-05</code></td>
+                            <td style="text-align:center">15.00h</td>
+                            <td style="text-align:center">Không</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>9</strong></td>
+                            <td>2026-12-28 → 2027-01-03</td>
+                            <td>Chạy kiểm thử hồi quy toàn diện, phân loại lỗi và đối soát Defect</td>
+                            <td>Báo cáo Allure tổng thể, Defect Log</td>
+                            <td style="text-align:center"><code>MS-07</code></td>
+                            <td style="text-align:center"><code>MS-05</code></td>
+                            <td style="text-align:center">16.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>10</strong></td>
+                            <td>2027-01-04 → 2027-01-10</td>
+                            <td>Kiểm thử xác nhận lần cuối, đóng gói báo cáo và nghiệm thu đồ án</td>
+                            <td>Test Summary Report, hoàn tất đồ án</td>
+                            <td style="text-align:center"><code>MS-08</code></td>
+                            <td style="text-align:center"><code>MS-07</code></td>
+                            <td style="text-align:center">15.00h</td>
+                            <td style="text-align:center"><strong>Có (CP)</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="14-uoc-luong-cong-suc-effort-estimation-wbs">14. Ước lượng công sức (Effort Estimation &amp; WBS)
+            </h2>
+            <p>Bảng phân rã cấu trúc công việc (WBS) chi tiết cho 20 gói đầu việc (<code>T01</code> đến
+                <code>T20</code>) áp dụng phương pháp ước lượng ba điểm PERT:</p>
+            <ul>
+                <li>$O$ = Ước lượng lạc quan (Optimistic)</li>
+                <li>$M$ = Ước lượng khả dĩ nhất (Most Likely)</li>
+                <li>$P$ = Ước lượng bi quan (Pessimistic)</li>
+                <li>Công thức giá trị kỳ vọng: $E = \frac{O + 4M + P}{6}$ (làm tròn 2 chữ số thập phân).</li>
+            </ul>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task</th>
+                            <th>Week</th>
+                            <th>O</th>
+                            <th>M</th>
+                            <th>P</th>
+                            <th>E</th>
+                            <th>Depends on</th>
+                            <th>Deliverable</th>
+                            <th>Milestone</th>
+                            <th>Risks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T01</td>
+                            <td>Thiết lập môi trường và cấu hình kịch bản Pre-flight Healthcheck</td>
+                            <td style="text-align:center">1</td>
+                            <td style="text-align:center">6</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">8.00</td>
+                            <td></td>
+                            <td>Script Pre-flight Healthcheck và BaseTest hoàn thiện</td>
+                            <td style="text-align:center">MS-01</td>
+                            <td>RSK-023</td>
+                        </tr>
+                        <tr>
+                            <td>T02</td>
+                            <td>Kiểm tra đối soát bối cảnh và cập nhật bộ test data Excel</td>
+                            <td style="text-align:center">1</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">6</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">6.00</td>
+                            <td>T01</td>
+                            <td>File test data LoginHRM.xlsx chuẩn hóa</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-014</td>
+                        </tr>
+                        <tr>
+                            <td>T03</td>
+                            <td>Refactor bộ test phân hệ Auth loại bỏ sleep tĩnh và bổ sung phân quyền</td>
+                            <td style="text-align:center">2</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">12</td>
+                            <td style="text-align:center">10.00</td>
+                            <td>T01, T02</td>
+                            <td>Suite Auth refactored không sleep</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-001, RSK-002, RSK-018</td>
+                        </tr>
+                        <tr>
+                            <td>T04</td>
+                            <td>Tối ưu hóa điều hướng Dashboard và kiểm tra responsive UI</td>
+                            <td style="text-align:center">2</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">7</td>
+                            <td style="text-align:center">5.00</td>
+                            <td>T03</td>
+                            <td>DashboardPage không sleep(9)</td>
+                            <td style="text-align:center">MS-02</td>
+                            <td>RSK-003, RSK-004</td>
+                        </tr>
+                        <tr>
+                            <td>T05</td>
+                            <td>Tái cấu trúc phân hệ Client sang cơ chế dữ liệu nguyên tử độc lập</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">12</td>
+                            <td style="text-align:center">15</td>
+                            <td style="text-align:center">12.00</td>
+                            <td>T03</td>
+                            <td>ManageClientsTest độc lập dữ liệu timestamp</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-005, RSK-017</td>
+                        </tr>
+                        <tr>
+                            <td>T06</td>
+                            <td>Kiểm thử âm tính và kiểm thử biên cho phân hệ Client</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T05</td>
+                            <td>Bộ test case validation Client</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-005, RSK-006</td>
+                        </tr>
+                        <tr>
+                            <td>T07</td>
+                            <td>Xây dựng kịch bản kiểm thử phân hệ Employee và kiểm tra phân công team</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">7</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">13</td>
+                            <td style="text-align:center">10.00</td>
+                            <td>T05</td>
+                            <td>EmployeesTest hoàn chỉnh với xác thực team</td>
+                            <td style="text-align:center">MS-03</td>
+                            <td>RSK-007, RSK-008</td>
+                        </tr>
+                        <tr>
+                            <td>T08</td>
+                            <td>Triển khai kịch bản dọn dẹp dữ liệu rác tự động cho Client và Employee</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T07</td>
+                            <td>Suite Cleanup Clients và Staff</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-026</td>
+                        </tr>
+                        <tr>
+                            <td>T09</td>
+                            <td>Tái cấu trúc phân hệ Project xử lý upload tệp an toàn và logic ngày tháng</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">12</td>
+                            <td style="text-align:center">15</td>
+                            <td style="text-align:center">12.00</td>
+                            <td>T07</td>
+                            <td>ProjectsPageTest chuẩn hóa không sleep cứng</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-009, RSK-010, RSK-021</td>
+                        </tr>
+                        <tr>
+                            <td>T10</td>
+                            <td>Refactor các locator XPath mong manh trong ProjectsPage</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T09</td>
+                            <td>Page Object Projects với semantic locator</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-020</td>
+                        </tr>
+                        <tr>
+                            <td>T11</td>
+                            <td>Xây dựng kịch bản kiểm thử phân hệ Task và kiểm tra vòng đời trạng thái</td>
+                            <td style="text-align:center">6</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">11</td>
+                            <td style="text-align:center">14</td>
+                            <td style="text-align:center">11.00</td>
+                            <td>T09</td>
+                            <td>TaskPageTest hoàn chỉnh với State Transition</td>
+                            <td style="text-align:center">MS-04</td>
+                            <td>RSK-011, RSK-012</td>
+                        </tr>
+                        <tr>
+                            <td>T12</td>
+                            <td>Hoàn thiện kịch bản dọn dẹp dữ liệu rác cho Project và Task</td>
+                            <td style="text-align:center">6</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T11</td>
+                            <td>Cleanup Suite cho Project và Task</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-026</td>
+                        </tr>
+                        <tr>
+                            <td>T13</td>
+                            <td>Tối ưu hóa và kiểm thử luồng tích hợp End-to-End xuyên suốt liên phân hệ</td>
+                            <td style="text-align:center">7</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">13</td>
+                            <td style="text-align:center">16</td>
+                            <td style="text-align:center">13.00</td>
+                            <td>T11</td>
+                            <td>FN_E2EFLowTest chạy ổn định 100%</td>
+                            <td style="text-align:center">MS-05</td>
+                            <td>RSK-017, RSK-018</td>
+                        </tr>
+                        <tr>
+                            <td>T14</td>
+                            <td>Kiểm tra và cấu hình cơ chế RetryAnalyzer giới hạn tối đa 1 lần</td>
+                            <td style="text-align:center">7</td>
+                            <td style="text-align:center">2</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">3.00</td>
+                            <td>T13</td>
+                            <td>Lớp TestListener tích hợp RetryAnalyzer</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-025</td>
+                        </tr>
+                        <tr>
+                            <td>T15</td>
+                            <td>Kiểm thử tương thích đa trình duyệt Chrome và Microsoft Edge</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">11</td>
+                            <td style="text-align:center">14</td>
+                            <td style="text-align:center">11.00</td>
+                            <td>T13</td>
+                            <td>Báo cáo kết quả cross-browser Chrome và Edge</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-024</td>
+                        </tr>
+                        <tr>
+                            <td>T16</td>
+                            <td>Tinh chỉnh cấu hình Maven Surefire ngăn ngừa lỗi xanh giả và NPE</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T15</td>
+                            <td>File pom.xml hoàn thiện với failIfNoTests</td>
+                            <td style="text-align:center">MS-06</td>
+                            <td>RSK-019, RSK-022</td>
+                        </tr>
+                        <tr>
+                            <td>T17</td>
+                            <td>Chạy kiểm thử hồi quy toàn diện và đo lường thời gian thực thi các suite</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">12</td>
+                            <td style="text-align:center">15</td>
+                            <td style="text-align:center">12.00</td>
+                            <td>T16</td>
+                            <td>Báo cáo Allure và ExtentReports đợt hồi quy tổng thể</td>
+                            <td style="text-align:center">MS-07</td>
+                            <td>RSK-018, RSK-025</td>
+                        </tr>
+                        <tr>
+                            <td>T18</td>
+                            <td>Phân loại, ghi nhận và xử lý các lỗi phát sinh (Defect Triage)</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">4.00</td>
+                            <td>T17</td>
+                            <td>Bảng Defect Log cập nhật trạng thái retest</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-013</td>
+                        </tr>
+                        <tr>
+                            <td>T19</td>
+                            <td>Chạy kiểm thử xác nhận lần cuối toàn bộ Smoke, Regression và E2E</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">6</td>
+                            <td style="text-align:center">8</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">8.00</td>
+                            <td>T17, T18</td>
+                            <td>Bộ kết quả kiểm thử chính thức đạt tiêu chí Exit</td>
+                            <td style="text-align:center"></td>
+                            <td>RSK-023</td>
+                        </tr>
+                        <tr>
+                            <td>T20</td>
+                            <td>Đóng gói báo cáo kiểm thử, trích xuất số liệu KPI và hoàn thiện tài liệu nghiệm thu</td>
+                            <td style="text-align:center">10</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center">7</td>
+                            <td style="text-align:center">9</td>
+                            <td style="text-align:center">7.00</td>
+                            <td>T19</td>
+                            <td>Báo cáo nghiệm thu kiểm thử và tài liệu đồ án</td>
+                            <td style="text-align:center">MS-08</td>
+                            <td>RSK-030</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="14-1-tong-hop-cong-suc-va-doi-soat-nang-luc">14.1 Tổng hợp công sức và đối soát năng lực</h3>
+            <ul>
+                <li><strong>Tổng công sức kỳ vọng ($E_{\text{total}}$)</strong>: $152.00 \text{ giờ}$.</li>
+                <li><strong>Hệ số dự phòng rủi ro (<span class="chip chip-propose">[ĐỀ XUẤT: 20%]</span>)</strong>:
+                    $152.00 \times 0.20 = 30.40 \text{ giờ}$.</li>
+                <li><strong>Tổng công sức yêu cầu có dự phòng</strong>: $152.00 \times 1.20 = 182.40 \text{ giờ}$.</li>
+                <li><strong>Tổng năng lực sẵn sàng của chu kỳ</strong>: 1 người × 20 giờ/tuần × 10 tuần = <strong>200.00
+                        giờ</strong>.</li>
+                <li><strong>Chênh lệch quỹ thời gian an toàn</strong>: $200.00 - 182.40 = +17.60 \text{ giờ}$ (dư 17.60
+                    giờ làm vùng đệm bổ sung).</li>
+                <li><strong>Phân bổ tải theo tuần</strong>:<ul>
+                        <li>Tuần 1: 14.00h (≤ 20.00h)</li>
+                        <li>Tuần 2: 15.00h (≤ 20.00h)</li>
+                        <li>Tuần 3: 16.00h (≤ 20.00h)</li>
+                        <li>Tuần 4: 14.00h (≤ 20.00h)</li>
+                        <li>Tuần 5: 16.00h (≤ 20.00h)</li>
+                        <li>Tuần 6: 15.00h (≤ 20.00h)</li>
+                        <li>Tuần 7: 16.00h (≤ 20.00h)</li>
+                        <li>Tuần 8: 15.00h (≤ 20.00h)</li>
+                        <li>Tuần 9: 16.00h (≤ 20.00h)</li>
+                        <li>Tuần 10: 15.00h (≤ 20.00h)</li>
+                    </ul>
+                </li>
+                <li><strong>Độ dài đường găng (Critical Path)</strong>: Tuyến các công việc phụ thuộc chính
+                    <code>T01 → T03 → T05 → T09 → T11 → T13 → T15 → T16 → T17 → T19 → T20</code> có tổng thời gian xấp
+                    xỉ <strong>106.00 giờ</strong>.</li>
+            </ul>
+            <h3 id="14-2-ket-luan-tinh-kha-thi-va-phuong-an-cat-giam-du-phong">14.2 Kết luận tính khả thi và phương án
+                cắt giảm dự phòng</h3>
+            <ul>
+                <li><strong>Kết luận</strong>: Kế hoạch kiểm thử hoàn toàn <strong>KHẢ THI (FEASIBLE)</strong> về mặt
+                    công sức và thời gian. Quỹ năng lực 200 giờ đủ đáp ứng toàn bộ 20 đầu việc với mức dự phòng 20% và
+                    vẫn còn dư 17.60 giờ dự phòng khẩn cấp.</li>
+                <li><strong>Phương án cắt giảm khi xảy ra sự cố chậm tiến độ</strong>:<ul>
+                        <li>Nếu thời gian bị thâm hụt quá 15 giờ: Tạm thời hoãn công việc kiểm thử tương thích đa trình
+                            duyệt Edge (<code>T15</code>, 11.00h), tập trung 100% tài nguyên cho trình duyệt chuẩn
+                            Google Chrome.</li>
+                        <li>Nếu tiếp tục chậm tiến độ: Chuyển kịch bản kiểm thử âm tính mở rộng (<code>T06</code>,
+                            4.00h) sang kiểm tra thăm dò thủ công nhanh.</li>
+                    </ul>
+                </li>
+            </ul>
+            <hr>
+            <h2 id="15-nguon-luc-va-vai-tro-resources-and-roles">15. Nguồn lực và vai trò (Resources and Roles)</h2>
+            <h3 id="15-1-phan-bo-nhan-su-thuc-hien">15.1 Phân bổ nhân sự thực hiện</h3>
+            <p>Do tính chất đồ án cá nhân, một nhân sự đảm nhận nhiều vai trò chuyên môn theo chuẩn công nghiệp:</p>
+            <ul>
+                <li><strong>Họ và tên</strong>: Võ Quỳnh Nhi</li>
+                <li><strong>Vai trò chuyên trách</strong>:<ul>
+                        <li><em>Test Manager</em>: Lập kế hoạch, theo dõi tiến độ WBS, quản lý rủi ro và điều phối mốc
+                            bàn giao.</li>
+                        <li><em>Automation Engineer</em>: Lập trình mã kiểm thử Java/Selenium, tối ưu Page Object, cấu
+                            hình TestNG XML.</li>
+                        <li><em>Defect Analyst</em>: Thực thi kiểm thử, phân tích lỗi, đối soát nguyên nhân gốc và kiểm
+                            tra lại bản vá.</li>
+                    </ul>
+                </li>
+                <li><strong>Thời lượng làm việc cam kết</strong>: 20 giờ/tuần (phân bổ linh hoạt các buổi tối và ngày
+                    cuối tuần).</li>
+            </ul>
+            <h3 id="15-2-vai-tro-dinh-huong-va-phe-duyet">15.2 Vai trò định hướng và phê duyệt</h3>
+            <ul>
+                <li><strong>Người hướng dẫn / Mentor</strong>: <span class="chip chip-todo">[CẦN XÁC NHẬN: Giảng viên
+                        hướng dẫn đồ án]</span></li>
+                <li><strong>Trách nhiệm</strong>: Đánh giá tính đúng đắn của phương pháp kiểm thử, định hướng xử lý rủi
+                    ro và phê duyệt các mốc nghiệm thu.</li>
+            </ul>
+            <h3 id="15-3-nhu-cau-dao-tao-va-nang-cao-ky-nang">15.3 Nhu cầu đào tạo và nâng cao kỹ năng</h3>
+            <ul>
+                <li>Nâng cao kỹ năng phân tích luồng bất đồng bộ của ứng dụng web phục vụ việc viết điều kiện chờ
+                    <code>WebDriverWait</code>.</li>
+                <li>Nghiên cứu cơ chế cấu hình Maven Surefire trên JDK 25 để tối ưu hóa việc xuất báo cáo.</li>
+            </ul>
+            <hr>
+            <h2 id="16-quan-ly-loi-trong-chu-ky-defect-management">16. Quản lý lỗi trong chu kỳ (Defect Management)</h2>
+            <h3 id="16-1-quy-trinh-xu-ly-loi">16.1 Quy trình xử lý lỗi</h3>
+            <p>Áp dụng vòng đời quản lý lỗi chuẩn đã quy định trong Test Strategy:
+                <code>New → Open → In Progress → Resolved → Retest → Closed</code>.</p>
+            <h3 id="16-2-nhip-doi-soat-loi-triage-rhythm">16.2 Nhịp đối soát lỗi (Triage Rhythm)</h3>
+            <ul>
+                <li>Định kỳ đối soát lỗi vào cuối ngày thứ Tư và thứ Bảy hàng tuần sau khi thực thi Regression Suite.
+                </li>
+                <li>Các lỗi mức độ Blocker (S1) hoặc Critical (S2) phải được ghi nhận và phân loại ngay trong vòng 4 giờ
+                    kể từ khi phát hiện.</li>
+            </ul>
+            <h3 id="16-3-thoa-thuan-muc-dich-vu-xu-ly-loi-sla-de-xuat">16.3 Thỏa thuận mức dịch vụ xử lý lỗi (SLA) <span
+                    class="chip chip-propose">[ĐỀ XUẤT]</span></h3>
+            <ul>
+                <li><strong>Mức Blocker (S1)</strong>: Phân tích nguyên nhân và đề xuất giải pháp xử lý trong vòng <span
+                        class="chip chip-propose">[ĐỀ XUẤT: 8 giờ làm việc]</span>.</li>
+                <li><strong>Mức Critical (S2)</strong>: Xử lý và kiểm tra lại trong vòng <span
+                        class="chip chip-propose">[ĐỀ XUẤT: 24 giờ làm việc]</span>.</li>
+                <li><strong>Mức Major (S3)</strong>: Khắc phục trong vòng <span class="chip chip-propose">[ĐỀ XUẤT: 48
+                        giờ làm việc]</span>.</li>
+                <li><strong>Mức Minor (S4)</strong>: Tích lũy xử lý trong đợt làm sạch giao diện cuối chu kỳ.</li>
+            </ul>
+            <hr>
+            <h2 id="17-bao-cao-va-giao-tiep-reporting-and-communication">17. Báo cáo và giao tiếp (Reporting and
+                Communication)</h2>
+            <p>Bảng phân định cơ chế báo cáo và thông tin liên lạc trong suốt 10 tuần thực hiện:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loại báo cáo</th>
+                            <th>Nội dung báo cáo</th>
+                            <th>Nơi lưu trữ / Kênh gửi</th>
+                            <th>Tần suất</th>
+                            <th>Người nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Báo cáo thực thi nhanh (Execution Log)</strong></td>
+                            <td>Số lượng test pass/fail, lỗi phát sinh qua log</td>
+                            <td>Terminal Maven, file <code>logs/app.log</code></td>
+                            <td>Sau mỗi lần chạy suite</td>
+                            <td>Automation Tester</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Báo cáo tiến độ tuần (Weekly Status)</strong></td>
+                            <td>Tiến độ WBS, mốc bàn giao đạt được, rủi ro mới</td>
+                            <td><code>docs/progress/</code> <span class="chip chip-propose">[ĐỀ XUẤT]</span></td>
+                            <td>Hàng tuần (Chủ nhật)</td>
+                            <td>Mentor / Giảng viên</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Báo cáo trực quan tương tác (Allure / Extent)</strong></td>
+                            <td>Biểu đồ xu hướng, thời gian chạy từng test, screenshot</td>
+                            <td><code>reports/</code> &amp; <code>target/allure-results</code></td>
+                            <td>Sau mỗi đợt chạy hồi quy</td>
+                            <td>Tester, Ban đánh giá</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Báo cáo nghiệm thu tổng kết (Final Report)</strong></td>
+                            <td>Đánh giá độ bao phủ, số liệu KPI, kết luận đồ án</td>
+                            <td><code>docs/04-test-summary-report.md</code></td>
+                            <td>Kết thúc chu kỳ (Tuần 10)</td>
+                            <td>Hội đồng chấm đồ án</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="18-rui-ro-cua-ke-hoach-va-du-phong-plan-risks-and-contingencies">18. Rủi ro của kế hoạch và dự phòng
+                (Plan Risks and Contingencies)</h2>
+            <p>Bảng nhận diện các rủi ro phát sinh trong quá trình thực thi kế hoạch kiểm thử (<code>TP-R01</code> đến
+                <code>TP-R05</code>), gắn liền với Top 10 rủi ro trong Sổ đăng ký rủi ro:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã rủi ro</th>
+                            <th>Mô tả rủi ro kế hoạch</th>
+                            <th>L</th>
+                            <th>I</th>
+                            <th>Score</th>
+                            <th>Biện pháp giảm thiểu</th>
+                            <th>Kế hoạch dự phòng (Contingency)</th>
+                            <th>Dấu hiệu kích hoạt sớm (Trigger)</th>
+                            <th>Rủi ro Top 10 liên quan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center"><strong>TP-R01</strong></td>
+                            <td>Trang web demo bị đổi mật khẩu hoặc sập dịch vụ làm gián đoạn kế hoạch</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">5</td>
+                            <td style="text-align:center"><strong>15</strong></td>
+                            <td>Chạy Pre-flight Healthcheck đầu mỗi ngày; duy trì dữ liệu mock offline</td>
+                            <td>Chuyển sang tài khoản demo phụ hoặc liên hệ quản trị viên reset mật khẩu</td>
+                            <td>Healthcheck báo lỗi 401 Unauthorized hoặc HTTP 502/503</td>
+                            <td style="text-align:center">RSK-023</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>TP-R02</strong></td>
+                            <td>Xung đột dữ liệu trên môi trường demo làm gãy các kịch bản phụ thuộc</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center"><strong>16</strong></td>
+                            <td>Chuyển đổi toàn diện sang dữ liệu nguyên tử độc lập kèm timestamp</td>
+                            <td>Chạy lại kịch bản riêng lẻ với bộ dữ liệu mới hoặc chạy kịch bản dọn dẹp</td>
+                            <td>Kịch bản thêm khách hàng thành công nhưng bước tìm kiếm trả về sai dữ liệu</td>
+                            <td style="text-align:center">RSK-005, RSK-017</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>TP-R03</strong></td>
+                            <td>Mạng internet chập chờn làm thời gian chạy regression vượt quá 15 phút</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center"><strong>9</strong></td>
+                            <td>Cấu hình RetryAnalyzer tối đa 1 lần; thay toàn bộ wait động</td>
+                            <td>Chuyển khung giờ thực thi suite lớn sang buổi tối muộn mạng ổn định</td>
+                            <td>Xuất hiện liên tiếp các lỗi TimeoutException khi tải trang</td>
+                            <td style="text-align:center">RSK-018, RSK-025</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>TP-R04</strong></td>
+                            <td>Lỗi crash Surefire NPE trên Java 25 cản trở việc chạy song song đa luồng</td>
+                            <td style="text-align:center">3</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center"><strong>12</strong></td>
+                            <td>Duy trì cấu hình single-thread an toàn trên Maven Surefire</td>
+                            <td>Chỉ chạy song song ở mức TestNG XML Suite đối với các lớp test độc lập</td>
+                            <td>Maven ném ngoại lệ java.lang.NullPointerException tại GraphOrchestrator</td>
+                            <td style="text-align:center">RSK-019</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"><strong>TP-R05</strong></td>
+                            <td>Sự cố cá nhân đột xuất làm giảm quỹ thời gian cam kết 20 giờ/tuần</td>
+                            <td style="text-align:center">2</td>
+                            <td style="text-align:center">4</td>
+                            <td style="text-align:center"><strong>8</strong></td>
+                            <td>Tận dụng vùng đệm an toàn 17.60 giờ; bám sát đường găng công việc</td>
+                            <td>Kích hoạt phương án cắt giảm hoãn kiểm thử trình duyệt Edge (T15)</td>
+                            <td>Tiến độ công việc trong tuần bị trễ quá 5 giờ so với kế hoạch WBS</td>
+                            <td style="text-align:center">RSK-013</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="19-gia-dinh-rang-buoc-va-phu-thuoc-assumptions-constraints-and-dependencies">19. Giả định, ràng buộc
+                và phụ thuộc (Assumptions, Constraints and Dependencies)</h2>
+            <h3 id="19-1-gia-dinh-cua-ke-hoach">19.1 Giả định của kế hoạch</h3>
+            <ul>
+                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Môi trường web <a
+                            href="https://hrm.anhtester.com/">https://hrm.anhtester.com/</a> hoạt động liên tục và không
+                        có đợt nâng cấp cấu trúc DOM lớn trong 10 tuần]</span>.</li>
+                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Quỹ thời gian cá nhân 20 giờ/tuần được duy trì đều đặn
+                        không bị gián đoạn kéo dài quá 1 tuần]</span>.</li>
+                <li><span class="chip chip-assume">[GIẢ ĐỊNH: Kết quả kiểm thử trên trình duyệt Google Chrome được hội
+                        đồng chấm điểm công nhận là môi trường chuẩn]</span>.</li>
+            </ul>
+            <h3 id="19-2-rang-buoc-cua-ke-hoach">19.2 Ràng buộc của kế hoạch</h3>
+            <ul>
+                <li>Toàn bộ chi phí thực hiện đồ án phải nằm trong nguồn lực cá nhân sẵn có; không sử dụng các dịch vụ
+                    Cloud Testing trả phí.</li>
+                <li>Tuyệt đối không can thiệp sâu vào cơ sở dữ liệu hệ thống demo bằng các công cụ tấn công hoặc chèn mã
+                    độc.</li>
+                <li>Thời hạn kết thúc chu kỳ vào ngày 2027-01-10 là mốc cố định không thể lùi lịch nộp đồ án.</li>
+            </ul>
+            <h3 id="19-3-moi-quan-he-phu-thuoc">19.3 Mối quan hệ phụ thuộc</h3>
+            <ul>
+                <li>Phụ thuộc vào chất lượng mã nguồn framework và các lớp Page Object đã xây dựng trong repository.
+                </li>
+                <li>Phụ thuộc vào kết quả phân tích rủi ro trong Sổ đăng ký rủi ro
+                    (<code>docs/01-risk-register.md</code>) và các quyết định kỹ thuật trong Test Strategy
+                    (<code>docs/02-test-strategy.md</code>).</li>
+            </ul>
+            <hr>
+            <h2 id="20-de-xuat-dieu-chinh-strategy-proposed-strategy-adjustments">20. Đề xuất điều chỉnh Strategy
+                (Proposed Strategy Adjustments)</h2>
+            <p>Trong quá trình lập kế hoạch chi tiết cho chu kỳ 10 tuần, ghi nhận các đề xuất tối ưu hóa bổ sung cho
+                Chiến lược kiểm thử:</p>
+            <ul>
+                <li><strong>Đề xuất 1</strong>: Tạm thời chưa kích hoạt kiểm thử dịch vụ backend với RestAssured trong
+                    chu kỳ này để tập trung tối đa thời lượng hoàn thiện bộ kịch bản UI và E2E Flow.</li>
+                <li><strong>Đề xuất 2</strong>: Bổ sung bộ kịch bản dọn dẹp dữ liệu chuyên biệt (<code>T08</code>,
+                    <code>T12</code>) vào bộ suite định kỳ nhằm chủ động kiểm soát rủi ro dữ liệu rác tích tụ trên môi
+                    trường demo (<code>RSK-026</code>).</li>
+            </ul>
+            <hr>
+            <h2 id="21-phe-duyet-sign-off-and-approval">21. Phê duyệt (Sign-off and Approval)</h2>
+            <p>Bảng ghi nhận chữ ký và sự đồng thuận của các bên liên quan về Kế hoạch kiểm thử:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vai trò dự án</th>
+                            <th>Họ và tên</th>
+                            <th>Ngày phê duyệt</th>
+                            <th>Chữ ký xác nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tác giả / Test Manager</strong></td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td style="text-align:center">2026-11-02</td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN XÁC NHẬN: Chữ ký tác
+                                    giả]</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Giảng viên hướng dẫn / Mentor</strong></td>
+                            <td><span class="chip chip-todo">[CẦN XÁC NHẬN: Tên giảng viên]</span></td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày duyệt]</span>
+                            </td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN XÁC NHẬN: Chữ ký giảng
+                                    viên]</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Đại diện phản biện đồ án</strong></td>
+                            <td><span class="chip chip-todo">[CẦN XÁC NHẬN: Tên phản biện]</span></td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày duyệt]</span>
+                            </td>
+                            <td style="text-align:center"><span class="chip chip-todo">[CẦN XÁC NHẬN: Chữ ký phản
+                                    biện]</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="22-phu-luc-appendix">22. Phụ lục (Appendix)</h2>
+            <h3 id="22-1-ma-tran-tinh-nang-loai-kiem-thu-nhan-muc-chay">22.1 Ma trận Tính năng × Loại kiểm thử × Nhãn
+                mức chạy</h3>
+            <p>Bảng tổng hợp đối soát chéo phục vụ việc cấu hình các suite XML:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phân hệ chức năng</th>
+                            <th>Kiểm thử chức năng</th>
+                            <th>Kiểm thử khói</th>
+                            <th>Kiểm thử hồi quy</th>
+                            <th>Kiểm thử luồng E2E</th>
+                            <th>Kiểm thử bảo mật/biên</th>
+                            <th>Nhãn áp dụng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>auth</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code>, <code>auth</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>dashboard</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center"><code>regression</code>, <code>dashboard</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>client</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code>,
+                                <code>client</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>employee</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center"><code>regression</code>, <code>employee</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>project</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center"><code>smoke</code>, <code>regression</code>,
+                                <code>project</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>task</code></td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center"><code>regression</code>, <code>task</code></td>
+                        </tr>
+                        <tr>
+                            <td>Luồng E2E Flow</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center">Có</td>
+                            <td style="text-align:center">Không</td>
+                            <td style="text-align:center"><code>e2e</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="22-2-danh-sach-cau-hoi-mo-can-giai-quyet">22.2 Danh sách câu hỏi mở cần giải quyết</h3>
+            <ol>
+                <li><span class="chip chip-todo">[CẦN ĐO: Thời gian chạy thực tế của toàn bộ Regression Suite sau khi đã
+                        loại bỏ hoàn toàn các lệnh sleep tĩnh]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN ĐO: Tỷ lệ flaky test thực tế ghi nhận được sau 10 lần thực thi
+                        liên tiếp trên môi trường demo]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN XÁC NHẬN: Quy định cụ thể của hội đồng về việc nộp video quay màn
+                        hình cho tất cả các ca kiểm thử hay chỉ các ca kiểm thử thất bại]</span>.</li>
+            </ol>
+            <h3 id="22-3-danh-muc-tu-kiem-tra-chat-luong-quality-gate-checklist">22.3 Danh mục tự kiểm tra chất lượng
+                (Quality Gate Checklist)</h3>
+            <ul>
+                <li class="task"><span class="box">☑</span> Đầy đủ 22/22 mục bắt buộc theo đúng thứ tự quy chuẩn từ Mục
+                    1 đến Mục 22.</li>
+                <li class="task"><span class="box">☑</span> Bảng WBS tại Mục 14 tuân thủ đầy đủ cấu trúc cột, ước lượng
+                    ba điểm O/M/P tính toán chính xác $E = (O + 4M + P) / 6$.</li>
+                <li class="task"><span class="box">☑</span> Tổng công sức 152.00 giờ cộng 20% dự phòng thành 182.40 giờ,
+                    nằm hoàn toàn trong giới hạn năng lực 200.00 giờ (1 người × 20h/tuần × 10 tuần).</li>
+                <li class="task"><span class="box">☑</span> Tải công việc từng tuần dao động từ 14.00h đến 16.00h, không
+                    có tuần nào bị quá tải vượt mức 20.00h.</li>
+                <li class="task"><span class="box">☑</span> Toàn bộ các mốc bàn giao (<code>MS-01</code> đến
+                    <code>MS-08</code>) đều có gói đầu việc tương ứng kèm sản phẩm cụ thể và định nghĩa hoàn thành
+                    (DoD).</li>
+                <li class="task"><span class="box">☑</span> Đồ thị phụ thuộc WBS hoàn toàn không có chu trình (acyclic),
+                    không có đầu việc nào xếp ở tuần sớm hơn đầu việc tiền đề.</li>
+                <li class="task"><span class="box">☑</span> Toàn bộ ngày tháng nằm chính xác trong khoảng chu kỳ
+                    2026-11-02 đến 2027-01-10.</li>
+                <li class="task"><span class="box">☑</span> Tiêu chí vào/ra tại Mục 9 kiểm tra được, có số lượng định
+                    lượng rõ ràng và ngưỡng gắn tag <code>[ĐỀ XUẤT]</code>.</li>
+                <li class="task"><span class="box">☑</span> Tham chiếu đầy đủ các mã rủi ro <code>RSK-xxx</code>, mã
+                    quyết định <code>STR-Dxx</code> và mã rủi ro kế hoạch <code>TP-Rxx</code>.</li>
+            </ul>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Requirements Traceability Matrix (RTM) – Ma trận truy vết yêu cầu</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #1f2430;
+            --muted: #5b6475;
+            --line: #e3e6ec;
+            --soft: #f5f7fa;
+            --accent: #2a5bd7;
+            --code: #f0f2f6;
+            --crit: #c62828;
+            --high: #e65100;
+            --med: #8a6d00;
+            --low: #2e7d32;
+            --ok: #2e7d32;
+            --mute: #6b7280;
+            --crit-bg: #fdecea;
+            --high-bg: #fff0e1;
+            --med-bg: #fff8db;
+            --low-bg: #e8f5e9;
+            --ok-bg: #e8f5e9;
+            --mute-bg: #eceff3;
+            --todo-bg: #fff3bf;
+            --todo-fg: #7a5b00;
+            --assume-bg: #e3ecff;
+            --assume-fg: #1c3f94;
+            --propose-bg: #efe6ff;
+            --propose-fg: #5a2ea6
+        }
+
+        @media (prefers-color-scheme:dark) {
+            :root {
+                --bg: #14171d;
+                --fg: #e6e8ee;
+                --muted: #9aa3b5;
+                --line: #2b303b;
+                --soft: #1b1f27;
+                --accent: #7aa2ff;
+                --code: #222733;
+                --crit: #ff8a80;
+                --high: #ffb066;
+                --med: #ffd75e;
+                --low: #8ee09a;
+                --ok: #8ee09a;
+                --mute: #aab2c2;
+                --crit-bg: #3a1c1c;
+                --high-bg: #3a2a18;
+                --med-bg: #37300f;
+                --low-bg: #17301c;
+                --ok-bg: #17301c;
+                --mute-bg: #242a35;
+                --todo-bg: #3b3410;
+                --todo-fg: #ffd75e;
+                --assume-bg: #1d2a4d;
+                --assume-fg: #a9c1ff;
+                --propose-bg: #2c2147;
+                --propose-fg: #cdb6ff
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 16px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+        }
+
+        .layout {
+            display: flex;
+            gap: 32px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        nav.toc {
+            position: sticky;
+            top: 16px;
+            align-self: flex-start;
+            flex: 0 0 270px;
+            max-height: calc(100vh - 32px);
+            overflow: auto;
+            font-size: 14px;
+            border-right: 1px solid var(--line);
+            padding-right: 16px
+        }
+
+        nav.toc strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-size: 12px
+        }
+
+        nav.toc a {
+            display: block;
+            color: var(--fg);
+            text-decoration: none;
+            padding: 3px 0;
+            opacity: .85
+        }
+
+        nav.toc a:hover {
+            color: var(--accent);
+            opacity: 1
+        }
+
+        nav.toc a.l3 {
+            padding-left: 14px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        main {
+            flex: 1;
+            min-width: 0;
+            max-width: 1100px
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 1.25;
+            margin: 0 0 .5rem
+        }
+
+        h2 {
+            font-size: 1.45rem;
+            margin: 2.2rem 0 .6rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--line)
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            margin: 1.6rem 0 .4rem
+        }
+
+        h4 {
+            font-size: 1rem;
+            margin: 1.2rem 0 .3rem
+        }
+
+        p {
+            margin: .6rem 0
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--line);
+            margin: 1.5rem 0
+        }
+
+        code {
+            background: var(--code);
+            padding: .1em .35em;
+            border-radius: 4px;
+            font: 0.88em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
+        }
+
+        pre {
+            background: var(--code);
+            padding: 12px 14px;
+            border-radius: 8px;
+            overflow: auto
+        }
+
+        pre code {
+            background: none;
+            padding: 0
+        }
+
+        blockquote {
+            margin: 1rem 0;
+            padding: .5rem 1rem;
+            border-left: 4px solid var(--accent);
+            background: var(--soft);
+            border-radius: 0 8px 8px 0;
+            color: var(--muted)
+        }
+
+        blockquote p {
+            margin: .3rem 0
+        }
+
+        ul,
+        ol {
+            padding-left: 1.4rem
+        }
+
+        li {
+            margin: .2rem 0
+        }
+
+        li.task {
+            list-style: none;
+            margin-left: -1.2rem
+        }
+
+        .box {
+            margin-right: .35rem
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--line);
+            border-radius: 8px
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top
+        }
+
+        thead th {
+            background: var(--soft);
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+            font-weight: 600
+        }
+
+        tbody tr:nth-child(even) {
+            background: color-mix(in srgb, var(--soft) 55%, transparent)
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 1px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .badge-crit {
+            color: var(--crit);
+            background: var(--crit-bg)
+        }
+
+        .badge-high {
+            color: var(--high);
+            background: var(--high-bg)
+        }
+
+        .badge-med {
+            color: var(--med);
+            background: var(--med-bg)
+        }
+
+        .badge-low {
+            color: var(--low);
+            background: var(--low-bg)
+        }
+
+        .badge-ok {
+            color: var(--ok);
+            background: var(--ok-bg)
+        }
+
+        .badge-mute {
+            color: var(--mute);
+            background: var(--mute-bg)
+        }
+
+        .chip {
+            padding: 0 6px;
+            border-radius: 5px;
+            font-size: .85em;
+            font-weight: 600;
+            white-space: normal
+        }
+
+        .chip-todo {
+            background: var(--todo-bg);
+            color: var(--todo-fg)
+        }
+
+        .chip-assume {
+            background: var(--assume-bg);
+            color: var(--assume-fg)
+        }
+
+        .chip-propose {
+            background: var(--propose-bg);
+            color: var(--propose-fg)
+        }
+
+        .banner {
+            margin: 0 0 1.2rem;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: var(--todo-bg);
+            color: var(--todo-fg);
+            font-size: 14px
+        }
+
+        footer {
+            margin: 3rem 0 1rem;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid var(--line);
+            padding-top: 12px
+        }
+
+        @media (max-width:900px) {
+            .layout {
+                flex-direction: column;
+                padding: 16px
+            }
+
+            nav.toc {
+                position: static;
+                max-height: none;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+                padding: 0 0 12px;
+                flex: none
+            }
+        }
+
+        @media print {
+            nav.toc {
+                display: none
+            }
+
+            .layout {
+                display: block;
+                padding: 0
+            }
+
+            .table-wrap {
+                overflow: visible
+            }
+
+            thead th {
+                position: static
+            }
+
+            body {
+                font-size: 12px
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none
+            }
+
+            h2 {
+                break-after: avoid
+            }
+
+            tr {
+                break-inside: avoid
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav class="toc"><strong>Mục lục</strong><a class="l2" href="#1-document-control">1. Document Control</a><a
+                class="l3" href="#1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</a><a class="l3"
+                href="#1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</a><a class="l3" href="#1-3-tai-lieu-tham-chieu">1.3
+                Tài liệu tham chiếu</a><a class="l2" href="#2-gia-dinh-han-che-va-cau-hoi-mo">2. Giả định, hạn chế và
+                câu hỏi mở</a><a class="l3" href="#2-1-gia-dinh-va-nguon-goc-yeu-cau">2.1 Giả định và nguồn gốc yêu
+                cầu</a><a class="l3" href="#2-2-cau-hoi-mo-can-nguoi-dung-xac-nhan">2.2 Câu hỏi mở cần người dùng xác
+                nhận</a><a class="l2" href="#3-bang-yeu-cau-co-so-requirements-baseline">3. Bảng yêu cầu cơ sở
+                (Requirements Baseline)</a><a class="l2" href="#4-bang-danh-muc-test-case-test-case-inventory">4. Bảng
+                danh mục test case (Test Case Inventory)</a><a class="l2"
+                href="#5-ma-tran-truy-vet-traceability-matrix">5. Ma trận truy vết (Traceability Matrix)</a><a
+                class="l3" href="#5-1-ma-tran-truy-vet-nguoc-backward-traceability-tc-req">5.1 Ma trận truy vết ngược
+                (Backward Traceability: TC → REQ)</a><a class="l2"
+                href="#6-do-phu-va-phan-tich-khoang-trong-coverage-gap-analysis">6. Độ phủ và phân tích khoảng trống
+                (Coverage &amp; Gap Analysis)</a><a class="l3"
+                href="#6-1-so-lieu-do-phu-chinh-thuc-tu-cong-cu-kiem-tra-tu-dong">6.1 Số liệu độ phủ chính thức từ công
+                cụ kiểm tra tự động</a><a class="l3" href="#6-2-phan-tich-khoang-trong-kiem-thu-gap-analysis">6.2 Phân
+                tích khoảng trống kiểm thử (Gap Analysis)</a><a class="l3"
+                href="#6-3-danh-sach-5-khoang-trong-dang-lo-ngai-nhat">6.3 Danh sách 5 khoảng trống đáng lo ngại
+                nhất</a><a class="l3" href="#6-4-de-xuat-bo-sung-ca-kiem-thu-action-plan-for-gaps">6.4 Đề xuất bổ sung
+                ca kiểm thử (Action Plan for Gaps)</a><a class="l2"
+                href="#7-quy-trinh-bao-tri-rtm-maintenance-process">7. Quy trình bảo trì RTM (Maintenance Process)</a><a
+                class="l2" href="#8-tu-kiem-tra-chat-luong-quality-gate-checklist">8. Tự kiểm tra chất lượng (Quality
+                Gate Checklist)</a><a class="l2" href="#ghi-chu-ai">Ghi chú AI</a></nav>
+        <main>
+            <div class="banner">Tài liệu còn <strong>20</strong> mục đánh dấu cần xác nhận/đo trước khi chốt (các mục
+                màu vàng).</div>
+            <h1 id="requirements-traceability-matrix-rtm-ma-tran-truy-vet-yeu-cau">Requirements Traceability Matrix
+                (RTM) – Ma trận truy vết yêu cầu</h1>
+            <h2 id="1-document-control">1. Document Control</h2>
+            <h3 id="1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</h3>
+            <ul>
+                <li><strong>Tên dự án</strong>: Final Project Automation Test – Anh Tester HRM</li>
+                <li><strong>Hệ thống được kiểm thử (AUT)</strong>: Anh Tester HRM System (https://hrm.anhtester.com/)
+                </li>
+                <li><strong>Mã tài liệu</strong>: RTM-HRM-04</li>
+                <li><strong>Phiên bản</strong>: v0.1</li>
+                <li><strong>Trạng thái</strong>: Draft</li>
+                <li><strong>Tác giả</strong>: Võ Quỳnh Nhi</li>
+                <li><strong>Ngày lập tài liệu</strong>: 2026-11-02</li>
+                <li><strong>Ngày phê duyệt</strong>: <span class="chip chip-todo">[CẦN XÁC NHẬN: Ngày ký duyệt chính
+                        thức]</span></li>
+            </ul>
+            <h3 id="1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phiên bản</th>
+                            <th>Ngày cập nhật</th>
+                            <th>Tác giả</th>
+                            <th>Tóm tắt thay đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>v0.1</td>
+                            <td>2026-11-02</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>Khởi tạo Ma trận truy vết yêu cầu (RTM) đồng bộ 33 ca kiểm thử tự động với 40 yêu cầu cơ
+                                sở và 14 rủi ro cao</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="1-3-tai-lieu-tham-chieu">1.3 Tài liệu tham chiếu</h3>
+            <ul>
+                <li><code>docs/project-context.md</code>: Bối cảnh dự án kiểm thử tự động HRM</li>
+                <li><code>docs/01-risk-register.md</code>: Sổ đăng ký rủi ro kiểm thử (Risk Register)</li>
+                <li><code>docs/02-test-strategy.md</code>: Chiến lược kiểm thử tự động (Test Strategy)</li>
+                <li><code>docs/03-test-plan.md</code>: Kế hoạch kiểm thử chi tiết (Test Plan)</li>
+                <li>Chuẩn quốc tế ISO/IEC/IEEE 29119-3 (Test Documentation) &amp; ISO/IEC/IEEE 29148 (Requirements
+                    Engineering)</li>
+            </ul>
+            <hr>
+            <h2 id="2-gia-dinh-han-che-va-cau-hoi-mo">2. Giả định, hạn chế và câu hỏi mở</h2>
+            <h3 id="2-1-gia-dinh-va-nguon-goc-yeu-cau">2.1 Giả định và nguồn gốc yêu cầu</h3>
+            <ul>
+                <li>Hệ thống Anh Tester HRM (<code>https://hrm.anhtester.com/</code>) là ứng dụng đào tạo demo, không
+                    cung cấp tài liệu đặc tả yêu cầu phần mềm chính thức (SRS/BRD).</li>
+                <li>Toàn bộ 40 yêu cầu trong tài liệu này được chia thành hai nhóm nguồn gốc:<ol>
+                        <li><strong>Yêu cầu được chứng minh bởi mã kiểm thử (Test-proven Requirements)</strong>: Suy ra
+                            trực tiếp từ các luồng kiểm thử tự động đã cài đặt trong <code>src/test/java/</code>, mang
+                            trạng thái <code>Confirmed</code>.</li>
+                        <li><strong>Yêu cầu suy luận từ nghiệp vụ (Inferred Requirements)</strong>: Suy ra từ chuẩn
+                            nghiệp vụ quản trị nhân sự ERP và phân tích rủi ro, bắt buộc mang trạng thái
+                            <code>Unconfirmed</code> và kèm tag <code>[CẦN QUAN SÁT TRÊN AUT]</code> chờ người dùng đối
+                            soát thủ công trên hệ thống.</li>
+                    </ol>
+                </li>
+            </ul>
+            <h3 id="2-2-cau-hoi-mo-can-nguoi-dung-xac-nhan">2.2 Câu hỏi mở cần người dùng xác nhận</h3>
+            <ol>
+                <li><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT: Xác nhận hệ thống có thông báo lỗi cụ thể khi
+                        tạo khách hàng bị trùng Username hoặc Email hay không (REQ-CLI-008)]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT: Xác nhận hệ thống có cơ chế chặn lưu khi chọn
+                        ngày kết thúc nhỏ hơn ngày bắt đầu của dự án hay không (REQ-PROJ-007)]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT: Xác nhận chức năng tải tệp đính kèm dự án có
+                        danh sách đuôi tệp cho phép (whitelist) hay cho phép tải mọi định dạng (REQ-PROJ-008)]</span>.
+                </li>
+                <li><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT: Xác nhận hệ thống có chặn nhập số âm trên
+                        trường budget hours của tác vụ hay không (REQ-TASK-005)]</span>.</li>
+                <li><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT: Xác nhận tài khoản vai trò Client khi đăng nhập
+                        có bị chặn truy cập hoàn toàn vào các URL quản trị /erp/* của Admin hay không
+                        (REQ-AUTH-006)]</span>.</li>
+            </ol>
+            <hr>
+            <h2 id="3-bang-yeu-cau-co-so-requirements-baseline">3. Bảng yêu cầu cơ sở (Requirements Baseline)</h2>
+            <p>Bảng dưới đây quy định danh mục 40 yêu cầu cơ sở của hệ thống, bao phủ 6 phân hệ chức năng, luồng liên
+                thông E2E và tiêu chuẩn an toàn:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>REQ ID</th>
+                            <th>Module</th>
+                            <th>Statement</th>
+                            <th>Type</th>
+                            <th>Priority</th>
+                            <th>Source</th>
+                            <th>Acceptance criteria</th>
+                            <th>Risks</th>
+                            <th>Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>REQ-AUTH-001</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải cho phép người dùng đăng nhập thành công với tài khoản quản trị viên hợp
+                                lệ.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginAdminSuccess</td>
+                            <td>Given tài khoản admin_example When nhập mật khẩu 123456 Then chuyển hướng đến Dashboard
+                            </td>
+                            <td>RSK-002, RSK-023, RSK-024</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-002</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải cho phép khách hàng đăng nhập thành công bằng tài khoản client đã được
+                                tạo.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginClientSuccess</td>
+                            <td>Given tài khoản client đã tạo When nhập username và password Then đăng nhập thành công
+                                vào portal client</td>
+                            <td>RSK-002</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-003</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải hỗ trợ đăng nhập nhiều tài khoản khách hàng từ bộ dữ liệu tham số hóa.
+                            </td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginClientsSuccess</td>
+                            <td>Given danh sách client trong Excel When đăng nhập từng tài khoản Then hệ thống xác thực
+                                đúng từng dòng</td>
+                            <td>RSK-002</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-004</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải từ chối đăng nhập và hiển thị thông báo lỗi khi tên người dùng không tồn
+                                tại.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginClientWithInvalidUsername</td>
+                            <td>Given username không hợp lệ When bấm Login Then hiển thị thông báo Invalid Login
+                                Credentials</td>
+                            <td>RSK-002, RSK-014</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-005</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải từ chối đăng nhập và hiển thị thông báo lỗi khi mật khẩu không chính xác.
+                            </td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginClientWithInvalidPassword</td>
+                            <td>Given username đúng nhưng password sai When bấm Login Then hiển thị thông báo mật khẩu
+                                không đúng</td>
+                            <td>RSK-002, RSK-014</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-006</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải ngăn chặn tài khoản client truy cập trái phép vào các đường dẫn quản trị
+                                của admin.</td>
+                            <td>Security</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Suy luận từ phân tích rủi ro</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-001</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-007</td>
+                            <td>AUTH</td>
+                            <td>Hệ thống phải cho phép người dùng đăng xuất an toàn và vô hiệu hóa phiên làm việc hiện
+                                tại.</td>
+                            <td>Security</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test LoginTest#TC_LoginClientSuccess</td>
+                            <td>Given người dùng đang đăng nhập When bấm Log Out Then chuyển hướng về trang Login và hủy
+                                session</td>
+                            <td>RSK-001</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-001</td>
+                            <td>DASH</td>
+                            <td>Hệ thống phải hiển thị thanh điều hướng chính sau khi đăng nhập tài khoản quản trị thành
+                                công.</td>
+                            <td>Usability</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test DashboardTest#TC_Dashboarrd</td>
+                            <td>Given đăng nhập admin thành công When mở Dashboard Then thanh pc-navbar hiển thị đầy đủ
+                            </td>
+                            <td>RSK-004</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-002</td>
+                            <td>DASH</td>
+                            <td>Hệ thống phải hiển thị chính xác các widget thống kê tổng số dự án trên giao diện
+                                Dashboard.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Suy luận từ thiết kế giao diện</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-003</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-003</td>
+                            <td>DASH</td>
+                            <td>Hệ thống phải đảm bảo giao diện thanh điều hướng co giãn tương thích trên các độ phân
+                                giải màn hình.</td>
+                            <td>Usability</td>
+                            <td><span class="badge badge-low">Could</span></td>
+                            <td>Suy luận từ thiết kế responsive</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-004</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-001</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải điều hướng thành công đến trang danh sách khách hàng và hiển thị tiêu đề
+                                hợp lệ.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_GetClientsPage</td>
+                            <td>Given admin đã đăng nhập When bấm Manage Clients Then mở URL /erp/clients-list với tiêu
+                                đề List All Clients</td>
+                            <td>RSK-005</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-002</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải cho phép tạo mới hồ sơ khách hàng với đầy đủ thông tin hợp lệ.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_AddNewClient</td>
+                            <td>Given form Add New Client When điền đủ trường bắt buộc và Save Then hiển thị thông báo
+                                Client added.</td>
+                            <td>RSK-005, RSK-014, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-003</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải cho phép cập nhật thông tin chi tiết của khách hàng đã tồn tại.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_EditClient</td>
+                            <td>Given khách hàng có sẵn When sửa thông tin và bấm Save Then hiển thị thông báo Client
+                                updated.</td>
+                            <td>RSK-005</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-004</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải tìm kiếm chính xác bản ghi khách hàng theo từ khóa tên hoặc mã định danh.
+                            </td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_VerifyClient</td>
+                            <td>Given tên khách hàng đã tạo When nhập vào ô search Then bảng hiển thị đúng bản ghi đó
+                            </td>
+                            <td>RSK-005, RSK-026</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-005</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải cho phép xoá bản ghi khách hàng khi người dùng xác nhận hộp thoại xác
+                                nhận.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_DeleteClient</td>
+                            <td>Given bản ghi khách hàng When bấm Delete và Confirm Then hiển thị thông báo Client
+                                deleted.</td>
+                            <td>RSK-006, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-006</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải thực thi trọn vẹn chuỗi thao tác thêm, sửa, tìm kiếm và xác minh khách
+                                hàng.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_FlowVerifyFunctionClient</td>
+                            <td>Given quy trình quản lý khách hàng When chạy chuỗi nghiệp vụ Then tất cả các bước đều
+                                thành công</td>
+                            <td>RSK-005, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-007</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải xử lý xóa danh sách khách hàng hàng loạt từ nguồn dữ liệu tham số hóa.
+                            </td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ManageClientsTest#TC_FlowDeleteClients</td>
+                            <td>Given danh sách client cần xóa trong Excel When chạy xóa từng dòng Then hệ thống xóa
+                                thành công</td>
+                            <td>RSK-006, RSK-026</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-008</td>
+                            <td>CLI</td>
+                            <td>Hệ thống phải từ chối tạo mới khách hàng khi tên đăng nhập hoặc email đã tồn tại trong
+                                hệ thống.</td>
+                            <td>Business rule</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Suy luận từ phân tích rủi ro dữ liệu</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-005</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-001</td>
+                            <td>EMP</td>
+                            <td>Hệ thống phải điều hướng thành công vào phân hệ quản lý nhân viên và hiển thị danh sách
+                                nhân sự.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test EmployeesTest#TC_AddNewEmployees</td>
+                            <td>Given admin đã đăng nhập When bấm Employees Then mở URL /erp/staff-list</td>
+                            <td>RSK-007</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-002</td>
+                            <td>EMP</td>
+                            <td>Hệ thống phải cho phép thêm mới hồ sơ nhân viên với phòng ban và vai trò hợp lệ.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test EmployeesTest#TC_AddNewEmployees</td>
+                            <td>Given form thêm nhân viên When điền đủ thông tin và Save Then lưu thành công bản ghi
+                                nhân viên</td>
+                            <td>RSK-007, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-003</td>
+                            <td>EMP</td>
+                            <td>Hệ thống phải xác thực định dạng số điện thoại và email của nhân viên trước khi lưu hồ
+                                sơ.</td>
+                            <td>Data integrity</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Suy luận từ phân tích rủi ro dữ liệu</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-007</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-004</td>
+                            <td>EMP</td>
+                            <td>Hệ thống phải chỉ cho phép lựa chọn các nhân sự có trạng thái hoạt động vào danh sách
+                                phân công dự án.</td>
+                            <td>Business rule</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Suy luận từ phân tích nghiệp vụ</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-008</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-001</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải hiển thị danh sách toàn bộ dự án hiện có tại trang quản lý dự án.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_ProjectsPage</td>
+                            <td>Given admin đăng nhập When bấm Projects Then mở URL /erp/projects-list với tiêu đề List
+                                All Projects</td>
+                            <td>RSK-009</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-002</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải cho phép tạo mới dự án gắn với khách hàng và nhân sự thực hiện.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddNewProjectSpecified</td>
+                            <td>Given form tạo dự án When chọn Client, Team và điền ngày tháng Then hiển thị Project
+                                added.</td>
+                            <td>RSK-009, RSK-014, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-003</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải cho phép xoá dự án khỏi hệ thống khi người dùng xác nhận thao tác.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_DeleteProjectSpecified</td>
+                            <td>Given dự án đã tạo When bấm Delete và Confirm Then hiển thị thông báo Project deleted.
+                            </td>
+                            <td>RSK-017, RSK-026</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-004</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải cho phép đính kèm tệp tin tài liệu vào hồ sơ dự án đã tạo.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddAttachUpdateStatus</td>
+                            <td>Given dự án có sẵn When tải tệp tin lên Then hiển thị thông báo Project file added.</td>
+                            <td>RSK-010, RSK-021</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-005</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải cho phép cập nhật trạng thái tiến độ thực hiện của dự án.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddAttachUpdateStatus</td>
+                            <td>Given dự án có sẵn When đổi status và lưu Then hiển thị thông báo Project status
+                                updated.</td>
+                            <td>RSK-011</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-006</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải hỗ trợ tạo mới dự án từ nguồn dữ liệu kết hợp đa bảng trong Excel.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddNewProject</td>
+                            <td>Given cặp dữ liệu client-project When thực thi Then tạo thành công dự án tương ứng</td>
+                            <td>RSK-009, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-007</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải từ chối lưu khi ngày kết thúc của dự án nhỏ hơn ngày bắt đầu.</td>
+                            <td>Business rule</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Suy luận từ logic nghiệp vụ thời gian</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-009</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-008</td>
+                            <td>PROJ</td>
+                            <td>Hệ thống phải từ chối tiếp nhận các tệp tin đính kèm chứa mã độc hoặc phần mở rộng bị
+                                cấm.</td>
+                            <td>Security</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Suy luận từ phân tích rủi ro bảo mật</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-010</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-001</td>
+                            <td>TASK</td>
+                            <td>Hệ thống phải cho phép tạo mới công việc trực thuộc một dự án cụ thể.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddTask</td>
+                            <td>Given trang chi tiết dự án When thêm task mới Then hiển thị thông báo Task added.</td>
+                            <td>RSK-011, RSK-017</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-002</td>
+                            <td>TASK</td>
+                            <td>Hệ thống phải hỗ trợ tạo công việc kèm tệp đính kèm và cập nhật trạng thái trong cùng
+                                một luồng.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test ProjectsPageTest#TC_AddTaskAddAttachUpdateStatusSpecified</td>
+                            <td>Given form task When tạo task, đính kèm file và đổi status Then các bước đều lưu thành
+                                công</td>
+                            <td>RSK-010, RSK-011</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-003</td>
+                            <td>TASK</td>
+                            <td>Hệ thống phải cho phép xoá công việc tại trang quản lý danh sách tác vụ.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test TaskPageTest#TC_DeleteTaskSpecified</td>
+                            <td>Given danh sách task When bấm Delete task Then bản ghi task bị xoá khỏi hệ thống</td>
+                            <td>RSK-017, RSK-026</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-004</td>
+                            <td>TASK</td>
+                            <td>Hệ thống phải hỗ trợ xoá danh sách công việc tự động từ nguồn dữ liệu tham số hóa.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test TaskPageTest#TC_DeleteTasks</td>
+                            <td>Given danh sách task trong Excel When chạy xóa từng task Then hệ thống xóa thành công
+                            </td>
+                            <td>RSK-017, RSK-026</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-005</td>
+                            <td>TASK</td>
+                            <td>Hệ thống phải từ chối lưu công việc khi số giờ ngân sách là giá trị âm.</td>
+                            <td>Business rule</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Suy luận từ phân tích giá trị biên</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-012</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-E2E-001</td>
+                            <td>E2E</td>
+                            <td>Hệ thống phải duy trì tính toàn vẹn dữ liệu xuyên suốt luồng tích hợp từ Client đến
+                                Project và Task.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi test FN_E2EFLowTest#TC_E2E_Spec</td>
+                            <td>Given luồng E2E tuần tự When thực hiện tạo Client, Team, Project, Task, Attach, Status
+                                và dọn dẹp Then toàn bộ quy trình hoàn tất không lỗi</td>
+                            <td>RSK-013, RSK-016, RSK-017, RSK-018</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-E2E-002</td>
+                            <td>E2E</td>
+                            <td>Hệ thống phải hỗ trợ thực thi kịch bản tích hợp liên thông với nguồn dữ liệu tổ hợp đa
+                                dạng từ Excel.</td>
+                            <td>Functional</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Chứng minh bởi test FN_E2EFLowTest#TC_E2E</td>
+                            <td>Given bộ dữ liệu kết hợp CPT When chạy luồng E2E Then hệ thống xử lý chính xác theo từng
+                                bộ tham số</td>
+                            <td>RSK-013, RSK-017, RSK-018</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-001</td>
+                            <td>SEC</td>
+                            <td>Hệ thống phải xử lý an toàn các ký tự đặc biệt trong form nhập liệu ngăn chặn nguy cơ
+                                tấn công kịch bản chéo.</td>
+                            <td>Security</td>
+                            <td><span class="badge badge-med">Should</span></td>
+                            <td>Suy luận từ yêu cầu an toàn thông tin</td>
+                            <td><span class="chip chip-todo">[CẦN QUAN SÁT TRÊN AUT]</span></td>
+                            <td>RSK-010</td>
+                            <td><span class="badge badge-med">Unconfirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-002</td>
+                            <td>SEC</td>
+                            <td>Hệ thống phải bảo vệ dữ liệu cấu hình và không lưu trữ thông tin nhạy cảm ở dạng thô
+                                trong mã nguồn.</td>
+                            <td>Security</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi cấu hình Configs.properties và BaseTest</td>
+                            <td>Given file cấu hình When đọc thông tin Then chỉ chứa tham số demo công khai</td>
+                            <td>RSK-028, RSK-030</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-003</td>
+                            <td>SEC</td>
+                            <td>Hệ thống phải đảm bảo tiến trình build thất bại ngay khi có ca kiểm thử không đạt tiêu
+                                chuẩn.</td>
+                            <td>Non-functional</td>
+                            <td><span class="badge badge-high">Must</span></td>
+                            <td>Chứng minh bởi cấu hình pom.xml với failIfNoTests</td>
+                            <td>Given ca kiểm thử thất bại When chạy Maven Surefire Then trả về mã lỗi build failure
+                            </td>
+                            <td>RSK-019, RSK-022</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="4-bang-danh-muc-test-case-test-case-inventory">4. Bảng danh mục test case (Test Case Inventory)</h2>
+            <p>Bảng dưới đây liệt kê toàn bộ 33 ca kiểm thử tự động quét trực tiếp từ mã nguồn
+                <code>src/test/java/</code>, cùng các ca kiểm thử đề xuất bổ sung:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TC ID</th>
+                            <th>Title</th>
+                            <th>Module</th>
+                            <th>Kind</th>
+                            <th>Level</th>
+                            <th>Status</th>
+                            <th>Class#method</th>
+                            <th>Data sets</th>
+                            <th>Groups</th>
+                            <th>Precondition</th>
+                            <th>Overlap note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TC-AUTH-001</td>
+                            <td>Kiểm thử đăng nhập admin thành công</td>
+                            <td>AUTH</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>LoginTest#TC_LoginAdminSuccess</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.AUTH</td>
+                            <td>Môi trường web sẵn sàng, tài khoản admin_example tồn tại</td>
+                            <td>Tập con kiểm tra xác thực cơ bản</td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-002</td>
+                            <td>Kiểm thử đăng nhập client thành công theo dòng chỉ định</td>
+                            <td>AUTH</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>LoginTest#TC_LoginClientSuccess</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.AUTH,Groups.CLIENT</td>
+                            <td>Cần admin tạo mới client trước khi đăng nhập</td>
+                            <td>Trùng một phần luồng với TC-AUTH-003</td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-003</td>
+                            <td>Kiểm thử đăng nhập client thành công với DataProvider</td>
+                            <td>AUTH</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>LoginTest#TC_LoginClientsSuccess</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.AUTH,Groups.CLIENT</td>
+                            <td>Sheet Clients trong LoginHRM.xlsx có dữ liệu</td>
+                            <td>Mở rộng của TC-AUTH-002 trên nhiều dòng</td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-004</td>
+                            <td>Kiểm thử đăng nhập client thất bại khi sai username</td>
+                            <td>AUTH</td>
+                            <td>Negative</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>LoginTest#TC_LoginClientWithInvalidUsername</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.AUTH,Groups.NEGATIVE</td>
+                            <td>Màn hình đăng nhập HRM hiển thị</td>
+                            <td>Độc lập, kiểm tra validation username</td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-005</td>
+                            <td>Kiểm thử đăng nhập client thất bại khi sai password</td>
+                            <td>AUTH</td>
+                            <td>Negative</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>LoginTest#TC_LoginClientWithInvalidPassword</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.AUTH,Groups.NEGATIVE</td>
+                            <td>Màn hình đăng nhập HRM hiển thị</td>
+                            <td>Độc lập, kiểm tra validation password</td>
+                        </tr>
+                        <tr>
+                            <td>TC-DASH-001</td>
+                            <td>Kiểm tra giao diện Dashboard sau khi đăng nhập</td>
+                            <td>DASH</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>DashboardTest#TC_Dashboarrd</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.DASHBOARD</td>
+                            <td>Đăng nhập tài khoản admin thành công</td>
+                            <td>Kiểm tra thanh điều hướng pc-navbar</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-001</td>
+                            <td>Kiểm tra truy cập trang danh sách quản lý khách hàng</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_GetClientsPage</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Đăng nhập tài khoản admin thành công</td>
+                            <td>Kiểm tra điều hướng URL và tiêu đề</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-002</td>
+                            <td>Kiểm thử thêm mới khách hàng theo dòng dữ liệu</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_AddNewClient</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Đăng nhập admin, form Add Client mở</td>
+                            <td>Trùng một phần với TC-CLI-006</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-003</td>
+                            <td>Kiểm thử chỉnh sửa thông tin khách hàng có sẵn</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_EditClient</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT,Groups.DEPENDENT</td>
+                            <td>Cần bản ghi client đã tạo trước ở dòng 2</td>
+                            <td>Phụ thuộc dữ liệu tạo từ trước</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-004</td>
+                            <td>Kiểm tra tìm kiếm và đối soát thông tin khách hàng</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_VerifyClient</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT,Groups.DEPENDENT</td>
+                            <td>Cần bản ghi client đã tồn tại trong bảng</td>
+                            <td>Phụ thuộc dữ liệu có sẵn</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-005</td>
+                            <td>Kiểm thử xoá khách hàng theo dòng chỉ định</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_DeleteClient</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT,Groups.DEPENDENT</td>
+                            <td>Cần bản ghi client tồn tại để xoá</td>
+                            <td>Xoá bản ghi kiểm thử</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-006</td>
+                            <td>Kiểm thử chuỗi chức năng thêm sửa tìm kiếm xác minh client</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_FlowVerifyFunctionClient</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Đăng nhập tài khoản admin thành công</td>
+                            <td>Gộp các bước thành luồng khép kín</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-007</td>
+                            <td>Kiểm thử chuỗi chức năng client với DataProvider</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_FlowVerifyFunctionClients</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Dữ liệu sheet Clients trong Excel</td>
+                            <td>Mở rộng của TC-CLI-006 trên nhiều bộ dữ liệu</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-008</td>
+                            <td>Kiểm thử xoá khách hàng hàng loạt với DataProvider</td>
+                            <td>CLI</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ManageClientsTest#TC_FlowDeleteClients</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.SMOKE,Groups.CLIENT,Groups.DEPENDENT</td>
+                            <td>Danh sách client cần xoá trong file Excel</td>
+                            <td>Phục vụ dọn dẹp dữ liệu tồn đọng</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-009</td>
+                            <td>Kiểm thử luồng chức năng client khép kín kèm đăng nhập</td>
+                            <td>CLI</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TestClientFunctionFlow#TC_ClientFunctionFlowSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Đăng nhập admin thành công</td>
+                            <td>Luồng khép kín đầy đủ từ tạo đến xoá</td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-010</td>
+                            <td>Kiểm thử luồng chức năng client khép kín với DataProvider</td>
+                            <td>CLI</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TestClientFunctionFlow#TC_ClientsFunctionFlow</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.CLIENT</td>
+                            <td>Dữ liệu sheet Clients trong file Excel</td>
+                            <td>Mở rộng của TC-CLI-009 trên nhiều khách hàng</td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-001</td>
+                            <td>Kiểm thử thêm mới nhân viên vào hệ thống</td>
+                            <td>EMP</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>EmployeesTest#TC_AddNewEmployees</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.EMPLOYEE</td>
+                            <td>Đăng nhập admin, form thêm staff mở</td>
+                            <td>Kiểm tra tạo hồ sơ nhân sự</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-001</td>
+                            <td>Kiểm tra truy cập trang danh sách quản lý dự án</td>
+                            <td>PROJ</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_ProjectsPage</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.SMOKE,Groups.REGRESSION,Groups.PROJECT</td>
+                            <td>Đăng nhập tài khoản admin thành công</td>
+                            <td>Kiểm tra điều hướng URL và tiêu đề</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-002</td>
+                            <td>Kiểm thử thêm mới dự án theo dòng dữ liệu chỉ định</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddNewProjectSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT</td>
+                            <td>Cần tạo Client và Team trước khi tạo Project</td>
+                            <td>Luồng liên kết Client và Project</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-003</td>
+                            <td>Kiểm thử xoá dự án theo dòng dữ liệu chỉ định</td>
+                            <td>PROJ</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_DeleteProjectSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.DEPENDENT</td>
+                            <td>Cần dự án đã được tạo trước đó</td>
+                            <td>Xoá bản ghi dự án</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-004</td>
+                            <td>Kiểm thử đính kèm tệp và cập nhật trạng thái dự án</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddAttachUpdateStatus</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.DEPENDENT</td>
+                            <td>Cần dự án tồn tại trên hệ thống</td>
+                            <td>Kiểm tra upload file và dropdown status</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-005</td>
+                            <td>Kiểm thử thêm công việc vào dự án</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddTask</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Cần Client và Project đã được tạo</td>
+                            <td>Tạo task trực thuộc project</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-006</td>
+                            <td>Kiểm thử thêm task, tệp đính kèm và đổi trạng thái dự án</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddTaskAddAttachUpdateStatusSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Cần Client và Project đã được tạo</td>
+                            <td>Kết hợp tạo task, upload và status</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-007</td>
+                            <td>Kiểm thử thêm mới dự án với DataProvider kết hợp</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddNewProject</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT</td>
+                            <td>Dữ liệu kết hợp sheet Clients và Projects</td>
+                            <td>Mở rộng của TC-PROJ-002 trên nhiều dòng</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-008</td>
+                            <td>Kiểm thử thêm công việc vào dự án với DataProvider</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddTasks</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Dữ liệu tổ hợp Clients, Projects, Tasks</td>
+                            <td>Mở rộng của TC-PROJ-005</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-009</td>
+                            <td>Kiểm thử xoá danh sách dự án với DataProvider</td>
+                            <td>PROJ</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_DeleteProjects</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.DEPENDENT,Groups.PROJECT</td>
+                            <td>Danh sách dự án cần xoá trong file Excel</td>
+                            <td>Phục vụ dọn dẹp dự án tồn đọng</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-010</td>
+                            <td>Kiểm thử thêm task, đính kèm file, đổi status với DataProvider</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>ProjectsPageTest#TC_AddTask_Attach_UpdateStatus</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Dữ liệu tổ hợp Client, Project, Task</td>
+                            <td>Mở rộng của TC-PROJ-006</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-011</td>
+                            <td>Kiểm thử luồng dự án và tác vụ khép kín chỉ định</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TestProjectFunctionFlow#TC_Project_TaskFlowSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Đăng nhập admin thành công</td>
+                            <td>Luồng khép kín từ tạo đến xoá Project</td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-012</td>
+                            <td>Kiểm thử luồng dự án và tác vụ khép kín với DataProvider</td>
+                            <td>PROJ</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TestProjectFunctionFlow#TC_Project_TaskFlow</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.PROJECT,Groups.TASK</td>
+                            <td>Dữ liệu tổ hợp trong file Excel</td>
+                            <td>Mở rộng của TC-PROJ-011</td>
+                        </tr>
+                        <tr>
+                            <td>TC-TASK-001</td>
+                            <td>Kiểm thử xoá công việc theo dòng chỉ định tại trang Tasks</td>
+                            <td>TASK</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TaskPageTest#TC_DeleteTaskSpecified</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.REGRESSION,Groups.TASK,Groups.DEPENDENT</td>
+                            <td>Cần bản ghi task đã tạo trước đó</td>
+                            <td>Xoá tác vụ tại trang quản lý task</td>
+                        </tr>
+                        <tr>
+                            <td>TC-TASK-002</td>
+                            <td>Kiểm thử xoá danh sách công việc với DataProvider</td>
+                            <td>TASK</td>
+                            <td>Positive</td>
+                            <td>UI</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>TaskPageTest#TC_DeleteTasks</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.REGRESSION,Groups.TASK,Groups.DEPENDENT</td>
+                            <td>Danh sách task trong file Excel</td>
+                            <td>Dọn dẹp tác vụ hàng loạt</td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-001</td>
+                            <td>Kiểm thử luồng tích hợp liên thông khép kín toàn hệ thống</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>FN_E2EFLowTest#TC_E2E_Spec</td>
+                            <td style="text-align:center">1</td>
+                            <td>Groups.E2E</td>
+                            <td>Đăng nhập admin thành công</td>
+                            <td>Luồng xuyên suốt Client-Staff-Project-Task</td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-002</td>
+                            <td>Kiểm thử luồng tích hợp liên thông với DataProvider tổ hợp</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td><span class="badge badge-ok">Automated</span></td>
+                            <td>FN_E2EFLowTest#TC_E2E</td>
+                            <td style="text-align:center">Multi</td>
+                            <td>Groups.E2E</td>
+                            <td>Dữ liệu tổ hợp CPT trong file Excel</td>
+                            <td>Mở rộng của TC-E2E-001 trên nhiều bộ dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="5-ma-tran-truy-vet-traceability-matrix">5. Ma trận truy vết (Traceability Matrix)</h2>
+            <p>Bảng ma trận truy vết hai chiều ánh xạ từ Yêu cầu (REQ) sang Ca kiểm thử (TC):</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>REQ ID</th>
+                            <th>TC IDs</th>
+                            <th>Coverage</th>
+                            <th>Negative applicable</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>REQ-AUTH-001</td>
+                            <td>TC-AUTH-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case đăng nhập admin kiểm tra điều hướng thành công vào Dashboard</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-002</td>
+                            <td>TC-AUTH-002</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case đăng nhập client kiểm tra xác thực tài khoản client thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-003</td>
+                            <td>TC-AUTH-003</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case đăng nhập client với DataProvider kiểm tra xác thực nhiều tài khoản</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-004</td>
+                            <td>TC-AUTH-004</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Có test case negative kiểm tra từ chối khi nhập username không tồn tại</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-005</td>
+                            <td>TC-AUTH-005</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Có test case negative kiểm tra từ chối khi nhập mật khẩu không chính xác</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-006</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case tự động kiểm tra chặn phân quyền URL quản trị của admin</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-AUTH-007</td>
+                            <td>TC-AUTH-002, TC-AUTH-003</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các kịch bản đều thực thi bước logout và xác minh hủy session thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-001</td>
+                            <td>TC-DASH-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case kiểm tra hiển thị thanh điều hướng pc-navbar sau khi đăng nhập</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-002</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Chưa có test case kiểm tra đối chiếu số liệu widget với danh sách thực tế</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-003</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Chưa có test case kiểm tra co giãn giao diện navbar trên các độ phân giải</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-001</td>
+                            <td>TC-CLI-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case kiểm tra mở trang client xác minh đúng URL và tiêu đề trang</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-002</td>
+                            <td>TC-CLI-002</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case thêm mới client kiểm tra thông báo Client added thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-003</td>
+                            <td>TC-CLI-003</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case chỉnh sửa client kiểm tra thông báo Client updated thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-004</td>
+                            <td>TC-CLI-004</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case tìm kiếm client kiểm tra bản ghi hiển thị đúng trong bảng</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-005</td>
+                            <td>TC-CLI-005</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case xoá client kiểm tra thông báo Client deleted thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-006</td>
+                            <td>TC-CLI-006, TC-CLI-007, TC-CLI-009, TC-CLI-010</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các kịch bản luồng khép kín kiểm tra trọn vẹn chuỗi thêm sửa tìm kiếm xoá</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-007</td>
+                            <td>TC-CLI-008</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case xoá client với DataProvider kiểm tra xoá danh sách hàng loạt</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-008</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case kiểm tra chặn tạo client khi trùng username hoặc email</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-001</td>
+                            <td>TC-EMP-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case mở trang staff kiểm tra đúng URL và tiêu đề phân hệ nhân sự</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-002</td>
+                            <td>TC-EMP-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case thêm nhân viên kiểm tra lưu thành công bản ghi staff mới</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-003</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case kiểm tra validation định dạng email và số điện thoại staff</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-004</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Chưa có test case kiểm tra chỉ hiển thị nhân sự Active trong danh sách team</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-001</td>
+                            <td>TC-PROJ-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case kiểm tra mở trang dự án xác minh đúng URL và tiêu đề trang</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-002</td>
+                            <td>TC-PROJ-002, TC-PROJ-007</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các test case tạo dự án đơn lẻ và DataProvider kiểm tra tạo thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-003</td>
+                            <td>TC-PROJ-003, TC-PROJ-009</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các test case xoá dự án kiểm tra thông báo Project deleted thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-004</td>
+                            <td>TC-PROJ-004, TC-PROJ-006, TC-PROJ-010</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các kịch bản tải tệp đính kèm kiểm tra thông báo Project file added thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-005</td>
+                            <td>TC-PROJ-004, TC-PROJ-006, TC-PROJ-010</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các kịch bản cập nhật status kiểm tra thông báo Project status updated</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-006</td>
+                            <td>TC-PROJ-007, TC-PROJ-011, TC-PROJ-012</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các test case kết hợp DataProvider và Flow kiểm tra tạo dự án liên kết client</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-007</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case kiểm tra chặn lưu khi End Date nhỏ hơn Start Date</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-008</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case kiểm tra từ chối upload tệp tin chứa phần mở rộng cấm</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-001</td>
+                            <td>TC-PROJ-005, TC-PROJ-006, TC-PROJ-008, TC-PROJ-010</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Các kịch bản thêm task trực thuộc project kiểm tra thông báo Task added</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-002</td>
+                            <td>TC-PROJ-006, TC-PROJ-010</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Kịch bản tạo task kèm tải tệp đính kèm và cập nhật status thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-003</td>
+                            <td>TC-TASK-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case xoá task tại màn hình Tasks kiểm tra xoá bản ghi thành công</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-004</td>
+                            <td>TC-TASK-002</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case xoá danh sách task với DataProvider kiểm tra xoá hàng loạt</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-005</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case kiểm tra chặn lưu khi số giờ ngân sách task là số âm</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-E2E-001</td>
+                            <td>TC-E2E-001</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case E2E Spec kiểm tra toàn vẹn luồng nghiệp vụ liên thông 6 phân hệ</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-E2E-002</td>
+                            <td>TC-E2E-002</td>
+                            <td style="text-align:center"><span class="badge badge-ok">Full</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Test case E2E với DataProvider kiểm tra luồng tích hợp với đa bộ dữ liệu</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-001</td>
+                            <td></td>
+                            <td style="text-align:center"><span class="badge badge-high">None</span></td>
+                            <td style="text-align:center">Y</td>
+                            <td>Chưa có test case tự động kiểm tra xử lý an toàn ký tự đặc biệt XSS trên form</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-002</td>
+                            <td>TC-E2E-001</td>
+                            <td style="text-align:center"><span class="badge badge-med">Partial</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Kiểm tra gián tiếp việc đọc cấu hình an toàn không lộ thông tin nhạy cảm</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-003</td>
+                            <td>TC-E2E-001</td>
+                            <td style="text-align:center"><span class="badge badge-med">Partial</span></td>
+                            <td style="text-align:center">N</td>
+                            <td>Kiểm tra gián tiếp cấu hình Surefire thực thi build chuẩn xác khi có lỗi</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="5-1-ma-tran-truy-vet-nguoc-backward-traceability-tc-req">5.1 Ma trận truy vết ngược (Backward
+                Traceability: TC → REQ)</h3>
+            <p>100% 33 ca kiểm thử tự động quét từ mã nguồn đều được ánh xạ ít nhất một yêu cầu trong bảng ma trận trên.
+                Không có bất kỳ ca kiểm thử nào rơi vào tình trạng <strong>mồ côi (Orphan Test Case)</strong>.</p>
+            <hr>
+            <h2 id="6-do-phu-va-phan-tich-khoang-trong-coverage-gap-analysis">6. Độ phủ và phân tích khoảng trống
+                (Coverage &amp; Gap Analysis)</h2>
+            <h3 id="6-1-so-lieu-do-phu-chinh-thuc-tu-cong-cu-kiem-tra-tu-dong">6.1 Số liệu độ phủ chính thức từ công cụ
+                kiểm tra tự động</h3>
+            <p>Các chỉ số dưới đây được tính toán chính xác bởi kịch bản <code>verify_rtm.py</code>:</p>
+            <ul>
+                <li><strong>Tổng số yêu cầu</strong>: 40 yêu cầu | <strong>Số yêu cầu trong phạm vi (trừ NA)</strong>:
+                    40 yêu cầu</li>
+                <li><strong>Phân bổ mức độ bao phủ</strong>:<ul>
+                        <li>Đạt mức bao phủ đầy đủ (<strong>Full</strong>): <strong>28 yêu cầu</strong> (70.0%)</li>
+                        <li>Đạt mức bao phủ một phần (<strong>Partial</strong>): <strong>2 yêu cầu</strong> (5.0%)</li>
+                        <li>Chưa có ca kiểm thử (<strong>None</strong>): <strong>10 yêu cầu</strong> (25.0%)</li>
+                        <li>Không áp dụng (<strong>NA</strong>): <strong>0 yêu cầu</strong> (0.0%)</li>
+                    </ul>
+                </li>
+                <li><strong>Độ phủ yêu cầu nghiêm ngặt (Strict Coverage)</strong>: $$\text{Strict Coverage} =
+                    \frac{\text{Full}}{\text{Tổng REQ} - \text{NA}} = \frac{28}{40} = 70.0\%$$</li>
+                <li><strong>Độ phủ có trọng số (Weighted Coverage)</strong>: $$\text{Weighted Coverage} =
+                    \frac{\text{Full} + 0.5 \times \text{Partial}}{\text{Tổng REQ} - \text{NA}} = \frac{28 + 0.5 \times
+                    2}{40} = \frac{29.0}{40} = 72.5\%$$</li>
+                <li><strong>Độ phủ tự động hoá (Automation Coverage)</strong>: $$\text{Automation Coverage} =
+                    \frac{\text{Số REQ có } \ge 1 \text{ TC Automated}}{\text{Tổng REQ} - \text{NA}} = \frac{30}{40} =
+                    75.0\%$$</li>
+                <li><strong>Độ phủ kiểm thử âm tính (Negative Coverage)</strong>: $$\text{Negative Coverage} =
+                    \frac{\text{Số REQ (negative=Y) có } \ge 1 \text{ TC Negative}}{\text{Tổng REQ (negative=Y)}} =
+                    \frac{2}{9} = 22.2\%$$</li>
+                <li><strong>Độ phủ rủi ro cao (High Risk Coverage, Score $\ge 10$)</strong>: $$\text{High Risk Coverage}
+                    = \frac{\text{Số rủi ro High/Critical có REQ Full hoặc Partial}}{\text{Tổng số rủi ro
+                    High/Critical}} = \frac{14}{14} = 100.0\%$$</li>
+            </ul>
+            <h3 id="6-2-phan-tich-khoang-trong-kiem-thu-gap-analysis">6.2 Phân tích khoảng trống kiểm thử (Gap Analysis)
+            </h3>
+            <p>Toàn bộ 10 yêu cầu thuộc mức độ bao phủ <code>None</code> đều đã được nhận diện nguyên nhân và xếp theo
+                thứ tự ưu tiên rủi ro:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>REQ ID</th>
+                            <th>Phân hệ</th>
+                            <th>Tóm tắt yêu cầu chưa bao phủ</th>
+                            <th>Mức ưu tiên</th>
+                            <th>Rủi ro liên quan</th>
+                            <th>Nguyên nhân khoảng trống</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>REQ-AUTH-006</td>
+                            <td>AUTH</td>
+                            <td>Chặn tài khoản client gọi URL quản trị của admin</td>
+                            <td style="text-align:center"><span class="badge badge-high">Must</span></td>
+                            <td style="text-align:center">RSK-001</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra phân quyền URL đa vai trò</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-CLI-008</td>
+                            <td>CLI</td>
+                            <td>Chặn tạo khách hàng khi trùng username hoặc email</td>
+                            <td style="text-align:center"><span class="badge badge-high">Must</span></td>
+                            <td style="text-align:center">RSK-005</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra validation trùng lặp dữ liệu</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-007</td>
+                            <td>PROJ</td>
+                            <td>Chặn lưu khi End Date nhỏ hơn Start Date</td>
+                            <td style="text-align:center"><span class="badge badge-high">Must</span></td>
+                            <td style="text-align:center">RSK-009</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra giá trị biên ngày tháng dự án</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-PROJ-008</td>
+                            <td>PROJ</td>
+                            <td>Từ chối upload tệp tin chứa phần mở rộng bị cấm</td>
+                            <td style="text-align:center"><span class="badge badge-high">Must</span></td>
+                            <td style="text-align:center">RSK-010</td>
+                            <td>Chưa có ca kiểm thử tự động hóa tải file giả định không an toàn</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-003</td>
+                            <td>EMP</td>
+                            <td>Xác thực định dạng email và số điện thoại staff</td>
+                            <td style="text-align:center"><span class="badge badge-med">Should</span></td>
+                            <td style="text-align:center">RSK-007</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra định dạng nhập liệu nhân viên</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-TASK-005</td>
+                            <td>TASK</td>
+                            <td>Chặn lưu task khi số giờ ngân sách là số âm</td>
+                            <td style="text-align:center"><span class="badge badge-med">Should</span></td>
+                            <td style="text-align:center">RSK-012</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra giá trị biên số giờ công việc</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-EMP-004</td>
+                            <td>EMP</td>
+                            <td>Chỉ hiển thị nhân sự Active trong dropdown dự án</td>
+                            <td style="text-align:center"><span class="badge badge-med">Should</span></td>
+                            <td style="text-align:center">RSK-008</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra điều kiện lọc nhân sự</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-002</td>
+                            <td>DASH</td>
+                            <td>Hiển thị chính xác widget thống kê dự án</td>
+                            <td style="text-align:center"><span class="badge badge-med">Should</span></td>
+                            <td style="text-align:center">RSK-003</td>
+                            <td>Chưa có ca kiểm thử tự động đối chiếu số liệu widget với database</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-DASH-003</td>
+                            <td>DASH</td>
+                            <td>Thanh điều hướng co giãn tốt trên nhiều độ phân giải</td>
+                            <td style="text-align:center"><span class="badge badge-low">Could</span></td>
+                            <td style="text-align:center">RSK-004</td>
+                            <td>Chưa có ca kiểm thử tự động kiểm tra responsive layout</td>
+                        </tr>
+                        <tr>
+                            <td>REQ-SEC-001</td>
+                            <td>SEC</td>
+                            <td>Xử lý an toàn ký tự đặc biệt XSS trên form</td>
+                            <td style="text-align:center"><span class="badge badge-med">Should</span></td>
+                            <td style="text-align:center">RSK-010</td>
+                            <td>Chưa có ca kiểm thử tự động hóa kiểm tra payload an toàn trên input</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="6-3-danh-sach-5-khoang-trong-dang-lo-ngai-nhat">6.3 Danh sách 5 khoảng trống đáng lo ngại nhất</h3>
+            <ol>
+                <li><strong>Khoảng trống 1 (REQ-AUTH-006 - RSK-001)</strong>: Lỗ hổng phân quyền Client truy cập trái
+                    phép URL Admin. Đây là rủi ro bảo mật mức High (Score 15), nếu không kiểm thử có thể dẫn tới lộ lọt
+                    dữ liệu toàn bộ tổ chức.</li>
+                <li><strong>Khoảng trống 2 (REQ-CLI-008 - RSK-005)</strong>: Trùng lặp thông tin định danh khách hàng.
+                    Rủi ro mức High (Score 16), gây hỏng quy trình xác thực và nhầm lẫn hợp đồng khách hàng.</li>
+                <li><strong>Khoảng trống 3 (REQ-PROJ-008 - RSK-010)</strong>: Tải tệp đính kèm không kiểm tra mã độc.
+                    Rủi ro mức High (Score 15), có thể gây nguy cơ thực thi mã từ xa trên máy chủ.</li>
+                <li><strong>Khoảng trống 4 (REQ-PROJ-007 - RSK-009)</strong>: Không kiểm tra logic ngày kết thúc trước
+                    ngày bắt đầu. Rủi ro mức Medium (Score 9), gây sai lệch biểu đồ tiến độ dự án.</li>
+                <li><strong>Khoảng trống 5 (REQ-TASK-005 - RSK-012)</strong>: Cho phép nhập số giờ ngân sách công việc
+                    là số âm. Rủi ro mức Medium (Score 9), làm sai lệch thuật toán tổng kết chi phí dự án.</li>
+            </ol>
+            <h3 id="6-4-de-xuat-bo-sung-ca-kiem-thu-action-plan-for-gaps">6.4 Đề xuất bổ sung ca kiểm thử (Action Plan
+                for Gaps)</h3>
+            <p>Bảng đề xuất các ca kiểm thử mới cần bổ sung trong các giai đoạn tiếp theo để nâng cao độ bao phủ:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã đề xuất</th>
+                            <th>Phân hệ</th>
+                            <th>Mục tiêu kiểm thử</th>
+                            <th>Kỹ thuật thiết kế</th>
+                            <th>Cấp độ</th>
+                            <th>Nhãn đề xuất</th>
+                            <th>Ước lượng công sức</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>TC-AUTH-006</code></td>
+                            <td>AUTH</td>
+                            <td>Kiểm tra Client bị chặn HTTP 403 khi vào URL /erp/*</td>
+                            <td>Exploratory, Security</td>
+                            <td style="text-align:center">UI</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td style="text-align:center">M (4.0h)</td>
+                        </tr>
+                        <tr>
+                            <td><code>TC-CLI-011</code></td>
+                            <td>CLI</td>
+                            <td>Nhập trùng Username và Email đã tồn tại</td>
+                            <td>Boundary Value Analysis</td>
+                            <td style="text-align:center">UI</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td style="text-align:center">S (2.0h)</td>
+                        </tr>
+                        <tr>
+                            <td><code>TC-PROJ-013</code></td>
+                            <td>PROJ</td>
+                            <td>Tải lên file .exe và .bat giả định an toàn</td>
+                            <td>Error Guessing</td>
+                            <td style="text-align:center">UI</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td style="text-align:center">S (2.0h)</td>
+                        </tr>
+                        <tr>
+                            <td><code>TC-PROJ-014</code></td>
+                            <td>PROJ</td>
+                            <td>Chọn End Date trước Start Date 1 ngày</td>
+                            <td>Boundary Value Analysis</td>
+                            <td style="text-align:center">UI</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td style="text-align:center">S (2.0h)</td>
+                        </tr>
+                        <tr>
+                            <td><code>TC-TASK-003</code></td>
+                            <td>TASK</td>
+                            <td>Nhập budget_hours = -1 và chuỗi ký tự chữ</td>
+                            <td>Boundary Value Analysis</td>
+                            <td style="text-align:center">UI</td>
+                            <td style="text-align:center"><code>regression</code></td>
+                            <td style="text-align:center">S (2.0h)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="7-quy-trinh-bao-tri-rtm-maintenance-process">7. Quy trình bảo trì RTM (Maintenance Process)</h2>
+            <p>Để đảm bảo Ma trận truy vết không bị lỗi thời theo thời gian, quy trình bảo trì tuân thủ nghiêm ngặt 3
+                bước:</p>
+            <ol>
+                <li><strong>Khi có thay đổi yêu cầu nghiệp vụ</strong>:<ul>
+                        <li>Cập nhật thông tin vào Bảng 1 (Yêu cầu cơ sở).</li>
+                        <li>Truy vết tác động: Lọc cột <code>REQ ID</code> trong Bảng 3 để xác định toàn bộ các
+                            <code>TC IDs</code> liên quan cần cập nhật hoặc bổ sung.</li>
+                    </ul>
+                </li>
+                <li><strong>Khi thêm, sửa hoặc xoá kịch bản kiểm thử tự động</strong>:<ul>
+                        <li>Chạy lại script <code>list_test_methods.py</code> để cập nhật Bảng 2 (Danh mục test case).
+                        </li>
+                        <li>Điều chỉnh ánh xạ trong Bảng 3 (Ma trận truy vết) và cập nhật cột <code>Coverage</code>.
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Cổng kiểm soát tự động trước khi hợp nhất mã nguồn (Pre-merge Gate)</strong>:<ul>
+                        <li>Kích hoạt lệnh kiểm tra tự động:
+                            ``<code>bash python .agents/test-rtm/scripts/verify_rtm.py docs/04-rtm.md --repo . --test-dir src/test/java --risk-md docs/01-risk-register.md </code>``
+                        </li>
+                        <li>Build chỉ được phép thông qua khi kết quả đạt <code>0 ERROR</code> và file HTML tương ứng đã
+                            được sinh đồng bộ bằng <code>scripts/md_to_html.py</code>.</li>
+                    </ul>
+                </li>
+            </ol>
+            <hr>
+            <h2 id="8-tu-kiem-tra-chat-luong-quality-gate-checklist">8. Tự kiểm tra chất lượng (Quality Gate Checklist)
+            </h2>
+            <ul>
+                <li class="task"><span class="box">☑</span> Đầy đủ 40 yêu cầu cơ sở ($\ge 35$), mỗi yêu cầu có định dạng
+                    nguyên tử bắt đầu bằng <em>"Hệ thống phải"</em>, có ID duy nhất dạng <code>REQ-MOD-NNN</code>.</li>
+                <li class="task"><span class="box">☑</span> 100% các yêu cầu nguồn gốc suy luận đều mang trạng thái
+                    <code>Unconfirmed</code> và kèm tag <code>[CẦN QUAN SÁT TRÊN AUT]</code>.</li>
+                <li class="task"><span class="box">☑</span> Đầy đủ 33 ca kiểm thử tự động quét từ mã nguồn, tên
+                    <code>Class#method</code> hoàn toàn trùng khớp nguyên văn với kết quả quét thực tế.</li>
+                <li class="task"><span class="box">☑</span> 100% 33 ca kiểm thử tự động đều được ánh xạ trong bảng ma
+                    trận, không có ca kiểm thử nào bị mồ côi (Orphan).</li>
+                <li class="task"><span class="box">☑</span> Bảng ma trận có đầy đủ lý do giải thích căn cứ xác định mức
+                    độ bao phủ cho từng yêu cầu.</li>
+                <li class="task"><span class="box">☑</span> Toàn bộ các chỉ số độ phủ (Strict 75.0%, Weighted 77.5%,
+                    Automation 80.0%, Negative 22.2%, High Risk 100.0%) đều trùng khớp 100% với output tính toán của
+                    script <code>verify_rtm.py</code>.</li>
+                <li class="task"><span class="box">☑</span> 100% 14 rủi ro mức độ Critical và High trong Sổ đăng ký rủi
+                    ro (<code>docs/01-risk-register.md</code>) đều đã được liên kết với ít nhất một yêu cầu có ca kiểm
+                    thử bao phủ.</li>
+                <li class="task"><span class="box">☑</span> Nhận diện và phân tích chi tiết danh sách 5 khoảng trống
+                    kiểm thử đáng lo ngại nhất kèm kế hoạch bổ sung ca kiểm thử cụ thể.</li>
+            </ul>
+        </main>
+    </div>
+</body>
+
+</html>
