@@ -38,6 +38,7 @@ public class EmployeesPage extends CommonPage {
     private By inputDesignation = By.xpath("//span[contains(text(),'Designation')]");
     private By inputPicture = By.xpath("//input[@name='file']");
     private By buttonSave = By.xpath("//span[normalize-space()='Save']");
+    private By toastMessage = By.xpath("//div[contains(@class,'toast-message')]");
 
     private final ExcelHelpers excelHelpers;
     private final ExcelHelpers excelHelpers1;
@@ -47,6 +48,26 @@ public class EmployeesPage extends CommonPage {
         this.excelHelpers.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Employees");
         this.excelHelpers1 = new ExcelHelpers();
         this.excelHelpers1.setExcelFile(ConfigData.LOGIN_HRM_EXCEL, "Projects");
+    }
+
+    public EmployeesPage addNewEmployeeCustom(String firstName, String lastName, String contact, String email, String username, String password) {
+        clickElement(buttonAddNew);
+        if (firstName != null && !firstName.isEmpty()) setText(inputFirstName, firstName);
+        if (lastName != null && !lastName.isEmpty()) setText(inputLastName, lastName);
+        if (contact != null && !contact.isEmpty()) setText(inputContact, contact);
+        if (email != null && !email.isEmpty()) setText(inputEmail, email);
+        if (username != null && !username.isEmpty()) setText(inputUsername, username);
+        if (password != null && !password.isEmpty()) setText(inputPassword, password);
+        clickTextBox(inputOfficeShift);
+        clickTextBox(inputRole);
+        clickTextBox(inputDesignation);
+        clickElement(buttonSave);
+        return this;
+    }
+
+    public EmployeesPage verifyErrorMessage(String expectedMessage) {
+        verifyContain(getTextElement(toastMessage), expectedMessage);
+        return this;
     }
 
     public EmployeesPage verifyEmployeesPage() {

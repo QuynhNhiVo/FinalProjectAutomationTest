@@ -94,6 +94,31 @@ public class ManageClientsPage extends CommonPage {
         return this;
     }
 
+    public ManageClientsPage addClientCustom(String firstName, String lastName, String password, String contact, String gender, String email, String username, String attachment) {
+        clickElement(buttonAddNew);
+        verifyEqual(getTextElement(subHeadAddNew), textHeadAddNew, "Heading not match");
+        if (firstName != null && !firstName.isEmpty()) setText(inputFirstName, firstName);
+        if (lastName != null && !lastName.isEmpty()) setText(inputLastName, lastName);
+        if (password != null && !password.isEmpty()) setText(inputPassword, password);
+        if (contact != null && !contact.isEmpty()) setText(inputContactNumber, contact);
+        if (gender != null && !gender.isEmpty()) {
+            handleDropdown(buttonGender, dropdownGender, "value", gender.split(", "));
+        }
+        if (email != null && !email.isEmpty()) setText(inputEmail, email);
+        if (username != null && !username.isEmpty()) setText(inputUsername, username);
+        if (attachment != null && !attachment.isEmpty()) {
+            uploadFileSendKey(inputAttachment, attachment);
+        }
+        sleep(1);
+        clickElement(buttonSaveAdd);
+        return this;
+    }
+
+    public ManageClientsPage verifyErrorMessage(String expectedMessage) {
+        verifyContain(getTextElement(messEdit), expectedMessage);
+        return this;
+    }
+
     public ManageClientsPage addClient(Hashtable<String, String> data) {
         clickElement(buttonAddNew);
         verifyEqual(getTextElement(subHeadAddNew), textHeadAddNew, "Heading not match");

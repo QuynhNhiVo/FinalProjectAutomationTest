@@ -278,4 +278,51 @@ public class ProjectsPage extends CommonPage {
         sleep(5);
         return this;
     }
+
+    public ProjectsPage addNewProjectCustom(String title, String hour, String summary) {
+        clickElement(buttonAddNew);
+        if (title != null && !title.isEmpty()) setText(inputTitle, title);
+        if (hour != null && !hour.isEmpty()) setText(inputHour, hour);
+        if (summary != null && !summary.isEmpty()) setText(inputSummary, summary);
+        clickElement(buttonSave);
+        return this;
+    }
+
+    public ProjectsPage addNewProjectWithDates(String title, String hour, String startDate, String endDate) {
+        clickElement(buttonAddNew);
+        if (title != null && !title.isEmpty()) setText(inputTitle, title);
+        if (hour != null && !hour.isEmpty()) setText(inputHour, hour);
+        if (startDate != null && !startDate.isEmpty()) {
+            getStartDate(inputStartDate, startDate.split(", "), saveStartDate);
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            getEndDate(inputEndDate, endDate.split(", "), saveEndDate);
+        }
+        clickElement(buttonSave);
+        return this;
+    }
+
+    public ProjectsPage addTaskCustom(String taskTitle, String hour) {
+        getDetail();
+        getTabTask();
+        clickElement(buttonAddTasks);
+        if (taskTitle != null && !taskTitle.isEmpty()) setText(inputTitleTasks, taskTitle);
+        if (hour != null && !hour.isEmpty()) setText(inputHourTasks, hour);
+        clickElement(saveTasks);
+        return this;
+    }
+
+    public ProjectsPage addAttachFileCustom(String filePath, String fileTitle) {
+        getDetail();
+        getTabAttach();
+        uploadFileSendKey(uploadFiles, filePath);
+        if (fileTitle != null && !fileTitle.isEmpty()) setText(inputTitleAt, fileTitle);
+        clickElement(buttonAddFile);
+        return this;
+    }
+
+    public ProjectsPage verifyErrorMessage(String expectedMessage) {
+        verifyContain(getTextElement(message), expectedMessage);
+        return this;
+    }
 }

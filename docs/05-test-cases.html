@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Test Cases Specification – Đặc tả ca kiểm thử phần mềm</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #1f2430;
+            --muted: #5b6475;
+            --line: #e3e6ec;
+            --soft: #f5f7fa;
+            --accent: #2a5bd7;
+            --code: #f0f2f6;
+            --crit: #c62828;
+            --high: #e65100;
+            --med: #8a6d00;
+            --low: #2e7d32;
+            --ok: #2e7d32;
+            --mute: #6b7280;
+            --crit-bg: #fdecea;
+            --high-bg: #fff0e1;
+            --med-bg: #fff8db;
+            --low-bg: #e8f5e9;
+            --ok-bg: #e8f5e9;
+            --mute-bg: #eceff3;
+            --todo-bg: #fff3bf;
+            --todo-fg: #7a5b00;
+            --assume-bg: #e3ecff;
+            --assume-fg: #1c3f94;
+            --propose-bg: #efe6ff;
+            --propose-fg: #5a2ea6
+        }
+
+        @media (prefers-color-scheme:dark) {
+            :root {
+                --bg: #14171d;
+                --fg: #e6e8ee;
+                --muted: #9aa3b5;
+                --line: #2b303b;
+                --soft: #1b1f27;
+                --accent: #7aa2ff;
+                --code: #222733;
+                --crit: #ff8a80;
+                --high: #ffb066;
+                --med: #ffd75e;
+                --low: #8ee09a;
+                --ok: #8ee09a;
+                --mute: #aab2c2;
+                --crit-bg: #3a1c1c;
+                --high-bg: #3a2a18;
+                --med-bg: #37300f;
+                --low-bg: #17301c;
+                --ok-bg: #17301c;
+                --mute-bg: #242a35;
+                --todo-bg: #3b3410;
+                --todo-fg: #ffd75e;
+                --assume-bg: #1d2a4d;
+                --assume-fg: #a9c1ff;
+                --propose-bg: #2c2147;
+                --propose-fg: #cdb6ff
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 16px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+        }
+
+        .layout {
+            display: flex;
+            gap: 32px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        nav.toc {
+            position: sticky;
+            top: 16px;
+            align-self: flex-start;
+            flex: 0 0 270px;
+            max-height: calc(100vh - 32px);
+            overflow: auto;
+            font-size: 14px;
+            border-right: 1px solid var(--line);
+            padding-right: 16px
+        }
+
+        nav.toc strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-size: 12px
+        }
+
+        nav.toc a {
+            display: block;
+            color: var(--fg);
+            text-decoration: none;
+            padding: 3px 0;
+            opacity: .85
+        }
+
+        nav.toc a:hover {
+            color: var(--accent);
+            opacity: 1
+        }
+
+        nav.toc a.l3 {
+            padding-left: 14px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        nav.toc a.home {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent)
+        }
+
+        main {
+            flex: 1;
+            min-width: 0;
+            max-width: 1100px
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 1.25;
+            margin: 0 0 .5rem
+        }
+
+        h2 {
+            font-size: 1.45rem;
+            margin: 2.2rem 0 .6rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--line)
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            margin: 1.6rem 0 .4rem
+        }
+
+        h4 {
+            font-size: 1rem;
+            margin: 1.2rem 0 .3rem
+        }
+
+        p {
+            margin: .6rem 0
+        }
+
+        a {
+            color: var(--accent)
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--line);
+            margin: 1.5rem 0
+        }
+
+        code {
+            background: var(--code);
+            padding: .1em .35em;
+            border-radius: 4px;
+            font: 0.88em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
+        }
+
+        pre {
+            background: var(--code);
+            padding: 12px 14px;
+            border-radius: 8px;
+            overflow: auto
+        }
+
+        pre code {
+            background: none;
+            padding: 0
+        }
+
+        blockquote {
+            margin: 1rem 0;
+            padding: .5rem 1rem;
+            border-left: 4px solid var(--accent);
+            background: var(--soft);
+            border-radius: 0 8px 8px 0;
+            color: var(--muted)
+        }
+
+        blockquote p {
+            margin: .3rem 0
+        }
+
+        ul,
+        ol {
+            padding-left: 1.4rem
+        }
+
+        li {
+            margin: .2rem 0
+        }
+
+        li.task {
+            list-style: none;
+            margin-left: -1.2rem
+        }
+
+        .box {
+            margin-right: .35rem
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--line);
+            border-radius: 8px
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top
+        }
+
+        thead th {
+            background: var(--soft);
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+            font-weight: 600
+        }
+
+        tbody tr:nth-child(even) {
+            background: color-mix(in srgb, var(--soft) 55%, transparent)
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 1px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .badge-crit {
+            color: var(--crit);
+            background: var(--crit-bg)
+        }
+
+        .badge-high {
+            color: var(--high);
+            background: var(--high-bg)
+        }
+
+        .badge-med {
+            color: var(--med);
+            background: var(--med-bg)
+        }
+
+        .badge-low {
+            color: var(--low);
+            background: var(--low-bg)
+        }
+
+        .badge-ok {
+            color: var(--ok);
+            background: var(--ok-bg)
+        }
+
+        .badge-mute {
+            color: var(--mute);
+            background: var(--mute-bg)
+        }
+
+        .chip {
+            padding: 0 6px;
+            border-radius: 5px;
+            font-size: .85em;
+            font-weight: 600;
+            white-space: normal
+        }
+
+        .chip-todo {
+            background: var(--todo-bg);
+            color: var(--todo-fg)
+        }
+
+        .chip-assume {
+            background: var(--assume-bg);
+            color: var(--assume-fg)
+        }
+
+        .chip-propose {
+            background: var(--propose-bg);
+            color: var(--propose-fg)
+        }
+
+        .banner {
+            margin: 0 0 1.2rem;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: var(--todo-bg);
+            color: var(--todo-fg);
+            font-size: 14px
+        }
+
+        footer {
+            margin: 3rem 0 1rem;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid var(--line);
+            padding-top: 12px
+        }
+
+        @media (max-width:900px) {
+            .layout {
+                flex-direction: column;
+                padding: 16px
+            }
+
+            nav.toc {
+                position: static;
+                max-height: none;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+                padding: 0 0 12px;
+                flex: none
+            }
+        }
+
+        @media print {
+            nav.toc {
+                display: none
+            }
+
+            .layout {
+                display: block;
+                padding: 0
+            }
+
+            .table-wrap {
+                overflow: visible
+            }
+
+            thead th {
+                position: static
+            }
+
+            body {
+                font-size: 12px
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none
+            }
+
+            h2 {
+                break-after: avoid
+            }
+
+            tr {
+                break-inside: avoid
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav class="toc"><strong>Mục lục</strong><a class="l2" href="#1-document-control">1. Document Control</a><a
+                class="l3" href="#1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</a><a class="l3"
+                href="#1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</a><a class="l3" href="#1-3-tai-lieu-tham-chieu">1.3
+                Tài liệu tham chiếu</a><a class="l2" href="#2-pham-vi-va-phuong-phap-thiet-ke">2. Phạm vi và phương pháp
+                thiết kế</a><a class="l3" href="#2-1-phuong-phap-thiet-ke-kiem-thu-test-design-techniques">2.1 Phương
+                pháp thiết kế kiểm thử (Test Design Techniques)</a><a class="l3"
+                href="#2-2-rang-buoc-nghiep-vu-va-ghi-nhan-thuc-te-tren-he-thong-aut">2.2 Ràng buộc nghiệp vụ và ghi
+                nhận thực tế trên hệ thống AUT</a><a class="l2"
+                href="#3-nhat-ky-thiet-ke-va-tham-dinh-test-case-test-design-review-log">3. Nhật ký thiết kế và thẩm
+                định test case (Test Design &amp; Review Log)</a><a class="l2"
+                href="#4-danh-muc-test-case-test-case-specification">4. Danh mục test case (Test Case
+                Specification)</a><a class="l2" href="#5-diem-can-kiem-tra-sau-hon-exploratory-testing-note">5. Điểm cần
+                kiểm tra sâu hơn (Exploratory Testing Note)</a><a class="l2"
+                href="#6-so-lieu-chap-nhan-acceptance-metrics">6. Số liệu chấp nhận (Acceptance Metrics)</a><a
+                class="l3" href="#so-lieu-chap-nhan-tinh-tu-dong-boi-verifytestcases-py-khong-sua-tay">Số liệu chấp nhận
+                (tính tự động bởi verify_test_cases.py, không sửa tay)</a><a class="l2"
+                href="#7-ghi-chu-va-bai-hoc-kinh-nghiem-kiem-thu-test-engineering-reflections">7. Ghi chú và bài học
+                kinh nghiệm kiểm thử (Test Engineering Reflections)</a></nav>
+        <main>
+            <div class="banner">Tài liệu còn <strong>1</strong> mục đánh dấu cần xác nhận/đo trước khi chốt (các mục màu
+                vàng).</div>
+            <h1 id="test-cases-specification-dac-ta-ca-kiem-thu-phan-mem">Test Cases Specification – Đặc tả ca kiểm thử
+                phần mềm</h1>
+            <h2 id="1-document-control">1. Document Control</h2>
+            <h3 id="1-1-thong-tin-tai-lieu">1.1 Thông tin tài liệu</h3>
+            <ul>
+                <li><strong>Tên dự án</strong>: Final Project Automation Test – Anh Tester HRM</li>
+                <li><strong>Hệ thống được kiểm thử (AUT)</strong>: Anh Tester HRM System (https://hrm.anhtester.com/)
+                </li>
+                <li><strong>Mã tài liệu</strong>: TCD-HRM-05</li>
+                <li><strong>Phiên bản</strong>: v1.0</li>
+                <li><strong>Trạng thái</strong>: Approved</li>
+                <li><strong>Tác giả</strong>: Võ Quỳnh Nhi</li>
+                <li><strong>Ngày cập nhật</strong>: 2026-11-07</li>
+            </ul>
+            <h3 id="1-2-lich-su-thay-doi">1.2 Lịch sử thay đổi</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phiên bản</th>
+                            <th>Ngày cập nhật</th>
+                            <th>Tác giả</th>
+                            <th>Tóm tắt thay đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>v0.1</td>
+                            <td>2026-11-07</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>Thiết kế bộ 24 ca kiểm thử Negative, Boundary và E2E ban đầu cho màn hình
+                                ManageClientsPage và luồng liên thông</td>
+                        </tr>
+                        <tr>
+                            <td>v1.0</td>
+                            <td>2026-11-07</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>Mở rộng 22 ca kiểm thử cho LoginPage, EmployeesPage, ProjectsPage và TasksPage (Tổng 46
+                                ca); Chuẩn hóa toàn bộ kết quả mong đợi theo hành vi thực tế quan sát trên hệ thống AUT
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="1-3-tai-lieu-tham-chieu">1.3 Tài liệu tham chiếu</h3>
+            <ul>
+                <li><code>docs/project-context.md</code>: Bối cảnh dự án kiểm thử tự động HRM</li>
+                <li><code>docs/01-risk-register.md</code>: Sổ đăng ký rủi ro kiểm thử (Risk Register)</li>
+                <li><code>docs/02-test-strategy.md</code>: Chiến lược kiểm thử tự động (Test Strategy)</li>
+                <li><code>docs/04-rtm.md</code>: Ma trận truy vết yêu cầu (RTM)</li>
+                <li><code>docs/aut-observations.md</code>: Ghi chép quan sát và xác nhận hành vi thực tế trên AUT (Cập
+                    nhật 2026-11-07)</li>
+                <li><code>docs/ui-inventory.md</code>: Danh mục giao diện các trang và phần tử thật của hệ thống</li>
+                <li>Chuẩn quốc tế ISO/IEC/IEEE 29119-3 (Test Documentation) &amp; ISTQB CTFL/Advanced Test Analyst</li>
+            </ul>
+            <hr>
+            <h2 id="2-pham-vi-va-phuong-phap-thiet-ke">2. Phạm vi và phương pháp thiết kế</h2>
+            <h3 id="2-1-phuong-phap-thiet-ke-kiem-thu-test-design-techniques">2.1 Phương pháp thiết kế kiểm thử (Test
+                Design Techniques)</h3>
+            <p>Bộ test case này được thiết kế dựa trên các kỹ thuật kiểm thử hộp đen tiêu chuẩn công nghiệp:</p>
+            <ul>
+                <li><strong>Phân vùng tương đương (Equivalence Partitioning - EP)</strong>: Phân tách dữ liệu thành các
+                    lớp hợp lệ và không hợp lệ (để trống, sai định dạng).</li>
+                <li><strong>Phân tích giá trị biên (Boundary Value Analysis - BVA)</strong>: Kiểm thử các ngưỡng giới
+                    hạn (độ dài mật khẩu min-1/min, số điện thoại 10 số, số giờ âm).</li>
+                <li><strong>Bảng quyết định (Decision Table Testing)</strong>: Tổ hợp các điều kiện ràng buộc duy nhất
+                    (Username trùng, Email trùng).</li>
+                <li><strong>Chuyển trạng thái (State Transition Testing)</strong>: Vòng đời tài khoản (Active sang
+                    Banned, đổi mật khẩu) và hành vi submit form.</li>
+                <li><strong>Tổ hợp cặp (Pairwise Testing)</strong>: Tổ hợp tham số độc lập trên form thêm mới.</li>
+                <li><strong>Đoán lỗi (Error Guessing)</strong>: Kiểm thử ký tự khoảng trắng, ký tự đặc biệt, phần mở
+                    rộng tệp tin không hợp lệ.</li>
+                <li><strong>Kiểm thử luồng nghiệp vụ (Use Case / E2E Testing)</strong>: Kiểm thử liên thông đa vai trò
+                    Admin và Client.</li>
+            </ul>
+            <h3 id="2-2-rang-buoc-nghiep-vu-va-ghi-nhan-thuc-te-tren-he-thong-aut">2.2 Ràng buộc nghiệp vụ và ghi nhận
+                thực tế trên hệ thống AUT</h3>
+            <p>Các ca kiểm thử được đối chiếu trực tiếp với kết quả kiểm tra thực tế trên hệ thống AUT:</p>
+            <ol>
+                <li><strong>Validation bắt buộc</strong>: Các trường bắt buộc khi để trống hiển thị thông báo lỗi nguyên
+                    văn: <code>The "&lt;tên trường&gt;" field is required.</code> (trừ dropdown Gender không bắt buộc).
+                </li>
+                <li><strong>Khoảng trắng</strong>: Hệ thống không chấp nhận chuỗi chỉ chứa ký tự khoảng trắng
+                    (whitespace).</li>
+                <li><strong>Mật khẩu</strong>: Yêu cầu độ dài tối thiểu bắt buộc là 6 ký tự.</li>
+                <li><strong>Số điện thoại</strong>: Yêu cầu định dạng đúng 10 chữ số.</li>
+                <li><strong>Trùng lặp dữ liệu</strong>: Thông báo nguyên văn hiển thị:
+                    <code>This &lt;trường lỗi&gt; already exist. Please choose another &lt;trường lỗi&gt;.</code></li>
+                <li><strong>Tệp đính kèm</strong>: Hệ thống có whitelist định dạng:
+                    <code>Upload files only: gif,png,jpg,jpeg</code>.</li>
+                <li><strong>Submit lặp</strong>: Bấm nút Save liên tiếp không tạo bản ghi thứ 2.</li>
+                <li><strong>Phân quyền Client</strong>: Gọi trực tiếp URL quản trị bị chặn với thông báo
+                    <code>Error Message: Unauthorized Access</code>.</li>
+                <li><strong>Tài khoản Banned</strong>: Đăng nhập hiển thị <code>Invalid Login Credentials.</code>.</li>
+                <li><strong>Xóa khách hàng</strong>: Hệ thống thực hiện xóa cascade (xóa sạch toàn bộ dự án liên quan).
+                </li>
+                <li><strong>Lỗi logic phát hiện trên AUT (Defects)</strong>:<ul>
+                        <li>Logic ngày dự án (<code>End Date &lt; Start Date</code>): Web hiện tại chưa ngăn chặn lỗi
+                            này, nhưng theo quy chuẩn nghiệp vụ là <strong>không được phép</strong>.</li>
+                        <li>Số giờ ngân sách âm (<code>Budget Hours &lt; 0</code>): Web hiện tại chưa ngăn chặn lỗi này,
+                            nhưng theo quy chuẩn nghiệp vụ là <strong>không được phép</strong>.</li>
+                        <li>Độ dài First Name và Username: Web hiện tại chưa giới hạn độ dài ký tự tối đa.</li>
+                    </ul>
+                </li>
+            </ol>
+            <hr>
+            <h2 id="3-nhat-ky-thiet-ke-va-tham-dinh-test-case-test-design-review-log">3. Nhật ký thiết kế và thẩm định
+                test case (Test Design &amp; Review Log)</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lần rà soát (Run)</th>
+                            <th>Kỹ sư thực hiện</th>
+                            <th>Phương pháp thiết kế</th>
+                            <th>Phạm vi kiểm thử</th>
+                            <th>Ghi chú cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>R1</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>EP, BVA, Decision Table, Use Case</td>
+                            <td>ManageClientsPage (form thêm Client) &amp; 5 luồng E2E</td>
+                            <td>Thiết kế 24 ca kiểm thử ban đầu cho Client và liên thông E2E</td>
+                        </tr>
+                        <tr>
+                            <td>R2</td>
+                            <td>Võ Quỳnh Nhi</td>
+                            <td>BVA, EP, Error Guessing, Decision Table, State Transition</td>
+                            <td>LoginPage, EmployeesPage, ProjectsPage, TasksPage</td>
+                            <td>Mở rộng 22 ca kiểm thử cho 4 màn hình; Chuẩn hoá 100% kết quả mong đợi theo ràng buộc
+                                thực tế trên AUT (Tổng cộng 46 ca)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="4-danh-muc-test-case-test-case-specification">4. Danh mục test case (Test Case Specification)</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TC ID</th>
+                            <th>Title</th>
+                            <th>Module</th>
+                            <th>Page</th>
+                            <th>Fields</th>
+                            <th>REQ</th>
+                            <th>Technique</th>
+                            <th>Kind</th>
+                            <th>Priority</th>
+                            <th>Preconditions</th>
+                            <th>Steps</th>
+                            <th>Test data</th>
+                            <th>Expected result</th>
+                            <th>Oracle</th>
+                            <th>Source</th>
+                            <th>Run</th>
+                            <th>Review</th>
+                            <th>Review note</th>
+                            <th>Automation</th>
+                            <th>Class#method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TC-CLI-011</td>
+                            <td>Thêm mới Client thất bại khi để trống trường bắt buộc First Name</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, đang ở trang Quản lý khách hàng
+                                (/erp/clients-list).</td>
+                            <td>1. Bấm nút Add New để mở form thêm mới khách hàng.<br>2. Bỏ trống trường First
+                                Name.<br>3. Điền đầy đủ thông tin hợp lệ vào các trường còn lại (Last Name, Password,
+                                Contact Number, Gender, Email, Username).<br>4. Bấm nút Save.</td>
+                            <td>FIRSTNAME="" (để trống), LASTNAME="Nguyen", PASSWORD="Password123@",
+                                CONTACT="0901234567", GENDER="Male", EMAIL="test_cli11@example.com",
+                                USERNAME="testuser11"</td>
+                            <td>Hệ thống chặn gửi form, hiển thị thông báo lỗi "The first name field is required.",
+                                không hiển thị thông báo Client added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-012</td>
+                            <td>Thêm mới Client thất bại khi nhập First Name chỉ toàn ký tự khoảng trắng</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập chuỗi chỉ gồm các dấu cách trắng vào trường First Name.<br>2. Nhập đầy đủ thông
+                                tin hợp lệ vào các trường còn lại.<br>3. Bấm nút Save.</td>
+                            <td>FIRSTNAME=" " (5 khoảng trắng), LASTNAME="Tran", PASSWORD="Password123@",
+                                CONTACT="0901234568", GENDER="Female", EMAIL="test_cli12@example.com",
+                                USERNAME="testuser12"</td>
+                            <td>Hệ thống từ chối lưu, hiển thị thông báo lỗi "The first name field is required." do
+                                không chấp nhận khoảng trắng, bản ghi không được tạo.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-013</td>
+                            <td>Thêm mới Client thất bại khi để trống trường bắt buộc Last Name</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập thông tin hợp lệ vào trường First Name.<br>2. Để trống trường Last Name.<br>3.
+                                Nhập đầy đủ các trường Password, Contact, Gender, Email, Username.<br>4. Bấm nút Save.
+                            </td>
+                            <td>FIRSTNAME="Minh", LASTNAME="" (để trống), PASSWORD="Password123@", CONTACT="0901234569",
+                                GENDER="Male", EMAIL="test_cli13@example.com", USERNAME="testuser13"</td>
+                            <td>Hệ thống từ chối lưu dữ liệu, hiển thị thông báo lỗi "The last name field is required.",
+                                không xuất hiện thông báo Client added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-014</td>
+                            <td>Thêm mới Client thất bại khi để trống trường bắt buộc Email</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Điền đầy đủ các trường First Name, Last Name, Password, Contact, Gender.<br>2. Để
+                                trống trường Email.<br>3. Điền trường Username.<br>4. Bấm nút Save.</td>
+                            <td>FIRSTNAME="Hoang", LASTNAME="Le", PASSWORD="Password123@", CONTACT="0901234570",
+                                GENDER="Male", EMAIL="" (để trống), USERNAME="testuser14"</td>
+                            <td>Hệ thống hiển thị thông báo lỗi "The email field is required.", chặn thao tác gửi form
+                                tạo khách hàng.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-015</td>
+                            <td>Thêm mới Client thất bại khi để trống trường bắt buộc Username</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Điền đầy đủ thông tin hợp lệ vào First Name, Last Name, Password, Contact, Gender,
+                                Email.<br>2. Bỏ trống ô Username.<br>3. Bấm nút Save.</td>
+                            <td>FIRSTNAME="Thu", LASTNAME="Pham", PASSWORD="Password123@", CONTACT="0901234571",
+                                GENDER="Female", EMAIL="test_cli15@example.com", USERNAME="" (để trống)</td>
+                            <td>Hệ thống từ chối lưu, hiển thị thông báo lỗi "The username field is required.", không
+                                tạo tài khoản mới.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-016</td>
+                            <td>Thêm mới Client thất bại khi để trống trường bắt buộc Password</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Điền First Name, Last Name, Contact, Gender, Email, Username hợp lệ.<br>2. Để trống
+                                trường Password.<br>3. Bấm nút Save.</td>
+                            <td>FIRSTNAME="Khanh", LASTNAME="Vu", PASSWORD="" (để trống), CONTACT="0901234572",
+                                GENDER="Male", EMAIL="test_cli16@example.com", USERNAME="testuser16"</td>
+                            <td>Hệ thống chặn lưu dữ liệu, hiển thị thông báo lỗi "The password field is required.",
+                                không thêm mới khách hàng.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-017</td>
+                            <td>Thêm mới Client thất bại với mật khẩu dưới biên tối thiểu 6 ký tự (5 ký tự)</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập các trường thông tin hợp lệ.<br>2. Tại ô Password, nhập chuỗi có độ dài đúng 5
+                                ký tự.<br>3. Bấm nút Save.</td>
+                            <td>PASSWORD="12345" (5 ký tự = min - 1), FIRSTNAME="Anh", LASTNAME="Do",
+                                CONTACT="0901234573", GENDER="Male", EMAIL="test_cli17@example.com",
+                                USERNAME="testuser17"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi độ dài mật khẩu không đủ (yêu cầu tối
+                                thiểu 6 ký tự), không hiển thị Client added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-018</td>
+                            <td>Kiểm tra hành vi biên khi First Name nhập chuỗi dài vượt quá 50 ký tự (51 ký tự)</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập chuỗi 51 ký tự vào trường First Name.<br>2. Nhập các trường còn lại với dữ liệu
+                                hợp lệ.<br>3. Bấm nút Save.</td>
+                            <td>FIRSTNAME="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" (51 ký tự = max + 1),
+                                LASTNAME="Bui", PASSWORD="Password123@", CONTACT="0901234574", GENDER="Female",
+                                EMAIL="test_cli18@example.com", USERNAME="testuser18"</td>
+                            <td>Theo chuẩn hệ thống cần giới hạn độ dài ký tự tối đa 50 ký tự; trên AUT hiện chưa giới
+                                hạn độ dài (ghi nhận để khuyến nghị bổ sung ràng buộc).</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-019</td>
+                            <td>Kiểm tra hành vi biên khi Username nhập chuỗi dài vượt quá 30 ký tự (31 ký tự)</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập các trường thông tin hợp lệ.<br>2. Tại ô Username, nhập chuỗi gồm đúng 31 ký tự
+                                chữ và số.<br>3. Bấm nút Save.</td>
+                            <td>USERNAME="userlongnameboundarytest31chars" (31 ký tự = max + 1), FIRSTNAME="Duc",
+                                LASTNAME="Duong", PASSWORD="Password123@", CONTACT="0901234575", GENDER="Male",
+                                EMAIL="test_cli19@example.com"</td>
+                            <td>Theo chuẩn hệ thống cần giới hạn tối đa 30 ký tự cho Username; trên AUT hiện chưa giới
+                                hạn độ dài (ghi nhận để khuyến nghị bổ sung ràng buộc).</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-020</td>
+                            <td>Thêm mới Client thất bại khi số điện thoại không đúng 10 số (9 chữ số)</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập thông tin các trường hợp lệ.<br>2. Nhập số điện thoại chỉ gồm 9 chữ số vào
+                                trường Contact Number.<br>3. Bấm nút Save.</td>
+                            <td>CONTACT="090123456" (9 chữ số = min - 1), FIRSTNAME="Quang", LASTNAME="Ngo",
+                                PASSWORD="Password123@", GENDER="Male", EMAIL="test_cli20@example.com",
+                                USERNAME="testuser20"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi số điện thoại không hợp lệ (yêu cầu đúng
+                                10 chữ số), không lưu hồ sơ.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-021</td>
+                            <td>Thêm mới Client thất bại khi Email sai định dạng thiếu ký tự @</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập các trường thông tin hợp lệ.<br>2. Nhập chuỗi địa chỉ email không có ký tự @ vào
+                                ô Email.<br>3. Bấm nút Save.</td>
+                            <td>EMAIL="invalidemailformat.com", FIRSTNAME="Hai", LASTNAME="Dinh",
+                                PASSWORD="Password123@", CONTACT="0901234576", GENDER="Male", USERNAME="testuser21"</td>
+                            <td>Hệ thống kiểm tra định dạng email chuẩn RFC, hiển thị thông báo lỗi email không hợp lệ,
+                                chặn lưu dữ liệu.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-022</td>
+                            <td>Thêm mới Client thất bại khi Email sai định dạng thiếu tên miền cấp cao TLD</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập các trường hợp lệ.<br>2. Nhập email có ký tự @ nhưng thiếu domain TLD vào ô
+                                Email.<br>3. Bấm nút Save.</td>
+                            <td>EMAIL="user@domainname", FIRSTNAME="Trang", LASTNAME="Mai", PASSWORD="Password123@",
+                                CONTACT="0901234577", GENDER="Female", USERNAME="testuser22"</td>
+                            <td>Hệ thống kiểm tra định dạng email chuẩn RFC, hiển thị thông báo lỗi email không hợp lệ,
+                                từ chối thêm mới khách hàng.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-023</td>
+                            <td>Thêm mới Client thất bại khi Contact Number chứa chữ cái và ký tự đặc biệt</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập các trường thông tin hợp lệ.<br>2. Nhập chuỗi lẫn chữ và ký tự đặc biệt vào
+                                trường Contact Number.<br>3. Bấm nút Save.</td>
+                            <td>CONTACT="0901ABC#@!", FIRSTNAME="Phuong", LASTNAME="Ly", PASSWORD="Password123@",
+                                GENDER="Female", EMAIL="test_cli23@example.com", USERNAME="testuser23"</td>
+                            <td>Hệ thống chặn nhập ký tự chữ/ký tự đặc biệt hoặc hiển thị thông báo lỗi số điện thoại
+                                chỉ chấp nhận chữ số, không lưu bản ghi.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-024</td>
+                            <td>Thêm mới Client thất bại khi nhập Username đã tồn tại trong hệ thống</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-008</td>
+                            <td>Decision table</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Tài khoản khách hàng với Username 'client01' đã tồn tại trước đó trên hệ thống. Admin
+                                đang mở form Add New Client.</td>
+                            <td>1. Nhập First Name, Last Name, Password, Contact, Gender, Email hợp lệ chưa từng
+                                dùng.<br>2. Tại ô Username, nhập 'client01'.<br>3. Bấm nút Save.</td>
+                            <td>USERNAME="client01" (đã tồn tại), EMAIL="new_unique_email@example.com", FIRSTNAME="Tan",
+                                LASTNAME="Trinh", PASSWORD="Password123@", CONTACT="0901234578", GENDER="Male"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi nguyên văn: "This username already exist.
+                                Please choose another username.", chặn tạo bản ghi trùng lặp.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-025</td>
+                            <td>Thêm mới Client thất bại khi nhập Email đã tồn tại trong hệ thống</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-008</td>
+                            <td>Decision table</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Khách hàng với email 'client01@example.com' đã tồn tại trong hệ thống. Admin đang mở
+                                form Add New Client.</td>
+                            <td>1. Nhập First Name, Last Name, Password, Contact, Gender hợp lệ.<br>2. Nhập Email
+                                'client01@example.com'.<br>3. Nhập Username mới chưa từng dùng.<br>4. Bấm nút Save.</td>
+                            <td>EMAIL="client01@example.com" (đã tồn tại), USERNAME="new_unique_user", FIRSTNAME="Kien",
+                                LASTNAME="Phan", PASSWORD="Password123@", CONTACT="0901234579", GENDER="Male"</td>
+                            <td>Hệ thống từ chối tạo mới, hiển thị thông báo lỗi nguyên văn: "This email already exist.
+                                Please choose another email.", không xuất hiện thông báo Client added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-026</td>
+                            <td>Kiểm tra xử lý an toàn chuỗi XSS HTML script trên các ô nhập họ tên khách hàng</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-SEC-001</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập chuỗi HTML script vô hại vào First Name.<br>2. Nhập chuỗi thẻ định dạng vào Last
+                                Name.<br>3. Điền các trường còn lại hợp lệ.<br>4. Bấm nút Save.</td>
+                            <td>FIRSTNAME="&lt;script&gt;alert(1)&lt;/script&gt;",
+                                LASTNAME="&lt;b&gt;TestSafe&lt;/b&gt;", PASSWORD="Password123@", CONTACT="0901234580",
+                                GENDER="Male", EMAIL="test_cli26@example.com", USERNAME="testuser26"</td>
+                            <td>Hệ thống chặn thực thi mã độc bằng cách mã hóa an toàn các ký tự đặc biệt (HTML entity
+                                encoding), không cho phép thực thi script nguy hiểm khi hiển thị lại trên bảng dữ liệu.
+                            </td>
+                            <td>Assumed</td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-027</td>
+                            <td>Thêm mới Client thất bại khi tải tệp đính kèm có đuôi thực thi không cho phép (.exe)
+                            </td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.inputAttachment,
+                                ManageClientsPage.buttonSaveAdd, ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở. Có sẵn tệp rỗng định
+                                dạng .exe an toàn trong thư mục test.</td>
+                            <td>1. Điền đầy đủ các trường thông tin khách hàng hợp lệ.<br>2. Tại trường Attachment file,
+                                chọn tệp tin test_payload.exe.<br>3. Bấm nút Save.</td>
+                            <td>ATTACHMENT="test_payload.exe" (tệp rỗng giả định), FIRSTNAME="Nam", LASTNAME="Ho",
+                                PASSWORD="Password123@", CONTACT="0901234581", GENDER="Male",
+                                EMAIL="test_cli27@example.com", USERNAME="testuser27"</td>
+                            <td>Hệ thống từ chối tải tệp, hiển thị thông báo lỗi quy định: "Upload files only:
+                                gif,png,jpg,jpeg", chặn lưu hồ sơ.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-028</td>
+                            <td>Thêm mới Client thất bại khi tổ hợp không chọn giới tính và để trống tên</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>Pairwise</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Để trống trường First Name.<br>2. Không chọn giá trị trong dropdown Gender.<br>3.
+                                Nhập các trường Last Name, Password, Contact, Email, Username hợp lệ.<br>4. Bấm nút
+                                Save.</td>
+                            <td>FIRSTNAME="" (để trống), GENDER="" (không chọn), LASTNAME="Dao",
+                                PASSWORD="Password123@", CONTACT="0901234582", EMAIL="test_cli28@example.com",
+                                USERNAME="testuser28"</td>
+                            <td>Hệ thống hiển thị thông báo lỗi yêu cầu nhập First Name ("The first name field is
+                                required."), ngăn chặn tạo bản ghi khách hàng khi thiếu dữ liệu bắt buộc.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-CLI-029</td>
+                            <td>Ngăn chặn gửi dữ liệu trùng lặp khi bấm nút Save hai lần liên tiếp (Double Click)</td>
+                            <td>CLI</td>
+                            <td>ManageClientsPage</td>
+                            <td>ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit</td>
+                            <td>REQ-CLI-002</td>
+                            <td>State transition</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công, form Add New Client đang mở.</td>
+                            <td>1. Nhập toàn bộ dữ liệu khách hàng hợp lệ và duy nhất.<br>2. Thực hiện click nhanh hai
+                                lần liên tiếp (Double Click) vào nút Save.<br>3. Kiểm tra phản hồi của nút và số lượng
+                                bản ghi tạo ra trong danh sách.</td>
+                            <td>FIRSTNAME="Nhi", LASTNAME="Vo", PASSWORD="Password123@", CONTACT="0901234583",
+                                GENDER="Female", EMAIL="test_cli29@example.com", USERNAME="testuser29"</td>
+                            <td>Hệ thống kiểm soát chống trùng lặp submit tốt, chỉ tạo duy nhất 1 bản ghi khách hàng
+                                trong cơ sở dữ liệu và hiển thị 1 thông báo Client added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-003</td>
+                            <td>Kiểm tra cơ chế phân quyền bảo mật vai trò Client không thể truy cập URL quản trị của
+                                Admin</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin,
+                                ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit, CommonPage.buttonLogout, CommonPage.logoutClient,
+                                ManageClientsPage.inputSearch, ManageClientsPage.buttonDelete,
+                                ManageClientsPage.buttonConfirm</td>
+                            <td>REQ-AUTH-006, REQ-CLI-002, REQ-CLI-005, REQ-AUTH-007</td>
+                            <td>Use case</td>
+                            <td>E2E</td>
+                            <td>P1</td>
+                            <td>Môi trường web hoạt động bình thường, tài khoản Admin có quyền quản trị tối cao.</td>
+                            <td>1. Admin đăng nhập vào hệ thống HRM.<br>2. Mở trang Manage Clients, tạo mới một Client
+                                với thông tin duy nhất.<br>3. Admin đăng xuất an toàn.<br>4. Đăng nhập bằng tài khoản
+                                Client vừa tạo.<br>5. Với vai trò Client, điều hướng trực tiếp bằng thanh địa chỉ trình
+                                duyệt tới URL quản trị /erp/clients-list.<br>6. Xác minh hệ thống chặn quyền (hiển thị
+                                thông báo Error Message: Unauthorized Access), không để lộ danh sách khách hàng
+                                khác.<br>7. Client đăng xuất.<br>8. Admin đăng nhập lại, tìm kiếm và xoá tài khoản
+                                Client vừa tạo để dọn dẹp môi trường.</td>
+                            <td>Tài khoản Admin; Dữ liệu tạo Client: USERNAME="e2e_rbac_user", PASSWORD="Password123@",
+                                EMAIL="e2e_rbac@example.com", FIRSTNAME="Rbac", LASTNAME="User", CONTACT="0908888001",
+                                GENDER="Male"; URL kiểm tra: /erp/clients-list</td>
+                            <td>Tại bước 6, hệ thống từ chối quyền truy cập của Client vào trang quản trị của Admin,
+                                hiển thị thông báo lỗi "Error Message: Unauthorized Access", dữ liệu quản trị được bảo
+                                vệ an toàn.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-004</td>
+                            <td>Luồng Admin chuyển trạng thái Client sang Banned và xác minh chặn đăng nhập tại cổng
+                                Client</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin,
+                                LoginPage.alertInvaid, ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit, ManageClientsPage.inputSearch,
+                                ManageClientsPage.buttonDetail, ManageClientsPage.buttonStatus,
+                                ManageClientsPage.dropdownStatus, ManageClientsPage.buttonSaveIf,
+                                CommonPage.buttonLogout, ManageClientsPage.buttonDelete, ManageClientsPage.buttonConfirm
+                            </td>
+                            <td>REQ-CLI-002, REQ-CLI-003, REQ-AUTH-004, REQ-CLI-005</td>
+                            <td>State transition</td>
+                            <td>E2E</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công.</td>
+                            <td>1. Admin tạo mới một Client với thông tin hợp lệ.<br>2. Admin tìm kiếm Client vừa tạo,
+                                bấm nút Detail để mở form chỉnh sửa.<br>3. Chuyển trạng thái Status sang Banned và bấm
+                                Save (xác nhận thông báo Client updated).<br>4. Admin đăng xuất.<br>5. Tại màn hình
+                                Login, nhập tài khoản và mật khẩu của Client vừa bị Banned, bấm nút Login.<br>6. Xác
+                                minh hệ thống từ chối đăng nhập và hiển thị thông báo lỗi Invalid Login
+                                Credentials.<br>7. Admin đăng nhập lại, tìm kiếm và xoá Client để hoàn tất dọn dẹp.</td>
+                            <td>Dữ liệu tạo Client: USERNAME="e2e_banned_user", PASSWORD="Password123@",
+                                EMAIL="e2e_banned@example.com", FIRSTNAME="Status", LASTNAME="Test",
+                                CONTACT="0908888002", GENDER="Male"; Trạng thái cập nhật: STATUS="Banned"</td>
+                            <td>Tại bước 6, tài khoản Banned bị chặn đăng nhập hoàn toàn, hệ thống hiển thị thông báo
+                                lỗi "Invalid Login Credentials.", không cho phép truy cập vào portal khách hàng.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-005</td>
+                            <td>Luồng Admin tạo Project và đính kèm tệp gán cho Client và xác minh tính hiển thị tại
+                                Client Portal</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin,
+                                ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit, ProjectsPage.buttonAddNew, ProjectsPage.inputTitle,
+                                ProjectsPage.buttonClients, ProjectsPage.dropdownClients, ProjectsPage.inputStartDate,
+                                ProjectsPage.saveStartDate, ProjectsPage.inputEndDate, ProjectsPage.saveEndDate,
+                                ProjectsPage.buttonSave, ProjectsPage.buttonDetail, ProjectsPage.tabAttach,
+                                ProjectsPage.uploadFiles, ProjectsPage.inputTitleAt, ProjectsPage.buttonAddFile,
+                                CommonPage.buttonLogout, CommonPage.logoutClient, ProjectsPage.buttonDelete,
+                                ProjectsPage.confirmDel, ManageClientsPage.inputSearch, ManageClientsPage.buttonDelete,
+                                ManageClientsPage.buttonConfirm</td>
+                            <td>REQ-CLI-002, REQ-PROJ-002, REQ-PROJ-004, REQ-E2E-001, REQ-PROJ-003, REQ-CLI-005</td>
+                            <td>Use case</td>
+                            <td>E2E</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công, có sẵn file đính kèm hợp lệ Task.png.</td>
+                            <td>1. Admin tạo mới một Client với tên định danh duy nhất.<br>2. Admin sang trang Projects,
+                                tạo mới một Project và chọn Client vừa tạo trong dropdown Client.<br>3. Admin mở chi
+                                tiết Project, vào tab Attachments tải lên tệp tin hợp lệ.<br>4. Admin đăng xuất an
+                                toàn.<br>5. Client đăng nhập vào hệ thống, kiểm tra dự án được gán hiển thị đúng tiêu đề
+                                và tệp đính kèm.<br>6. Client đăng xuất.<br>7. Admin đăng nhập lại, xoá Project đã tạo,
+                                sau đó sang trang Manage Clients xoá Client để hoàn tất dọn dẹp.</td>
+                            <td>Client data: USERNAME="e2e_vis_client", PASSWORD="Password123@",
+                                EMAIL="e2e_vis@example.com", FIRSTNAME="Vis", LASTNAME="Client", CONTACT="0908888003",
+                                GENDER="Female"; Project data: TITLE="E2E Visibility Project 2026",
+                                START_DATE="2026-11-08", END_DATE="2026-12-08", ATTACH="Task.png"</td>
+                            <td>Client đăng nhập thành công và nhìn thấy đúng dự án kèm tệp đính kèm do Admin gán; sau
+                                đó Admin xoá sạch dữ liệu thử nghiệm mà không phát sinh lỗi.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-006</td>
+                            <td>Kiểm tra cơ chế xoá toàn bộ liên quan (Cascade Delete) khi xoá Client đang có Project
+                                hoạt động</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin,
+                                ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit, ProjectsPage.buttonAddNew, ProjectsPage.inputTitle,
+                                ProjectsPage.buttonClients, ProjectsPage.dropdownClients, ProjectsPage.inputStartDate,
+                                ProjectsPage.saveStartDate, ProjectsPage.inputEndDate, ProjectsPage.saveEndDate,
+                                ProjectsPage.buttonSave, ManageClientsPage.inputSearch, ManageClientsPage.buttonDelete,
+                                ManageClientsPage.buttonConfirm, ManageClientsPage.messConf, ProjectsPage.buttonDelete,
+                                ProjectsPage.confirmDel, CommonPage.buttonLogout</td>
+                            <td>REQ-CLI-002, REQ-PROJ-002, REQ-CLI-005, REQ-PROJ-003</td>
+                            <td>Decision table</td>
+                            <td>E2E</td>
+                            <td>P1</td>
+                            <td>Đăng nhập tài khoản Admin thành công.</td>
+                            <td>1. Admin tạo mới một Client với thông tin duy nhất.<br>2. Admin sang trang Projects, tạo
+                                mới một Project liên kết với Client vừa tạo.<br>3. Admin quay lại trang Manage Clients,
+                                tìm kiếm Client đó và bấm nút Delete rồi bấm Confirm.<br>4. Xác minh hệ thống thực hiện
+                                xoá thành công Client và hiển thị thông báo "Client deleted.".<br>5. Admin chuyển sang
+                                trang Projects, tìm kiếm lại Project đã tạo ở bước 2.<br>6. Xác minh Project liên kết
+                                cũng đã bị tự động xoá sạch khỏi hệ thống theo cơ chế Cascade Delete.<br>7. Admin đăng
+                                xuất.</td>
+                            <td>Client data: USERNAME="e2e_cascade_client", PASSWORD="Password123@",
+                                EMAIL="e2e_cascade@example.com", FIRSTNAME="Cascade", LASTNAME="Client",
+                                CONTACT="0908888004", GENDER="Male"; Project data: TITLE="E2E Cascade Delete Project"
+                            </td>
+                            <td>Tại bước 4, hệ thống xoá Client thành công ("Client deleted."); tại bước 6, Project liên
+                                kết cũng bị xoá sạch hoàn toàn khỏi danh sách dự án (Cascade Delete), đảm bảo không còn
+                                dữ liệu mồ côi.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-E2E-007</td>
+                            <td>Luồng Admin cập nhật mật khẩu Client và xác minh hiệu lực xác thực tại cổng đăng nhập
+                                Client</td>
+                            <td>E2E</td>
+                            <td>E2E</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin,
+                                LoginPage.alertInvaid, ManageClientsPage.buttonAddNew, ManageClientsPage.inputFirstName,
+                                ManageClientsPage.inputLastName, ManageClientsPage.inputPassword,
+                                ManageClientsPage.inputContactNumber, ManageClientsPage.buttonGender,
+                                ManageClientsPage.dropdownGender, ManageClientsPage.inputEmail,
+                                ManageClientsPage.inputUsername, ManageClientsPage.buttonSaveAdd,
+                                ManageClientsPage.messEdit, ManageClientsPage.inputSearch,
+                                ManageClientsPage.buttonDetail, ManageClientsPage.buttonSaveIf, CommonPage.buttonLogout,
+                                CommonPage.logoutClient, ManageClientsPage.buttonDelete, ManageClientsPage.buttonConfirm
+                            </td>
+                            <td>REQ-CLI-002, REQ-CLI-003, REQ-AUTH-002, REQ-AUTH-005, REQ-CLI-005</td>
+                            <td>State transition</td>
+                            <td>E2E</td>
+                            <td>P2</td>
+                            <td>Đăng nhập tài khoản Admin thành công.</td>
+                            <td>1. Admin tạo mới một Client với mật khẩu ban đầu là 'OldPass123@'.<br>2. Admin tìm kiếm
+                                Client, mở form Detail cập nhật mật khẩu mới 'NewPass456@' và bấm Save.<br>3. Admin đăng
+                                xuất an toàn.<br>4. Tại màn hình Login, nhập Username và mật khẩu cũ 'OldPass123@', bấm
+                                nút Login.<br>5. Xác minh hệ thống từ chối đăng nhập và hiển thị thông báo lỗi Invalid
+                                Login Credentials.<br>6. Nhập lại mật khẩu mới 'NewPass456@', bấm Login và xác minh đăng
+                                nhập thành công vào Dashboard.<br>7. Client đăng xuất.<br>8. Admin đăng nhập lại, tìm
+                                kiếm và xoá Client để hoàn tất dọn dẹp.</td>
+                            <td>Dữ liệu tạo Client: USERNAME="e2e_pwd_client", Mật khẩu ban đầu: PASSWORD="OldPass123@",
+                                Mật khẩu mới: PASSWORD="NewPass456@", EMAIL="e2e_pwd@example.com", FIRSTNAME="Pwd",
+                                LASTNAME="Test", CONTACT="0908888005", GENDER="Female"</td>
+                            <td>Tại bước 5, mật khẩu cũ bị từ chối với thông báo lỗi Invalid Login Credentials.; tại
+                                bước 6, mật khẩu mới xác thực thành công vào Dashboard, đảm bảo tính đồng bộ dữ liệu bảo
+                                mật giữa hai vai trò.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R1</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-006</td>
+                            <td>Đăng nhập thất bại khi để trống trường Username</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin, LoginPage.alertInvaid
+                            </td>
+                            <td>REQ-AUTH-004</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đang ở màn hình đăng nhập HRM.</td>
+                            <td>1. Mở trang đăng nhập HRM.<br>2. Để trống trường Username.<br>3. Nhập mật khẩu hợp lệ
+                                123456 vào trường Password.<br>4. Bấm nút Login.</td>
+                            <td>USERNAME="" (để trống), PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối đăng nhập, hiển thị thông báo lỗi yêu cầu nhập Username hoặc hiển thị
+                                "Invalid Login Credentials.", không cho phép vào Dashboard.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-007</td>
+                            <td>Đăng nhập thất bại khi để trống trường Password</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin, LoginPage.alertInvaid
+                            </td>
+                            <td>REQ-AUTH-005</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đang ở màn hình đăng nhập HRM.</td>
+                            <td>1. Mở trang đăng nhập HRM.<br>2. Nhập username hợp lệ admin_example.<br>3. Để trống
+                                trường Password.<br>4. Bấm nút Login.</td>
+                            <td>USERNAME="admin_example", PASSWORD="" (để trống)</td>
+                            <td>Hệ thống từ chối đăng nhập, hiển thị thông báo lỗi yêu cầu nhập mật khẩu hoặc hiển thị
+                                "Invalid Login Credentials.", không chuyển trang.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-008</td>
+                            <td>Đăng nhập thất bại khi để trống cả hai trường Username và Password</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin, LoginPage.alertInvaid
+                            </td>
+                            <td>REQ-AUTH-004, REQ-AUTH-005</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đang ở màn hình đăng nhập HRM.</td>
+                            <td>1. Mở trang đăng nhập HRM.<br>2. Để trống cả trường Username và Password.<br>3. Bấm nút
+                                Login.<br>4. Quan sát thông báo lỗi.</td>
+                            <td>USERNAME="" (để trống), PASSWORD="" (để trống)</td>
+                            <td>Hệ thống từ chối gửi form đăng nhập, hiển thị thông báo lỗi bắt buộc nhập thông tin hoặc
+                                hiển thị "Invalid Login Credentials.".</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-009</td>
+                            <td>Đăng nhập thất bại với mật khẩu dưới 6 ký tự (5 ký tự)</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin, LoginPage.alertInvaid
+                            </td>
+                            <td>REQ-AUTH-005</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đang ở màn hình đăng nhập HRM.</td>
+                            <td>1. Mở trang đăng nhập HRM.<br>2. Nhập username hợp lệ.<br>3. Tại ô Password, nhập chuỗi
+                                có độ dài đúng 5 ký tự.<br>4. Bấm nút Login.</td>
+                            <td>USERNAME="admin_example", PASSWORD="12345" (5 ký tự = min - 1)</td>
+                            <td>Hệ thống từ chối đăng nhập và hiển thị thông báo lỗi "Invalid Login Credentials." (hoặc
+                                cảnh báo độ dài tối thiểu 6 ký tự), chặn truy cập.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-010</td>
+                            <td>Đăng nhập thất bại khi nhập Username chỉ toàn ký tự khoảng trắng</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.ipPassword, LoginPage.buttonLogin, LoginPage.alertInvaid
+                            </td>
+                            <td>REQ-AUTH-004</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đang ở màn hình đăng nhập HRM.</td>
+                            <td>1. Mở trang đăng nhập HRM.<br>2. Nhập 5 dấu cách trắng vào ô Username.<br>3. Nhập mật
+                                khẩu 123456.<br>4. Bấm nút Login.</td>
+                            <td>USERNAME=" " (5 khoảng trắng), PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối đăng nhập, hiển thị thông báo lỗi không chấp nhận khoảng trắng hoặc
+                                "Invalid Login Credentials.", không chuyển trang.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-AUTH-011</td>
+                            <td>Chặn truy cập trái phép vào đường dẫn quản trị /erp/clients-list khi chưa đăng nhập</td>
+                            <td>AUTH</td>
+                            <td>LoginPage</td>
+                            <td>LoginPage.ipUsername, LoginPage.buttonLogin</td>
+                            <td>REQ-AUTH-006</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Trình duyệt chưa đăng nhập tài khoản nào vào hệ thống.</td>
+                            <td>1. Mở trình duyệt và truy cập trực tiếp vào URL quản trị /erp/clients-list.<br>2. Quan
+                                sát phản hồi điều hướng của hệ thống.</td>
+                            <td>URL="/erp/clients-list"</td>
+                            <td>Hệ thống chặn truy cập trái phép, tự động chuyển hướng về trang Login hoặc hiển thị
+                                thông báo "Error Message: Unauthorized Access", bảo mật thông tin.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-002</td>
+                            <td>Thêm mới nhân viên thất bại khi để trống trường bắt buộc First Name</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, đang ở trang Quản lý nhân viên (/erp/staff-list).</td>
+                            <td>1. Bấm nút Add New mở form thêm nhân viên.<br>2. Để trống trường First Name.<br>3. Nhập
+                                đầy đủ thông tin hợp lệ vào các trường còn lại (Last Name, Contact, Email, Username,
+                                Password).<br>4. Bấm Save.</td>
+                            <td>FIRSTNAME="" (để trống), LASTNAME="Nguyen", CONTACT="0901234567",
+                                EMAIL="emp02@example.com", USERNAME="emp_user02", PASSWORD="Password123@"</td>
+                            <td>Hệ thống chặn gửi form, hiển thị thông báo lỗi nguyên văn "The first name field is
+                                required.", hồ sơ nhân viên không được tạo.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-003</td>
+                            <td>Thêm mới nhân viên thất bại khi để trống trường bắt buộc Last Name</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Nhập First Name hợp lệ.<br>3. Để trống trường Last
+                                Name.<br>4. Nhập các trường còn lại hợp lệ.<br>5. Bấm Save.</td>
+                            <td>FIRSTNAME="Tuan", LASTNAME="" (để trống), CONTACT="0901234568",
+                                EMAIL="emp03@example.com", USERNAME="emp_user03", PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối lưu, hiển thị thông báo lỗi nguyên văn "The last name field is
+                                required.", không thêm mới nhân viên.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-004</td>
+                            <td>Thêm mới nhân viên thất bại khi để trống trường bắt buộc Email</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-003</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Điền các trường hợp lệ.<br>3. Để trống trường
+                                Email.<br>4. Bấm Save.</td>
+                            <td>FIRSTNAME="Linh", LASTNAME="Tran", CONTACT="0901234569", EMAIL="" (để trống),
+                                USERNAME="emp_user04", PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối lưu, hiển thị thông báo lỗi nguyên văn "The email field is required.",
+                                không tạo hồ sơ.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-005</td>
+                            <td>Thêm mới nhân viên thất bại khi nhập Email sai định dạng thiếu ký tự @</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-003</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Nhập các trường hợp lệ.<br>3. Tại ô Email, nhập chuỗi
+                                không có ký tự @.<br>4. Bấm Save.</td>
+                            <td>EMAIL="invalid_emp_email.com", FIRSTNAME="Hoa", LASTNAME="Le", CONTACT="0901234570",
+                                USERNAME="emp_user05", PASSWORD="Password123@"</td>
+                            <td>Hệ thống kiểm tra định dạng email chuẩn RFC, hiển thị thông báo lỗi định dạng email
+                                không hợp lệ, từ chối lưu thông tin nhân viên.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-006</td>
+                            <td>Thêm mới nhân viên thất bại khi mật khẩu dưới 6 ký tự (5 ký tự)</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Điền các trường hợp lệ.<br>3. Tại ô Password, nhập
+                                chuỗi gồm đúng 5 ký tự.<br>4. Bấm Save.</td>
+                            <td>PASSWORD="12345" (5 ký tự = min - 1), FIRSTNAME="Binh", LASTNAME="Pham",
+                                CONTACT="0901234571", EMAIL="emp06@example.com", USERNAME="emp_user06"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi độ dài mật khẩu không đủ (yêu cầu tối
+                                thiểu 6 ký tự), chặn lưu hồ sơ.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-007</td>
+                            <td>Thêm mới nhân viên thất bại khi số điện thoại không đủ 10 số (9 chữ số)</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-003</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Điền các trường hợp lệ.<br>3. Tại ô Contact Number,
+                                nhập số điện thoại gồm 9 chữ số.<br>4. Bấm Save.</td>
+                            <td>CONTACT="090123456" (9 chữ số = min - 1), FIRSTNAME="Phuc", LASTNAME="Hoang",
+                                EMAIL="emp07@example.com", USERNAME="emp_user07", PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi số điện thoại không hợp lệ (yêu cầu đúng
+                                10 chữ số), không thêm nhân viên.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-008</td>
+                            <td>Thêm mới nhân viên thất bại khi nhập Username đã tồn tại trong hệ thống</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-002</td>
+                            <td>Decision table</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Điền First Name, Last Name, Contact, Email, Password
+                                hợp lệ.<br>3. Tại ô Username, nhập tên người dùng đã tồn tại trên hệ thống.<br>4. Bấm
+                                Save.</td>
+                            <td>USERNAME="admin_example" (đã tồn tại), FIRSTNAME="Dung", LASTNAME="Vu",
+                                CONTACT="0901234572", EMAIL="emp08_unique@example.com", PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối lưu và hiển thị thông báo lỗi nguyên văn: "This username already exist.
+                                Please choose another username.", không tạo bản ghi trùng lặp.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-EMP-009</td>
+                            <td>Thêm mới nhân viên thất bại khi nhập Email đã tồn tại trong hệ thống</td>
+                            <td>EMP</td>
+                            <td>EmployeesPage</td>
+                            <td>EmployeesPage.buttonAddNew, EmployeesPage.inputFirstName, EmployeesPage.inputLastName,
+                                EmployeesPage.inputContact, EmployeesPage.inputEmail, EmployeesPage.inputUsername,
+                                EmployeesPage.inputPassword, EmployeesPage.buttonSave</td>
+                            <td>REQ-EMP-003</td>
+                            <td>Decision table</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đăng nhập Admin thành công, form Add New Employee đang mở.</td>
+                            <td>1. Mở form Add New Employee.<br>2. Điền các thông tin hợp lệ.<br>3. Tại ô Email, nhập
+                                email đã đăng ký trước đó.<br>4. Bấm Save.</td>
+                            <td>EMAIL="admin_example@gmail.com" (đã tồn tại), FIRSTNAME="Tung", LASTNAME="Do",
+                                CONTACT="0901234573", USERNAME="emp_user09_unique", PASSWORD="Password123@"</td>
+                            <td>Hệ thống từ chối tạo mới, hiển thị thông báo lỗi nguyên văn: "This email already exist.
+                                Please choose another email.", không xuất hiện thông báo thành công.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-013</td>
+                            <td>Thêm mới dự án thất bại khi để trống trường tiêu đề dự án Title</td>
+                            <td>PROJ</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonAddNew, ProjectsPage.inputTitle, ProjectsPage.buttonClients,
+                                ProjectsPage.dropdownClients, ProjectsPage.inputStartDate, ProjectsPage.saveStartDate,
+                                ProjectsPage.inputEndDate, ProjectsPage.saveEndDate, ProjectsPage.buttonSave,
+                                ProjectsPage.message</td>
+                            <td>REQ-PROJ-002</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Admin mở trang Projects (/erp/projects-list).</td>
+                            <td>1. Bấm nút Add New mở form tạo dự án.<br>2. Để trống trường Title.<br>3. Chọn Client,
+                                ngày bắt đầu và ngày kết thúc hợp lệ.<br>4. Bấm Save.</td>
+                            <td>TITLE="" (để trống), CLIENT="Client 1", START_DATE="2026-11-10", END_DATE="2026-12-10"
+                            </td>
+                            <td>Hệ thống chặn gửi form, hiển thị thông báo lỗi "The title field is required." (hoặc yêu
+                                cầu nhập tiêu đề), không xuất hiện thông báo Project added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-014</td>
+                            <td>Kiểm thử logic ngày kết thúc trước ngày bắt đầu 1 ngày (Bắt lỗi nghiệp vụ AUT)</td>
+                            <td>PROJ</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonAddNew, ProjectsPage.inputTitle, ProjectsPage.buttonClients,
+                                ProjectsPage.dropdownClients, ProjectsPage.inputStartDate, ProjectsPage.saveStartDate,
+                                ProjectsPage.inputEndDate, ProjectsPage.saveEndDate, ProjectsPage.buttonSave,
+                                ProjectsPage.message</td>
+                            <td>REQ-PROJ-007</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Mở form Add New Project.</td>
+                            <td>1. Điền Title hợp lệ.<br>2. Chọn Start Date là 2026-11-10.<br>3. Chọn End Date là
+                                2026-11-09 (nhỏ hơn Start Date 1 ngày).<br>4. Bấm Save.</td>
+                            <td>TITLE="Invalid Date Project", START_DATE="2026-11-10", END_DATE="2026-11-09" (End Date =
+                                Start Date - 1 ngày)</td>
+                            <td>Quy chuẩn nghiệp vụ không được phép lưu dự án có ngày kết thúc trước ngày bắt đầu (hiển
+                                thị lỗi). Thực tế trên web chưa chặn -&gt; Phát hiện lỗi Defect.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-015</td>
+                            <td>Kiểm thử số giờ ngân sách là số âm (-1 giờ) trên form tạo dự án (Bắt lỗi nghiệp vụ AUT)
+                            </td>
+                            <td>PROJ</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonAddNew, ProjectsPage.inputTitle, ProjectsPage.inputHour,
+                                ProjectsPage.buttonClients, ProjectsPage.dropdownClients, ProjectsPage.inputStartDate,
+                                ProjectsPage.saveStartDate, ProjectsPage.inputEndDate, ProjectsPage.saveEndDate,
+                                ProjectsPage.buttonSave, ProjectsPage.message</td>
+                            <td>REQ-PROJ-002</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P2</td>
+                            <td>Mở form Add New Project.</td>
+                            <td>1. Điền Title và các trường hợp lệ.<br>2. Tại ô Budget Hours, nhập giá trị -1.<br>3. Bấm
+                                Save.</td>
+                            <td>HOUR="-1" (số âm = 0 - 1), TITLE="Negative Budget Project", START_DATE="2026-11-10",
+                                END_DATE="2026-12-10"</td>
+                            <td>Quy chuẩn nghiệp vụ không được phép lưu số giờ ngân sách là số âm (phải chặn hoặc hiển
+                                thị lỗi). Thực tế trên web chưa chặn -&gt; Phát hiện lỗi Defect.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-016</td>
+                            <td>Tải lên tệp đính kèm dự án thất bại khi chọn tệp tin thực thi bị cấm (.exe)</td>
+                            <td>PROJ</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonDetail, ProjectsPage.tabAttach, ProjectsPage.uploadFiles,
+                                ProjectsPage.inputTitleAt, ProjectsPage.buttonAddFile, ProjectsPage.messConf</td>
+                            <td>REQ-PROJ-008</td>
+                            <td>Error guessing</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đang ở trang chi tiết dự án.</td>
+                            <td>1. Mở chi tiết dự án, chuyển sang tab Attachments.<br>2. Nhập tiêu đề tệp tin.<br>3. Tại
+                                ô tải tệp, chọn file exploit.exe.<br>4. Bấm nút Add File.</td>
+                            <td>uploadFiles="exploit.exe", inputTitleAt="Executable Malicious File"</td>
+                            <td>Hệ thống từ chối tải tệp lên, hiển thị thông báo lỗi quy định: "Upload files only:
+                                gif,png,jpg,jpeg", không lưu tệp đính kèm.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-PROJ-017</td>
+                            <td>Thêm công việc trong dự án thất bại khi để trống tên tác vụ Task Name</td>
+                            <td>PROJ</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonDetail, ProjectsPage.tabTasks, ProjectsPage.buttonAddTasks,
+                                ProjectsPage.inputTitleTasks, ProjectsPage.inputHourTasks, ProjectsPage.saveTasks,
+                                ProjectsPage.message</td>
+                            <td>REQ-TASK-001</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P1</td>
+                            <td>Đang ở tab Tasks trong trang chi tiết dự án.</td>
+                            <td>1. Mở chi tiết dự án, chuyển sang tab Tasks.<br>2. Bấm Add New Task mở form công
+                                việc.<br>3. Để trống ô Task Name.<br>4. Nhập các trường còn lại hợp lệ.<br>5. Bấm nút
+                                Save Task.</td>
+                            <td>inputTitleTasks="" (để trống), inputHourTasks="5"</td>
+                            <td>Hệ thống chặn gửi form, hiển thị thông báo lỗi "The task name field is required." (hoặc
+                                yêu cầu nhập tên công việc), không xuất hiện thông báo Task added.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-TASK-003</td>
+                            <td>Kiểm thử số giờ làm việc là số âm (-1 giờ) khi thêm công việc (Bắt lỗi nghiệp vụ AUT)
+                            </td>
+                            <td>TASK</td>
+                            <td>ProjectsPage</td>
+                            <td>ProjectsPage.buttonDetail, ProjectsPage.tabTasks, ProjectsPage.buttonAddTasks,
+                                ProjectsPage.inputTitleTasks, ProjectsPage.inputHourTasks, ProjectsPage.saveTasks,
+                                ProjectsPage.message</td>
+                            <td>REQ-TASK-005</td>
+                            <td>BVA</td>
+                            <td>Boundary</td>
+                            <td>P1</td>
+                            <td>Đang ở tab Tasks trong chi tiết dự án.</td>
+                            <td>1. Tại chi tiết dự án, mở form Add New Task.<br>2. Nhập Task Name hợp lệ.<br>3. Tại ô
+                                Task Hours, nhập giá trị -1.<br>4. Bấm nút Save Task.</td>
+                            <td>inputTitleTasks="Negative Hour Task", inputHourTasks="-1" (số âm = 0 - 1)</td>
+                            <td>Quy chuẩn nghiệp vụ không được phép lưu số giờ làm việc là số âm (phải chặn hoặc hiển
+                                thị lỗi). Thực tế trên web chưa chặn -&gt; Phát hiện lỗi Defect.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-TASK-004</td>
+                            <td>Tìm kiếm công việc trên TasksPage với từ khóa không tồn tại</td>
+                            <td>TASK</td>
+                            <td>TasksPage</td>
+                            <td>TasksPage.inputSearch, TasksPage.headingTasks</td>
+                            <td>REQ-TASK-001</td>
+                            <td>EP</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đăng nhập Admin và chuyển đến trang Tasks (/erp/tasks-list).</td>
+                            <td>1. Mở trang danh sách Tasks.<br>2. Nhập từ khóa không tồn tại vào ô tìm kiếm.<br>3. Quan
+                                sát kết quả bảng dữ liệu.</td>
+                            <td>inputSearch="NON_EXISTING_TASK_SEARCH_KEYWORD_XYZ999"</td>
+                            <td>Bảng dữ liệu không hiển thị bản ghi nào, hiển thị thông báo không tìm thấy bản ghi phù
+                                hợp (No data available in table hoặc No matching records found).</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TC-TASK-005</td>
+                            <td>Huỷ thao tác xoá công việc khi bấm nút đóng modal xác nhận xoá</td>
+                            <td>TASK</td>
+                            <td>TasksPage</td>
+                            <td>TasksPage.inputSearch, TasksPage.buttonDelete, TasksPage.message</td>
+                            <td>REQ-TASK-003</td>
+                            <td>State transition</td>
+                            <td>Negative</td>
+                            <td>P2</td>
+                            <td>Đang ở trang Tasks (/erp/tasks-list).</td>
+                            <td>1. Tại trang Tasks, tìm kiếm một công việc có sẵn.<br>2. Bấm nút Delete trên dòng công
+                                việc để mở popup xác nhận.<br>3. Bấm nút đóng popup hoặc bấm ra ngoài để huỷ (không bấm
+                                Confirm).<br>4. Quan sát danh sách công việc.</td>
+                            <td>inputSearch="Task to Cancel Delete"</td>
+                            <td>Hộp thoại xác nhận bị đóng lại, bản ghi công việc vẫn tồn tại nguyên vẹn trong bảng, hệ
+                                thống không xoá và không hiển thị thông báo Task deleted.</td>
+                            <td><span class="badge badge-ok">Confirmed</span></td>
+                            <td>Human</td>
+                            <td>R2</td>
+                            <td>Accepted</td>
+                            <td></td>
+                            <td>Candidate</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="5-diem-can-kiem-tra-sau-hon-exploratory-testing-note">5. Điểm cần kiểm tra sâu hơn (Exploratory
+                Testing Note)</h2>
+            <p>Dựa trên kết quả đối soát thực tế, toàn bộ 45/46 ca kiểm thử đã được xác nhận kết quả mong đợi
+                (<code>Oracle = Confirmed</code>). Chỉ còn duy nhất một trường hợp cần kiểm tra trực tiếp:</p>
+            <ol>
+                <li><strong>[Xử lý an toàn chuỗi XSS REQ-SEC-001]</strong>: Cần thực thi kiểm thử thực tế trên giao diện
+                    để quan sát chuỗi <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> khi hiển thị lại trên bảng dữ
+                    liệu có được mã hóa HTML entity an toàn hay không (Liên quan <code>TC-CLI-026</code>).</li>
+            </ol>
+            <hr>
+            <h2 id="6-so-lieu-chap-nhan-acceptance-metrics">6. Số liệu chấp nhận (Acceptance Metrics)</h2>
+            <h3 id="so-lieu-chap-nhan-tinh-tu-dong-boi-verifytestcases-py-khong-sua-tay">Số liệu chấp nhận (tính tự động
+                bởi <code>verify_test_cases.py</code>, không sửa tay)</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Chỉ số</th>
+                            <th>Giá trị</th>
+                            <th>Cách tính</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tổng case</td>
+                            <td>46</td>
+                            <td>AI: 0, Human: 46</td>
+                        </tr>
+                        <tr>
+                            <td>Case AI đã review</td>
+                            <td>0/0 (n/a)</td>
+                            <td>khác Pending / tổng case Source=AI</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Chưa có case AI nào được review nên <strong>chưa thể tính tỷ lệ chấp nhận</strong>. Hãy review từng case
+                rồi chạy lại.</p>
+            <p><strong>Độ phủ negative/boundary so với RTM</strong> (yêu cầu có <code>Negative applicable = Y</code>):
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Thời điểm</th>
+                            <th>Yêu cầu có ≥ 1 case negative/boundary</th>
+                            <th>Tỷ lệ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Trước (test hiện có trong RTM)</td>
+                            <td>2/9</td>
+                            <td>22.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Sau (cộng case đã Accepted/Modified)</td>
+                            <td>9/9</td>
+                            <td>100.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Nếu duyệt hết case đang Pending</td>
+                            <td>9/9</td>
+                            <td>100.0%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h2 id="7-ghi-chu-va-bai-hoc-kinh-nghiem-kiem-thu-test-engineering-reflections">7. Ghi chú và bài học kinh
+                nghiệm kiểm thử (Test Engineering Reflections)</h2>
+            <p>Bộ test case đã được đối soát và hoàn thiện với các điểm mấu chốt sau:</p>
+            <ol>
+                <li><strong>Phát hiện lỗi nghiệp vụ thực tế (Defects Identification)</strong>:<ul>
+                        <li>Hệ thống web demo HRM hiện tại có 2 lỗi nghiệp vụ quan trọng: cho phép chọn ngày kết thúc
+                            nhỏ hơn ngày bắt đầu dự án (<code>TC-PROJ-014</code>), và cho phép nhập số giờ ngân sách là
+                            số âm (<code>TC-PROJ-015</code>, <code>TC-TASK-003</code>). Bộ test case đã đưa vào để phát
+                            hiện và làm cơ sở báo cáo lỗi cho đội ngũ phát triển.</li>
+                    </ul>
+                </li>
+                <li><strong>Xác thực hành vi bảo mật và phân quyền</strong>:<ul>
+                        <li>Xác nhận cơ chế phân quyền RBAC hoạt động chính xác khi Client truy cập đường dẫn quản trị
+                            bị chặn với thông báo <code>Unauthorized Access</code> (<code>TC-E2E-003</code>,
+                            <code>TC-AUTH-011</code>).</li>
+                        <li>Xác nhận cơ chế kiểm soát tệp tải lên có whitelist định dạng an toàn:
+                            <code>gif, png, jpg, jpeg</code> (<code>TC-CLI-027</code>, <code>TC-PROJ-016</code>).</li>
+                    </ul>
+                </li>
+                <li><strong>Kiểm soát tính toàn vẹn dữ liệu</strong>:<ul>
+                        <li>Xác nhận hệ thống thực hiện xóa cascade khi xóa khách hàng có dự án liên kết
+                            (<code>TC-E2E-006</code>).</li>
+                        <li>Xác nhận hệ thống chặn trùng lặp Username và Email với thông báo lỗi cụ thể
+                            (<code>TC-CLI-024</code>, <code>TC-CLI-025</code>, <code>TC-EMP-008</code>,
+                            <code>TC-EMP-009</code>).</li>
+                    </ul>
+                </li>
+            </ol>
+
+        </main>
+    </div>
+</body>
+
+</html>

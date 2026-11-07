@@ -104,4 +104,17 @@ public class LoginPage extends CommonPage{
         return new DashboardPage();
     }
 
+    public LoginPage loginInvalidCustom(String username, String password) {
+        openURL(ConfigData.URL);
+        verifyLoginPage();
+        if (username != null) setText(ipUsername, username);
+        if (password != null) setText(ipPassword, password);
+        clickElement(buttonLogin);
+        return this;
+    }
+
+    public LoginPage verifyLoginErrorMessage(String expectedMessage) {
+        verifyEqual(getTextElement(alertInvaid), expectedMessage, "Alert not display correct message!");
+        return this;
+    }
 }
